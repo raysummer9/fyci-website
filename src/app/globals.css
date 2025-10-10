@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Lota+Grotesque:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --primary: #5920a4;
+  --primary-foreground: #ffffff;
+  --secondary: #14b8a6;
+  --secondary-foreground: #ffffff;
+  --accent: #f59e0b;
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+  --border: #e5e7eb;
+  --radius: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --primary: #5920a4;
+    --primary-foreground: #1f2937;
+    --secondary: #2dd4bf;
+    --secondary-foreground: #1f2937;
+    --accent: #fbbf24;
+    --muted: #1f2937;
+    --muted-foreground: #9ca3af;
+    --border: #374151;
+  }
+}
+
+body {
+  background: #5920a4;
+  color: var(--foreground);
+  font-family: 'Lota Grotesque', sans-serif;
+}
+
+* {
+  border-color: var(--border);
+}
