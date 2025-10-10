@@ -21,9 +21,9 @@ export default function Navbar() {
       label: 'Who We Are',
       href: '/who-we-are',
       submenu: [
-        { href: '/about-us', label: 'About Us', icon: Users },
-        { href: '/organisational-structure', label: 'Organisational Structure', icon: Building },
-        { href: '/team', label: 'Team', icon: UserCheck },
+        { href: '/who-we-are/about', label: 'About Us', icon: Users },
+        { href: '/who-we-are/organisational-structure', label: 'Organisational Structure', icon: Building },
+        { href: '/who-we-are/team', label: 'Team', icon: UserCheck },
       ]
     },
     {
@@ -96,15 +96,13 @@ export default function Navbar() {
                           </h3>
                           <div className="space-y-2">
                             {link.submenu.map((subLink) => {
-                              const Icon = subLink.icon;
                               return (
                                 <Link
                                   key={subLink.href}
                                   href={subLink.href}
-                                  className="flex items-center gap-3 py-2 text-sm text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
+                                  className="block py-2 text-sm font-bold text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
                                   onMouseEnter={() => setHoveredSubItem(subLink.label)}
                                 >
-                                  <Icon size={20} className="text-gray-500" />
                                   {subLink.label}
                                 </Link>
                               );
@@ -151,14 +149,12 @@ export default function Navbar() {
                         </h3>
                         <div className="space-y-2">
                           {link.submenu.map((subLink) => {
-                            const Icon = subLink.icon;
                             return (
                               <Link
                                 key={subLink.href}
                                 href={subLink.href}
-                                className="flex items-center gap-3 py-2 text-sm text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
+                                className="block py-2 text-sm font-bold text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
                               >
-                                <Icon size={20} className="text-gray-500" />
                                 {subLink.label}
                               </Link>
                             );
