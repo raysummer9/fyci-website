@@ -2,8 +2,12 @@
 
 import { Metadata } from 'next'
 import { useState } from 'react';
-import { Target, Eye, Sparkles, UserCheck, Heart } from 'lucide-react';
+import { Target, Eye, Sparkles, UserCheck, Heart, Vote, Shield, Users2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
+import Partners from '@/components/Partners';
+import Newsletter from '@/components/Newsletter';
+import Footer from '@/components/Footer';
 
 export default function AboutPage() {
   const [activeTab, setActiveTab] = useState('biography');
@@ -42,8 +46,9 @@ export default function AboutPage() {
           <motion.h2 
             className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-6"
             initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            viewport={{ once: false, amount: 0.2 }}
           >
             Overview
           </motion.h2>
@@ -52,8 +57,9 @@ export default function AboutPage() {
           <motion.p 
             className="text-2xl sm:text-3xl lg:text-4xl text-gray-600 mb-12 max-w-4xl"
             initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+            viewport={{ once: false, amount: 0.2 }}
           >
             The Frontline Youth Creativity Initiative (FYCI) is dedicated to empowering young people across Africa to become active citizens and leaders in their communities through innovative programs and civic engagement.
           </motion.p>
@@ -62,8 +68,9 @@ export default function AboutPage() {
           <motion.div 
             className="mb-8"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            viewport={{ once: false, amount: 0.2 }}
           >
             <div className="border-b-2 border-gray-200">
               <nav className="-mb-0.5 flex space-x-8 overflow-x-auto" aria-label="Tabs">
@@ -230,6 +237,115 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Four Major Themes Section */}
+      <section className="py-16" style={{ backgroundColor: '#5920a4' }}>
+        <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            viewport={{ once: false, amount: 0.2 }}
+          >
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-8 max-w-4xl">
+              Based on the successes of the SABC approach in the context of water, sanitation and hygiene (WASH) projects, FYCI seeks to use this same approach to lay the foundation for sustainable positive change in Nigeria (and Africa), focusing on four major themes:
+            </h3>
+          </motion.div>
+
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+            viewport={{ once: false, amount: 0.2 }}
+          >
+            {/* Youth Political Participation */}
+            <motion.div 
+              className="bg-white/10 backdrop-blur-sm rounded-lg p-6"
+              whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+            >
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-3 rounded-lg w-16 h-16 flex items-center justify-center">
+                  <Image
+                    src="/img/about-icons/youth-political-participation.svg"
+                    alt="Youth Political Participation"
+                    width={48}
+                    height={48}
+                    className="filter brightness-0 invert w-12 h-12 object-contain"
+                  />
+                </div>
+                <h4 className="text-lg font-bold text-white">Youth Political Participation</h4>
+              </div>
+            </motion.div>
+
+            {/* Gender Rights */}
+            <motion.div 
+              className="bg-white/10 backdrop-blur-sm rounded-lg p-6"
+              whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+            >
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-3 rounded-lg w-16 h-16 flex items-center justify-center">
+                  <Image
+                    src="/img/about-icons/gender-rights.svg"
+                    alt="Gender Rights"
+                    width={48}
+                    height={48}
+                    className="filter brightness-0 invert w-12 h-12 object-contain"
+                  />
+                </div>
+                <h4 className="text-lg font-bold text-white">Gender Rights</h4>
+              </div>
+            </motion.div>
+
+            {/* Youth Agency and Self-Esteem */}
+            <motion.div 
+              className="bg-white/10 backdrop-blur-sm rounded-lg p-6"
+              whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+            >
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-3 rounded-lg w-16 h-16 flex items-center justify-center">
+                  <Image
+                    src="/img/about-icons/self-esteem.svg"
+                    alt="Youth Agency and Self-Esteem"
+                    width={48}
+                    height={48}
+                    className="filter brightness-0 invert w-12 h-12 object-contain"
+                  />
+                </div>
+                <h4 className="text-lg font-bold text-white">Youth Agency and Self-Esteem</h4>
+              </div>
+            </motion.div>
+
+            {/* Anti-Corruption */}
+            <motion.div 
+              className="bg-white/10 backdrop-blur-sm rounded-lg p-6"
+              whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+            >
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-3 rounded-lg w-16 h-16 flex items-center justify-center">
+                  <Image
+                    src="/img/about-icons/anti-corruption.svg"
+                    alt="Anti-Corruption"
+                    width={48}
+                    height={48}
+                    className="filter brightness-0 invert w-12 h-12 object-contain"
+                  />
+                </div>
+                <h4 className="text-lg font-bold text-white">Anti-Corruption</h4>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Partners Section */}
+      <Partners />
+
+      {/* Newsletter Section */}
+      <Newsletter />
+
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }
