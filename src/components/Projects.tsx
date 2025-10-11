@@ -77,7 +77,7 @@ export default function Projects() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: false, amount: 0.1, margin: "-100px" }}
           className="mb-12"
         >
           <motion.h2 
@@ -101,7 +101,7 @@ export default function Projects() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.1 }}
+          viewport={{ once: false, amount: 0.1, margin: "-100px" }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           {projects.map((project, index) => {

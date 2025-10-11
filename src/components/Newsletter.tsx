@@ -36,7 +36,7 @@ export default function Newsletter() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: false, amount: 0.1, margin: "-100px" }}
         >
           {/* Content Section */}
           <motion.div
@@ -66,7 +66,7 @@ export default function Newsletter() {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: false, amount: 0.1, margin: "-100px" }}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }}
             className="max-w-4xl"
           >

@@ -46,9 +46,8 @@ export default function AboutPage() {
           <motion.h2 
             className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-6"
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-            viewport={{ once: false, amount: 0.2 }}
           >
             Overview
           </motion.h2>
@@ -57,9 +56,8 @@ export default function AboutPage() {
           <motion.p 
             className="text-2xl sm:text-3xl lg:text-4xl text-gray-600 mb-12 max-w-4xl"
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-            viewport={{ once: false, amount: 0.2 }}
           >
             The Frontline Youth Creativity Initiative (FYCI) is dedicated to empowering young people across Africa to become active citizens and leaders in their communities through innovative programs and civic engagement.
           </motion.p>
@@ -68,9 +66,8 @@ export default function AboutPage() {
           <motion.div 
             className="mb-8"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            viewport={{ once: false, amount: 0.2 }}
           >
             <div className="border-b-2 border-gray-200">
               <nav className="-mb-0.5 flex space-x-8 overflow-x-auto" aria-label="Tabs">
@@ -245,7 +242,7 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: false, amount: 0.1, margin: "-100px" }}
           >
             <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-8 max-w-4xl">
               Based on the successes of the SABC approach in the context of water, sanitation and hygiene (WASH) projects, FYCI seeks to use this same approach to lay the foundation for sustainable positive change in Nigeria (and Africa), focusing on four major themes:
@@ -257,7 +254,7 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: false, amount: 0.1, margin: "-100px" }}
           >
             {/* Youth Political Participation */}
             <motion.div 

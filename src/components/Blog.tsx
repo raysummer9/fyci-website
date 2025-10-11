@@ -84,7 +84,7 @@ export default function Blog() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: false, amount: 0.1, margin: "-100px" }}
           className="mb-12"
         >
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

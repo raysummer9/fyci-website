@@ -49,7 +49,7 @@ export default function ImpactNumbers() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: false, amount: 0.1, margin: "-100px" }}
           className="mb-12"
         >
           <motion.h2 
@@ -76,7 +76,7 @@ export default function ImpactNumbers() {
               variants={cardVariants}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: false, amount: 0.2 }}
+              viewport={{ once: false, amount: 0.1, margin: "-100px" }}
               transition={{ 
                 duration: 0.6, 
                 ease: [0.25, 0.46, 0.45, 0.94],

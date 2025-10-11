@@ -51,7 +51,7 @@ export default function Footer() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: false, amount: 0.1, margin: "-100px" }}
           className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 lg:gap-12"
         >
           {/* Company Info */}

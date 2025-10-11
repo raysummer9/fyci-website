@@ -83,7 +83,7 @@ export default function SuccessStory() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: false, amount: 0.1, margin: "-100px" }}
           className="mb-12"
         >
           <motion.h2 

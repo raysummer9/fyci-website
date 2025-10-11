@@ -33,8 +33,7 @@ export default function Hero() {
         <motion.div
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: false, amount: 0.2 }}
+          animate="visible"
           className="max-w-4xl"
         >
           {/* Badge */}
