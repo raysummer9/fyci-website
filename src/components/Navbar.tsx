@@ -30,10 +30,10 @@ export default function Navbar() {
       label: 'Programme Areas',
       href: '/programme-areas',
       submenu: [
-        { href: '/gender-rights', label: 'Gender Rights', icon: Heart },
-        { href: '/youth-agency', label: 'Youth Agency and Self Esteem', icon: Target },
-        { href: '/youth-political-participation', label: 'Youth Political Participation', icon: Vote },
-        { href: '/anti-corruption', label: 'Anti-Corruption', icon: Shield },
+        { href: '/programme-areas/gender-rights', label: 'Gender Rights', icon: Heart },
+        { href: '/programme-areas/youth-agency', label: 'Youth Agency and Self Esteem', icon: Target },
+        { href: '/programme-areas/youth-political-participation', label: 'Youth Political Participation', icon: Vote },
+        { href: '/programme-areas/anti-corruption', label: 'Anti-Corruption', icon: Shield },
       ]
     },
     {

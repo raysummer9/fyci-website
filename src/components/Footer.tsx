@@ -30,10 +30,10 @@ export default function Footer() {
   ];
 
   const programmeAreas = [
-    { name: 'Gender Rights', href: '/programmes/gender-rights' },
-    { name: 'Youth Agency', href: '/programmes/youth-agency' },
-    { name: 'Political Participation', href: '/programmes/political-participation' },
-    { name: 'Anti-Corruption', href: '/programmes/anti-corruption' }
+    { name: 'Gender Rights', href: '/programme-areas/gender-rights' },
+    { name: 'Youth Agency', href: '/programme-areas/youth-agency' },
+    { name: 'Political Participation', href: '/programme-areas/youth-political-participation' },
+    { name: 'Anti-Corruption', href: '/programme-areas/anti-corruption' }
   ];
 
   const socialLinks = [
