@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react';
+import { Mail, Phone, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -37,11 +37,11 @@ export default function Footer() {
   ];
 
   const socialLinks = [
-    { name: 'Facebook', href: '#', icon: Facebook },
-    { name: 'Twitter', href: '#', icon: Twitter },
-    { name: 'Instagram', href: '#', icon: Instagram },
-    { name: 'LinkedIn', href: '#', icon: Linkedin },
-    { name: 'YouTube', href: '#', icon: Youtube }
+    { name: 'Facebook', href: '#', icon: '/assets/social-icons/facebook.svg' },
+    { name: 'Twitter', href: '#', icon: '/assets/social-icons/x.svg' },
+    { name: 'Instagram', href: '#', icon: '/assets/social-icons/instagram.svg' },
+    { name: 'LinkedIn', href: '#', icon: '/assets/social-icons/linkedin.svg' },
+    { name: 'YouTube', href: '#', icon: '/assets/social-icons/youtube.svg' }
   ];
 
   return (
@@ -140,14 +140,20 @@ export default function Footer() {
             {/* Social Links */}
             <div className="flex gap-4">
               {socialLinks.map((social) => {
-                const IconComponent = social.icon;
                 return (
                   <Link
                     key={social.name}
                     href={social.href}
-                    className="text-white/80 hover:text-white transition-colors duration-200"
+                    className="p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors duration-200"
+                    aria-label={social.name}
                   >
-                    <IconComponent size={20} />
+                    <Image
+                      src={social.icon}
+                      alt={social.name}
+                      width={20}
+                      height={20}
+                      className="w-5 h-5 filter brightness-0 invert"
+                    />
                   </Link>
                 );
               })}
