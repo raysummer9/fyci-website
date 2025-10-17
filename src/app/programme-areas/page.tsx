@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Search, Calendar, Heart, Target, Vote, Shield } from 'lucide-react';
+import { Search, Calendar, Heart, Target, Vote, Shield, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import Partners from '@/components/Partners';
 import Newsletter from '@/components/Newsletter';
@@ -89,15 +89,15 @@ export default function ProgrammeAreasPage() {
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'Gender Rights':
-        return 'bg-pink-100 text-pink-700';
+        return 'bg-purple-100 text-purple-700';
       case 'Youth Agency':
-        return 'bg-blue-100 text-blue-700';
+        return 'bg-purple-100 text-purple-700';
       case 'Political Participation':
-        return 'bg-green-100 text-green-700';
+        return 'bg-purple-100 text-purple-700';
       case 'Anti-Corruption':
         return 'bg-purple-100 text-purple-700';
       default:
-        return 'bg-gray-100 text-gray-700';
+        return 'bg-purple-100 text-purple-700';
     }
   };
 
@@ -217,9 +217,18 @@ export default function ProgrammeAreasPage() {
                     </h3>
                     
                     {/* Description */}
-                    <p className="text-gray-600 leading-relaxed text-left">
+                    <p className="text-gray-600 leading-relaxed text-left mb-4">
                       {project.description}
                     </p>
+                    
+                    {/* Read More Button */}
+                    <a
+                      href="#"
+                      className="inline-flex items-center gap-2 font-medium text-gray-900 hover:gap-3 transition-all duration-200 cursor-pointer"
+                    >
+                      Read more
+                      <ArrowRight size={16} />
+                    </a>
                   </div>
                 </motion.div>
               );

@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Search, Calendar, Heart, ArrowLeft } from 'lucide-react';
+import { Search, Calendar, Heart, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import Partners from '@/components/Partners';
 import Newsletter from '@/components/Newsletter';
@@ -153,8 +153,8 @@ export default function GenderRightsPage() {
                 <div className="p-6">
                   {/* Category Tag */}
                   <div className="flex items-center gap-2 mb-3">
-                    <Heart size={16} className="text-pink-600" />
-                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-pink-100 text-pink-700">
+                    <Heart size={16} className="text-purple-600" />
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
                       {project.category}
                     </span>
                   </div>
@@ -171,9 +171,18 @@ export default function GenderRightsPage() {
                   </h3>
                   
                   {/* Description */}
-                  <p className="text-gray-600 leading-relaxed text-left">
+                  <p className="text-gray-600 leading-relaxed text-left mb-4">
                     {project.description}
                   </p>
+                  
+                  {/* Read More Button */}
+                  <a
+                    href="#"
+                    className="inline-flex items-center gap-2 font-medium text-gray-900 hover:gap-3 transition-all duration-200 cursor-pointer"
+                  >
+                    Read more
+                    <ArrowRight size={16} />
+                  </a>
                 </div>
               </motion.div>
             ))}

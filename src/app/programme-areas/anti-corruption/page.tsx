@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Search, Calendar, Shield, ArrowLeft } from 'lucide-react';
+import { Search, Calendar, Shield, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import Partners from '@/components/Partners';
 import Newsletter from '@/components/Newsletter';
@@ -82,7 +82,10 @@ export default function AntiCorruptionPage() {
           >
             <Link 
               href="/programme-areas" 
-              className="inline-flex items-center text-purple-600 hover:text-purple-700 mb-6 transition-colors"
+              className="inline-flex items-center mb-6 transition-colors"
+              style={{ color: '#360e1d' }}
+              onMouseEnter={(e) => e.target.style.color = '#4a1a2a'}
+              onMouseLeave={(e) => e.target.style.color = '#360e1d'}
             >
               <ArrowLeft size={20} className="mr-2" />
               Back to Programme Areas
@@ -114,7 +117,8 @@ export default function AntiCorruptionPage() {
                 placeholder="Search anti-corruption projects..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent text-lg placeholder-gray-500"
+                className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent text-lg placeholder-gray-500"
+                style={{ '--tw-ring-color': '#360e1d' } as React.CSSProperties}
               />
             </div>
           </motion.div>
@@ -153,8 +157,8 @@ export default function AntiCorruptionPage() {
                 <div className="p-6">
                   {/* Category Tag */}
                   <div className="flex items-center gap-2 mb-3">
-                    <Shield size={16} className="text-purple-600" />
-                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
+                    <Shield size={16} style={{ color: '#360e1d' }} />
+                    <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#f0fdf4', color: '#360e1d' }}>
                       {project.category}
                     </span>
                   </div>
@@ -171,9 +175,18 @@ export default function AntiCorruptionPage() {
                   </h3>
                   
                   {/* Description */}
-                  <p className="text-gray-600 leading-relaxed text-left">
+                  <p className="text-gray-600 leading-relaxed text-left mb-4">
                     {project.description}
                   </p>
+                  
+                  {/* Read More Button */}
+                  <a
+                    href="#"
+                    className="inline-flex items-center gap-2 font-medium text-gray-900 hover:gap-3 transition-all duration-200 cursor-pointer"
+                  >
+                    Read more
+                    <ArrowRight size={16} />
+                  </a>
                 </div>
               </motion.div>
             ))}

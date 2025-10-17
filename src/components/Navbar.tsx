@@ -24,6 +24,7 @@ export default function Navbar() {
         { href: '/who-we-are/about', label: 'About Us', icon: Users },
         { href: '/who-we-are/organisational-structure', label: 'Organisational Structure', icon: Building },
         { href: '/who-we-are/team', label: 'Team', icon: UserCheck },
+        { href: '/who-we-are/annual-reports', label: 'Annual Reports', icon: FileText },
       ]
     },
     {
@@ -36,21 +37,13 @@ export default function Navbar() {
         { href: '/programme-areas/anti-corruption', label: 'Anti-Corruption', icon: Shield },
       ]
     },
-    {
-      label: 'Resource Hub',
-      href: '/resource-hub',
-      submenu: [
-        { href: '/publications', label: 'Publications', icon: BookOpen },
-        { href: '/events', label: 'Events', icon: Calendar },
-        { href: '/blog', label: 'Blog', icon: FileText },
-      ]
-    },
-    { href: '/get-involved', label: 'Get Involved' },
+    { href: '/publications', label: 'Publications' },
+    { href: '/blog', label: 'Blog' },
     { href: '/contact', label: 'Contact' },
   ];
 
   return (
-    <nav className="sticky top-0 z-50" style={{ backgroundColor: '#5920a4' }}>
+    <nav className="sticky top-0 z-50" style={{ backgroundColor: '#360e1d' }}>
       <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20 pt-6 pb-6">
           {/* Logo */}
@@ -169,7 +162,7 @@ export default function Navbar() {
             <Link
               href="/donate"
               className="ml-4 px-8 py-2 text-base font-semibold bg-white hover:bg-gray-100 rounded-md transition-colors"
-              style={{ color: '#5920a4' }}
+              style={{ color: '#360e1d' }}
             >
               Donate
             </Link>
@@ -188,7 +181,7 @@ export default function Navbar() {
 
       {/* Mobile Sidebar */}
       {isOpen && (
-        <div className="fixed top-0 left-0 h-full w-80 z-50 transform transition-transform duration-300 ease-in-out md:hidden" style={{ backgroundColor: '#5920a4' }}>
+        <div className="fixed top-0 left-0 h-full w-80 z-50 transform transition-transform duration-300 ease-in-out md:hidden" style={{ backgroundColor: '#360e1d' }}>
             <div className="flex flex-col h-full">
               {/* Header */}
               <div className="flex items-center justify-start p-6 border-b border-white/20">

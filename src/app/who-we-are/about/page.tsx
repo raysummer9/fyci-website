@@ -38,9 +38,22 @@ export default function AboutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white relative">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Subtle geometric shapes */}
+        <div className="absolute top-32 right-16 w-5 h-5 bg-gray-100 rounded-full animate-pulse"></div>
+        <div className="absolute top-48 left-16 w-3 h-3 bg-gray-50 rotate-45 animate-bounce"></div>
+        <div className="absolute bottom-32 right-24 w-7 h-7 bg-gray-100 rounded-full animate-pulse"></div>
+        <div className="absolute bottom-48 left-24 w-4 h-8 bg-gray-50 rotate-12 animate-bounce"></div>
+        
+        {/* Gradient orbs */}
+        <div className="absolute top-1/3 right-1/3 w-40 h-40 bg-gradient-to-br from-gray-50/20 to-transparent rounded-full blur-2xl"></div>
+        <div className="absolute bottom-1/3 left-1/3 w-28 h-28 bg-gradient-to-br from-gray-100/15 to-transparent rounded-full blur-xl"></div>
+      </div>
+
       {/* Overview Section with Tabs */}
-      <section className="py-16">
+      <section className="py-16 relative z-10">
         <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
           {/* Overview Heading */}
           <motion.h2 
@@ -133,7 +146,7 @@ export default function AboutPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="bg-purple-600 p-2 rounded-lg">
+                      <div className="p-2 rounded-lg" style={{ backgroundColor: '#360e1d' }}>
                         <Target className="text-white" size={28} />
                       </div>
                       <h3 className="text-2xl font-bold text-gray-900">Our Mission</h3>
@@ -145,7 +158,7 @@ export default function AboutPage() {
                   
                   <div>
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="bg-purple-600 p-2 rounded-lg">
+                      <div className="p-2 rounded-lg" style={{ backgroundColor: '#360e1d' }}>
                         <Eye className="text-white" size={28} />
                       </div>
                       <h3 className="text-2xl font-bold text-gray-900">Our Vision</h3>
@@ -172,7 +185,7 @@ export default function AboutPage() {
                   {/* Creativity & Innovation */}
                   <div>
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="bg-purple-600 p-2 rounded-lg">
+                      <div className="p-2 rounded-lg" style={{ backgroundColor: '#360e1d' }}>
                         <Sparkles className="text-white" size={28} />
                       </div>
                       <h3 className="text-2xl font-bold text-gray-900">Creativity & Innovation</h3>
@@ -185,7 +198,7 @@ export default function AboutPage() {
                   {/* Equal Participation */}
                   <div>
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="bg-purple-600 p-2 rounded-lg">
+                      <div className="p-2 rounded-lg" style={{ backgroundColor: '#360e1d' }}>
                         <UserCheck className="text-white" size={28} />
                       </div>
                       <h3 className="text-2xl font-bold text-gray-900">Equal Participation</h3>
@@ -198,7 +211,7 @@ export default function AboutPage() {
                   {/* Diversity and Inclusion */}
                   <div className="md:col-span-2">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="bg-purple-600 p-2 rounded-lg">
+                      <div className="p-2 rounded-lg" style={{ backgroundColor: '#360e1d' }}>
                         <Heart className="text-white" size={28} />
                       </div>
                       <h3 className="text-2xl font-bold text-gray-900">Diversity and Inclusion</h3>
@@ -236,7 +249,7 @@ export default function AboutPage() {
       </section>
 
       {/* Four Major Themes Section */}
-      <section className="py-16" style={{ backgroundColor: '#5920a4' }}>
+      <section className="py-16" style={{ backgroundColor: '#360e1d' }}>
         <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

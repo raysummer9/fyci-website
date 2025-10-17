@@ -108,7 +108,7 @@ export default function Blog() {
                 <div className="p-6">
                   {/* Category Badge */}
                   <div className="mb-3">
-                    <span className="inline-block bg-purple-600/20 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
+                    <span className="inline-block bg-red-600/20 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
                       {post.category}
                     </span>
                   </div>
@@ -154,7 +154,7 @@ export default function Blog() {
           transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="text-center"
         >
-          <button className="inline-flex items-center gap-2 bg-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-purple-700 transition-all duration-300 hover:shadow-lg">
+          <button className="inline-flex items-center gap-2 bg-red-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-red-700 transition-all duration-300 hover:shadow-lg">
             Visit Our Blog
             <ArrowRight size={20} />
           </button>

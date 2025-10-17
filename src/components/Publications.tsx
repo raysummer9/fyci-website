@@ -47,8 +47,21 @@ export default function Publications() {
   ];
 
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
+    <section className="py-20 bg-white relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Subtle geometric shapes */}
+        <div className="absolute top-16 right-12 w-4 h-4 bg-gray-100 rounded-full animate-pulse"></div>
+        <div className="absolute top-32 left-12 w-3 h-3 bg-gray-50 rotate-45 animate-bounce"></div>
+        <div className="absolute bottom-16 right-16 w-6 h-6 bg-gray-100 rounded-full animate-pulse"></div>
+        <div className="absolute bottom-32 left-16 w-2 h-6 bg-gray-50 rotate-12 animate-bounce"></div>
+        
+        {/* Gradient orbs */}
+        <div className="absolute top-1/4 right-1/4 w-36 h-36 bg-gradient-to-br from-gray-50/25 to-transparent rounded-full blur-2xl"></div>
+        <div className="absolute bottom-1/4 left-1/4 w-24 h-24 bg-gradient-to-br from-gray-100/20 to-transparent rounded-full blur-xl"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <motion.div
           variants={containerVariants}
@@ -99,7 +112,7 @@ export default function Publications() {
                     <div className="flex-1 order-2 sm:order-1">
                       {/* Publication Type Badge */}
                       <div className="mb-3">
-                        <span className="inline-block bg-purple-600/20 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
+                        <span className="inline-block px-3 py-1 rounded-full text-sm font-medium" style={{ backgroundColor: '#360e1d20', color: '#360e1d' }}>
                           {publication.type}
                         </span>
                       </div>
@@ -155,7 +168,7 @@ export default function Publications() {
               </div>
 
               {/* Call to Action */}
-              <div className="bg-purple-50 rounded-xl p-8">
+              <div className="rounded-xl p-8" style={{ backgroundColor: '#f0fdf4' }}>
                 <h3 className="text-xl font-bold mb-3 text-gray-900">Access All Resources</h3>
                 <p className="text-gray-700 mb-6">
                   Browse our complete library of publications, research papers, and educational resources.

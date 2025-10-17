@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Search, Calendar, Vote, ArrowLeft } from 'lucide-react';
+import { Search, Calendar, Vote, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import Partners from '@/components/Partners';
 import Newsletter from '@/components/Newsletter';
@@ -153,8 +153,8 @@ export default function YouthPoliticalParticipationPage() {
                 <div className="p-6">
                   {/* Category Tag */}
                   <div className="flex items-center gap-2 mb-3">
-                    <Vote size={16} className="text-green-600" />
-                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                    <Vote size={16} className="text-purple-600" />
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
                       {project.category}
                     </span>
                   </div>
@@ -171,9 +171,18 @@ export default function YouthPoliticalParticipationPage() {
                   </h3>
                   
                   {/* Description */}
-                  <p className="text-gray-600 leading-relaxed text-left">
+                  <p className="text-gray-600 leading-relaxed text-left mb-4">
                     {project.description}
                   </p>
+                  
+                  {/* Read More Button */}
+                  <a
+                    href="#"
+                    className="inline-flex items-center gap-2 font-medium text-gray-900 hover:gap-3 transition-all duration-200 cursor-pointer"
+                  >
+                    Read more
+                    <ArrowRight size={16} />
+                  </a>
                 </div>
               </motion.div>
             ))}

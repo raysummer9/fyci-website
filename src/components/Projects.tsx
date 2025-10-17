@@ -134,7 +134,7 @@ export default function Projects() {
                     <div className="pl-6 pr-6">
                       {/* Programme Area Badge */}
                       <div className="mb-3">
-                        <span className="inline-block bg-purple-600/20 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
+                        <span className="inline-block bg-red-600/20 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
                           {project.programmeArea}
                         </span>
                       </div>
