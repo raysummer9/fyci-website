@@ -35,14 +35,16 @@ export default function YouTubeChannel() {
           <motion.h2 
             variants={itemVariants}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-6"
+            className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6"
+            style={{ color: '#360e1d' }}
           >
             Creativity and Inspiration
           </motion.h2>
           <motion.p 
             variants={itemVariants}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-2xl sm:text-3xl lg:text-4xl text-gray-600 max-w-5xl"
+            className="text-2xl sm:text-3xl lg:text-4xl max-w-5xl"
+            style={{ color: '#4a1a2a' }}
           >
             Subscribe to our YouTube channel to stay updated with our latest projects, success stories, and youth empowerment initiatives.
           </motion.p>
@@ -120,19 +122,23 @@ export default function YouTubeChannel() {
                 <h4 className="font-semibold text-gray-900 mb-2">What You'll Find:</h4>
                 <ul className="space-y-2 text-gray-600">
                   <li className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
+                    <div className="w-2 h-2 rounded-full"
+                    style={{ backgroundColor: '#360e1d' }}></div>
                     Project highlights and success stories
                   </li>
                   <li className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
+                    <div className="w-2 h-2 rounded-full"
+                    style={{ backgroundColor: '#360e1d' }}></div>
                     Workshop and training session footage
                   </li>
                   <li className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
+                    <div className="w-2 h-2 rounded-full"
+                    style={{ backgroundColor: '#360e1d' }}></div>
                     Participant testimonials and interviews
                   </li>
                   <li className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
+                    <div className="w-2 h-2 rounded-full"
+                    style={{ backgroundColor: '#360e1d' }}></div>
                     Behind-the-scenes content from our programs
                   </li>
                 </ul>

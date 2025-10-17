@@ -43,7 +43,7 @@ export default function ImpactNumbers() {
   };
 
   return (
-    <section className="py-16" style={{ backgroundColor: '#5920a4' }}>
+    <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
         <motion.div
           variants={containerVariants}
@@ -55,14 +55,16 @@ export default function ImpactNumbers() {
           <motion.h2 
             variants={itemVariants}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6"
+            className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6"
+            style={{ color: '#360e1d' }}
           >
             Our Impact
           </motion.h2>
           <motion.p 
             variants={itemVariants}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-2xl sm:text-3xl lg:text-4xl text-white/90 max-w-5xl"
+            className="text-2xl sm:text-3xl lg:text-4xl max-w-5xl"
+            style={{ color: '#4a1a2a' }}
           >
             Through our dedicated programs and initiatives, we've made a measurable difference in the lives of young people and communities across the region.
           </motion.p>
@@ -82,10 +84,11 @@ export default function ImpactNumbers() {
                 ease: [0.25, 0.46, 0.45, 0.94],
                 delay: index * 0.1 
               }}
-              className="text-left bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-all duration-300"
+              className="text-left rounded-2xl p-6 transition-all duration-300"
+              style={{ backgroundColor: '#e6e1e3' }}
             >
-              <div className="text-5xl sm:text-6xl font-black text-white mb-3">{stat.number}</div>
-              <div className="text-xl sm:text-2xl font-semibold text-white/90">{stat.label}</div>
+              <div className="text-5xl sm:text-6xl font-black mb-3" style={{ color: '#360e1d' }}>{stat.number}</div>
+              <div className="text-xl sm:text-2xl font-semibold" style={{ color: '#360e1d' }}>{stat.label}</div>
             </motion.div>
           ))}
         </div>

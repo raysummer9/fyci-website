@@ -83,14 +83,16 @@ export default function Projects() {
           <motion.h2 
             variants={itemVariants}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-6"
+            className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6"
+            style={{ color: '#360e1d' }}
           >
             Our Projects
           </motion.h2>
           <motion.p 
             variants={itemVariants}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-2xl sm:text-3xl lg:text-4xl text-gray-600 max-w-5xl"
+            className="text-2xl sm:text-3xl lg:text-4xl max-w-5xl"
+            style={{ color: '#4a1a2a' }}
           >
             Explore our latest initiatives and discover how we're making a difference in communities around the world through creative youth empowerment.
           </motion.p>
@@ -134,7 +136,8 @@ export default function Projects() {
                     <div className="pl-6 pr-6">
                       {/* Programme Area Badge */}
                       <div className="mb-3">
-                        <span className="inline-block bg-red-600/20 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
+                        <span className="inline-block px-3 py-1 rounded-full text-sm font-medium"
+                        style={{ backgroundColor: '#360e1d20', color: '#360e1d' }}>
                           {project.programmeArea}
                         </span>
                       </div>
