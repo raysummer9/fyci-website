@@ -62,7 +62,7 @@ export default function Footer() {
           >
             <div className="mb-4">
               <Image
-                src="/assets/fyci-logo3.png"
+                src="/assets/fyci-logo2.png"
                 alt="FYCI Logo"
                 width={120}
                 height={40}

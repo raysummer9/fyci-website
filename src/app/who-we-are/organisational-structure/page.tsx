@@ -45,7 +45,7 @@ export default function OrganisationalStructurePage() {
   ];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#5920a4' }}>
+    <div className="min-h-screen bg-white">
       {/* Header Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
@@ -57,7 +57,8 @@ export default function OrganisationalStructurePage() {
             <motion.h1 
               variants={itemVariants}
               transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6"
+              className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6"
+              style={{ color: '#360e1d' }}
             >
               Organisational Structure
             </motion.h1>
@@ -65,7 +66,8 @@ export default function OrganisationalStructurePage() {
             <motion.p 
               variants={itemVariants}
               transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="text-2xl sm:text-3xl lg:text-4xl text-white/90 mb-8 max-w-4xl"
+              className="text-2xl sm:text-3xl lg:text-4xl mb-8 max-w-4xl"
+              style={{ color: '#4a1a2a' }}
             >
               FYCI has three main organs that work together to empower young people and drive positive social change.
             </motion.p>
@@ -89,12 +91,12 @@ export default function OrganisationalStructurePage() {
                   key={organ.id}
                   variants={itemVariants}
                   transition={{ duration: 0.6, delay: index * 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  className="rounded-xl p-8"
+                  className="rounded-xl p-8 bg-gray-50"
                   whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
                 >
                   {/* Icon */}
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="p-4 rounded-lg" style={{ backgroundColor: '#8861be' }}>
+                    <div className="p-4 rounded-lg" style={{ backgroundColor: '#360e1d' }}>
                       <Image
                         src={organ.iconSrc}
                         alt={organ.title}
@@ -103,11 +105,11 @@ export default function OrganisationalStructurePage() {
                         className="filter brightness-0 invert w-14 h-14 object-contain"
                       />
                     </div>
-                    <h3 className="text-2xl font-bold text-white">{organ.title}</h3>
+                    <h3 className="text-2xl font-bold text-gray-900">{organ.title}</h3>
                   </div>
 
                   {/* Description */}
-                  <p className="text-white/90 text-lg leading-relaxed">
+                  <p className="text-gray-700 text-lg leading-relaxed">
                     {organ.description}
                   </p>
                 </motion.div>

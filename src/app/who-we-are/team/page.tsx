@@ -94,7 +94,8 @@ export default function TeamPage() {
             <motion.h1 
               variants={itemVariants}
               transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-6"
+              className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6"
+              style={{ color: '#360e1d' }}
             >
               Our Team
             </motion.h1>
@@ -102,7 +103,8 @@ export default function TeamPage() {
             <motion.p 
               variants={itemVariants}
               transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="text-2xl sm:text-3xl lg:text-4xl text-gray-600 max-w-4xl"
+              className="text-2xl sm:text-3xl lg:text-4xl max-w-4xl"
+              style={{ color: '#4a1a2a' }}
             >
               Meet the passionate individuals driving positive change and empowering young people across Africa through creative arts and civic engagement.
             </motion.p>
@@ -143,7 +145,7 @@ export default function TeamPage() {
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">
                     {member.name}
                   </h3>
-                  <p className="text-lg font-semibold mb-3" style={{ color: '#5920a4' }}>
+                  <p className="text-lg font-semibold mb-3" style={{ color: '#360e1d' }}>
                     {member.role}
                   </p>
                   <p className="text-gray-600 text-base leading-relaxed mb-4">
@@ -157,7 +159,7 @@ export default function TeamPage() {
                         href={member.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 rounded-lg bg-gray-100 hover:bg-purple-100 transition-colors duration-200"
+                        className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors duration-200"
                         aria-label={`${member.name}'s LinkedIn`}
                       >
                         <Image
@@ -174,7 +176,7 @@ export default function TeamPage() {
                         href={member.twitter}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 rounded-lg bg-gray-100 hover:bg-purple-100 transition-colors duration-200"
+                        className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors duration-200"
                         aria-label={`${member.name}'s Twitter`}
                       >
                         <Image

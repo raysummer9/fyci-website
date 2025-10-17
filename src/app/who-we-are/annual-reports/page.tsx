@@ -79,14 +79,16 @@ export default function AnnualReportsPage() {
             <motion.h1 
               variants={itemVariants}
               transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-6"
+              className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6"
+              style={{ color: '#360e1d' }}
             >
               Annual Reports
             </motion.h1>
             <motion.p 
               variants={itemVariants}
               transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="text-2xl sm:text-3xl lg:text-4xl text-gray-600 max-w-5xl"
+              className="text-2xl sm:text-3xl lg:text-4xl max-w-5xl"
+              style={{ color: '#4a1a2a' }}
             >
               Review our annual reports to see our impact, achievements, and financial transparency as we work to empower young people across Africa.
             </motion.p>

@@ -57,7 +57,8 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
           {/* Overview Heading */}
           <motion.h2 
-            className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-6"
+            className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6"
+            style={{ color: '#360e1d' }}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -67,7 +68,8 @@ export default function AboutPage() {
           
           {/* Overview Description */}
           <motion.p 
-            className="text-2xl sm:text-3xl lg:text-4xl text-gray-600 mb-12 max-w-4xl"
+            className="text-2xl sm:text-3xl lg:text-4xl mb-12 max-w-4xl"
+            style={{ color: '#4a1a2a' }}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -91,10 +93,11 @@ export default function AboutPage() {
                     className={`
                       whitespace-nowrap py-4 px-1 border-b-2 font-bold text-base transition-colors
                       ${activeTab === tab.id
-                        ? 'border-purple-600 text-purple-600'
+                        ? 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                       }
                     `}
+                    style={activeTab === tab.id ? { borderBottomColor: '#360e1d', color: '#360e1d' } : {}}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.5 + (index * 0.1), ease: [0.25, 0.46, 0.45, 0.94] }}
