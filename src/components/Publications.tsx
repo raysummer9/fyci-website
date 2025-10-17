@@ -73,14 +73,16 @@ export default function Publications() {
           <motion.h2 
             variants={itemVariants}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-6"
+            className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6"
+            style={{ color: '#360e1d' }}
           >
             Latest Publications
           </motion.h2>
           <motion.p 
             variants={itemVariants}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-2xl sm:text-3xl lg:text-4xl text-gray-600 max-w-5xl"
+            className="text-2xl sm:text-3xl lg:text-4xl max-w-5xl"
+            style={{ color: '#4a1a2a' }}
           >
             Explore our research, reports, and resources that document the impact of creativity and innovation in youth development.
           </motion.p>

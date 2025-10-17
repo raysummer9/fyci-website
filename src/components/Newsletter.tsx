@@ -30,7 +30,7 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20" style={{ backgroundColor: '#5920a4' }}>
+    <section className="py-12 sm:py-16 lg:py-20" style={{ backgroundColor: '#360e1d' }}>
       <div className="max-w-7xl mx-auto px-6 sm:px-0">
         <motion.div
           variants={containerVariants}
@@ -102,7 +102,8 @@ export default function Newsletter() {
                 </div>
                 <button
                   type="submit"
-                  className="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 whitespace-nowrap inline-flex items-center justify-center gap-2 w-full lg:w-auto"
+                  className="bg-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 whitespace-nowrap inline-flex items-center justify-center gap-2 w-full lg:w-auto"
+                  style={{ color: '#360e1d' }}
                 >
                   Subscribe
                   <Send size={16} />
