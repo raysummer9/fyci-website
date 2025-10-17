@@ -45,7 +45,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="py-16 sm:py-20" style={{ backgroundColor: '#5920a4' }}>
+    <footer className="py-16 sm:py-20 bg-white">
       <div className="max-w-7xl mx-auto px-6 sm:px-0">
         <motion.div
           variants={containerVariants}
@@ -69,7 +69,7 @@ export default function Footer() {
                 className="h-10 w-auto"
               />
             </div>
-            <p className="text-white/90 mb-6 leading-relaxed">
+            <p className="text-gray-600 mb-6 leading-relaxed">
               Empowering young people across Africa through creative initiatives, 
               leadership development, and community engagement.
             </p>
@@ -77,12 +77,12 @@ export default function Footer() {
             {/* Contact Info */}
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <Mail size={16} className="text-white/80" />
-                <span className="text-white/80 text-sm">contact@fyci.com</span>
+                <Mail size={16} className="text-gray-600" />
+                <span className="text-gray-600 text-sm">contact@fyci.com</span>
               </div>
               <div className="flex items-center gap-3">
-                <MapPin size={16} className="text-white/80" />
-                <span className="text-white/80 text-sm">LL4B Sunnyvale Estate, Abuja, Nigeria</span>
+                <MapPin size={16} className="text-gray-600" />
+                <span className="text-gray-600 text-sm">LL4B Sunnyvale Estate, Abuja, Nigeria</span>
               </div>
             </div>
           </motion.div>
@@ -92,13 +92,13 @@ export default function Footer() {
             variants={itemVariants}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.1 }}
           >
-            <h4 className="text-lg font-semibold text-white mb-4">Quick Links</h4>
+            <h4 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h4>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-white/80 hover:text-white transition-colors duration-200 text-sm"
+                    className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm"
                   >
                     {link.name}
                   </Link>
@@ -112,13 +112,13 @@ export default function Footer() {
             variants={itemVariants}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }}
           >
-            <h4 className="text-lg font-semibold text-white mb-4">Programme Areas</h4>
+            <h4 className="text-lg font-semibold text-gray-900 mb-4">Programme Areas</h4>
             <ul className="space-y-3">
               {programmeAreas.map((programme) => (
                 <li key={programme.name}>
                   <Link
                     href={programme.href}
-                    className="text-white/80 hover:text-white transition-colors duration-200 text-sm"
+                    className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm"
                   >
                     {programme.name}
                   </Link>
@@ -132,8 +132,8 @@ export default function Footer() {
             variants={itemVariants}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.3 }}
           >
-            <h4 className="text-lg font-semibold text-white mb-4">Stay Connected</h4>
-            <p className="text-white/80 text-sm mb-6">
+            <h4 className="text-lg font-semibold text-gray-900 mb-4">Stay Connected</h4>
+            <p className="text-gray-600 text-sm mb-6">
               Follow us on social media for updates and news.
             </p>
             
@@ -144,7 +144,7 @@ export default function Footer() {
                   <Link
                     key={social.name}
                     href={social.href}
-                    className="p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors duration-200"
+                    className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors duration-200"
                     aria-label={social.name}
                   >
                     <Image
@@ -152,7 +152,7 @@ export default function Footer() {
                       alt={social.name}
                       width={20}
                       height={20}
-                      className="w-5 h-5 filter brightness-0 invert"
+                      className="w-5 h-5"
                     />
                   </Link>
                 );
@@ -165,22 +165,22 @@ export default function Footer() {
         <motion.div
           variants={itemVariants}
           transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.4 }}
-          className="mt-12 pt-8 border-t border-white/20"
+          className="mt-12 pt-8 border-t border-gray-200"
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-white/70 text-sm">
+            <p className="text-gray-500 text-sm">
               © {new Date().getFullYear()} FYCI. All rights reserved.
             </p>
             <div className="flex gap-6">
               <Link
                 href="/privacy"
-                className="text-white/70 hover:text-white transition-colors duration-200 text-sm"
+                className="text-gray-500 hover:text-gray-900 transition-colors duration-200 text-sm"
               >
                 Privacy Policy
               </Link>
               <Link
                 href="/terms"
-                className="text-white/70 hover:text-white transition-colors duration-200 text-sm"
+                className="text-gray-500 hover:text-gray-900 transition-colors duration-200 text-sm"
               >
                 Terms of Service
               </Link>
