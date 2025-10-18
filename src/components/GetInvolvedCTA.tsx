@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Users, Heart, Target } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function GetInvolvedCTA() {
   const containerVariants = {
@@ -66,31 +67,6 @@ export default function GetInvolvedCTA() {
               there are many ways to make a difference in your community.
             </motion.p>
 
-            {/* Features */}
-            <motion.div 
-              variants={itemVariants}
-              transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8"
-            >
-              <div className="flex items-center gap-3">
-                <div className="bg-white/20 p-2 rounded-lg">
-                  <Users className="text-white" size={20} />
-                </div>
-                <span className="text-white font-medium">Volunteer</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="bg-white/20 p-2 rounded-lg">
-                  <Heart className="text-white" size={20} />
-                </div>
-                <span className="text-white font-medium">Partner</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="bg-white/20 p-2 rounded-lg">
-                  <Target className="text-white" size={20} />
-                </div>
-                <span className="text-white font-medium">Support</span>
-              </div>
-            </motion.div>
 
             {/* CTA Button */}
             <motion.div
@@ -99,8 +75,8 @@ export default function GetInvolvedCTA() {
             >
               <Link
                 href="/get-involved"
-                className="inline-flex items-center gap-3 bg-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all duration-300 hover:gap-4 shadow-lg hover:shadow-xl"
-                style={{ color: '#360e1d' }}
+                className="inline-flex items-center gap-3 text-white font-bold text-lg hover:gap-4 transition-all duration-300"
+                style={{ color: 'white' }}
               >
                 Join Our Mission
                 <ArrowRight size={20} />
@@ -118,15 +94,22 @@ export default function GetInvolvedCTA() {
             className="order-1 lg:order-2"
           >
             <div className="relative">
-              {/* Placeholder for image */}
-              <div className="w-full h-96 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/20">
-                <div className="text-center">
-                  <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Users className="text-white" size={40} />
-                  </div>
-                  <p className="text-white/80 text-lg font-medium">Image Placeholder</p>
-                  <p className="text-white/60 text-sm">Add your image here</p>
-                </div>
+              {/* Actual Image */}
+              <div className="relative w-full h-96 rounded-2xl overflow-hidden shadow-2xl">
+                <Image
+                  src="/img/img1.JPG"
+                  alt="Youth training session with hands-on activity"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
+                />
+                {/* Primary color gradient overlay */}
+                <div 
+                  className="absolute inset-0 rounded-2xl"
+                  style={{ 
+                    background: 'linear-gradient(135deg, rgba(54, 14, 29, 0.4) 0%, rgba(54, 14, 29, 0.2) 50%, rgba(54, 14, 29, 0.3) 100%)'
+                  }}
+                ></div>
               </div>
               
               {/* Decorative elements */}
