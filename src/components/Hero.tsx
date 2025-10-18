@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 export default function Hero() {
   const containerVariants = {
@@ -56,12 +57,14 @@ export default function Hero() {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="max-w-4xl"
-        >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Content Section */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="max-w-4xl"
+          >
           {/* Badge */}
           <motion.div 
             variants={itemVariants}
@@ -76,7 +79,7 @@ export default function Hero() {
           <motion.h1 
             variants={itemVariants}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight"
+            className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-6 leading-tight"
           >
             Promoting Youth Agency Through the{' '}
               Creative Arts
@@ -87,7 +90,7 @@ export default function Hero() {
           <motion.p 
             variants={itemVariants}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-2xl sm:text-3xl lg:text-4xl text-white/90 mb-8 leading-relaxed"
+            className="text-lg sm:text-xl lg:text-2xl text-white/90 mb-8 leading-relaxed"
           >
             Empowering young people to express themselves, build confidence, and create positive change in their communities through creative expression and artistic development.
           </motion.p>
@@ -106,7 +109,85 @@ export default function Hero() {
               <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
-        </motion.div>
+          </motion.div>
+
+          {/* Images Section */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="relative"
+          >
+            <div className="relative mt-8 lg:mt-0">
+              {/* First Image - Bottom */}
+              <motion.div
+                variants={itemVariants}
+                transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="relative w-full h-64 sm:h-80 lg:h-96 rounded-2xl overflow-hidden shadow-2xl"
+                style={{ border: '4px solid white' }}
+                whileHover={{ 
+                  scale: 1.02,
+                  rotateY: 2,
+                  transition: { duration: 0.3 }
+                }}
+                animate={{ 
+                  y: [0, -5, 0],
+                  transition: { 
+                    duration: 4, 
+                    repeat: Infinity, 
+                    ease: "easeInOut" 
+                  }
+                }}
+              >
+                <Image
+                  src="/img/img1.JPG"
+                  alt="Youth training session"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
+                />
+                {/* Decorative overlay */}
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-white/20 rounded-full blur-sm"></div>
+                <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-white/30 rounded-full blur-sm"></div>
+              </motion.div>
+
+              {/* Second Image - Bottom Right (Overlapping) */}
+              <motion.div
+                variants={itemVariants}
+                transition={{ duration: 0.6, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="absolute -bottom-6 -right-6 sm:-bottom-8 sm:-right-8 lg:-bottom-12 lg:-right-12 w-3/4 sm:w-4/5 h-48 sm:h-64 lg:h-80 rounded-2xl overflow-hidden shadow-2xl"
+                style={{ border: '4px solid white' }}
+                whileHover={{ 
+                  scale: 1.05,
+                  rotateY: -3,
+                  z: 20,
+                  transition: { duration: 0.3 }
+                }}
+                animate={{ 
+                  y: [0, 8, 0],
+                  x: [0, -3, 0],
+                  transition: { 
+                    duration: 3.5, 
+                    repeat: Infinity, 
+                    ease: "easeInOut",
+                    delay: 1
+                  }
+                }}
+              >
+                <Image
+                  src="/img/img3.jpg"
+                  alt="Creative workshop activity"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
+                />
+                {/* Decorative overlay */}
+                <div className="absolute -top-2 -left-2 w-10 h-10 bg-white/15 rounded-full blur-sm"></div>
+                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-white/25 rounded-full blur-sm"></div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

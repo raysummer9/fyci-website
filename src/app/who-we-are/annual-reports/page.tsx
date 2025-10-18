@@ -3,6 +3,9 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, FileText, ExternalLink, Download } from 'lucide-react';
 import GetInvolvedCTA from '@/components/GetInvolvedCTA';
+import Partners from '@/components/Partners';
+import Newsletter from '@/components/Newsletter';
+import Footer from '@/components/Footer';
 
 export default function AnnualReportsPage() {
   const containerVariants = {
@@ -161,6 +164,15 @@ export default function AnnualReportsPage() {
 
       {/* Get Involved CTA Section */}
       <GetInvolvedCTA />
+
+      {/* Partners Section */}
+      <Partners />
+
+      {/* Newsletter Section */}
+      <Newsletter />
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
