@@ -116,14 +116,20 @@ export default function Navbar() {
                                       <h4 className="font-semibold text-sm text-gray-900 mb-2">Latest Programme</h4>
                                       <div className="text-xs text-gray-600 mb-2">Programme Title</div>
                                       <div className="w-full h-20 bg-gray-200 rounded mb-3"></div>
-                                      <Link href={`/programme-areas/${hoveredSubItem.toLowerCase().replace(/\s+/g, '-')}`} className="inline-block px-3 py-1 bg-purple-600 text-white text-xs rounded hover:bg-purple-700 transition-colors cursor-pointer">
+                                      <Link href={`/programme-areas/${hoveredSubItem.toLowerCase().replace(/\s+/g, '-')}`} className="inline-block px-3 py-1 text-white text-xs rounded transition-colors cursor-pointer"
+                                        style={{ backgroundColor: '#360e1d' }}
+                                        onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#4a1a2a'}
+                                        onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#360e1d'}>
                                         Access Programme
                                       </Link>
                                     </div>
                                     <div className="bg-gray-50 p-4 rounded-lg">
                                       <h4 className="font-semibold text-sm text-gray-900 mb-2">Latest Blog Post</h4>
                                       <div className="text-xs text-gray-600 mb-2">Blog post title related to {hoveredSubItem}</div>
-                                      <Link href={`/blog/${hoveredSubItem.toLowerCase().replace(/\s+/g, '-')}`} className="text-xs text-purple-600 hover:text-purple-700 cursor-pointer">
+                                      <Link href={`/blog/${hoveredSubItem.toLowerCase().replace(/\s+/g, '-')}`} className="text-xs cursor-pointer transition-colors"
+                                        style={{ color: '#360e1d' }}
+                                        onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#4a1a2a'}
+                                        onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#360e1d'}>
                                         Read More →
                                       </Link>
                                     </div>
@@ -171,7 +177,10 @@ export default function Navbar() {
           {/* Mobile menu button */}
           <button
             onClick={toggleMenu}
-            className="md:hidden p-2 rounded-md text-white hover:text-purple-200 hover:bg-white/10 transition-colors"
+            className="md:hidden p-2 rounded-md text-white hover:bg-white/10 transition-colors"
+            style={{ color: 'white' }}
+            onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#e6e1e3'}
+            onMouseLeave={(e) => (e.target as HTMLElement).style.color = 'white'}
             aria-label="Toggle menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}

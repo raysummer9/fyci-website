@@ -121,7 +121,7 @@ export default function AnnualReportsPage() {
                     <div className="flex-1 order-2 sm:order-1">
                       {/* Report Type Badge */}
                       <div className="mb-3">
-                          <span className="inline-block px-3 py-1 rounded-full text-sm font-medium" style={{ backgroundColor: '#360e1d20', color: '#360e1d' }}>
+                          <span className="inline-block px-3 py-1 rounded-full text-sm font-medium" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}>
                           {report.type}
                         </span>
                       </div>

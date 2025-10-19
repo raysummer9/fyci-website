@@ -158,7 +158,7 @@ export default function AntiCorruptionPage() {
                   {/* Category Tag */}
                   <div className="flex items-center gap-2 mb-3">
                     <Shield size={16} style={{ color: '#360e1d' }} />
-                    <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#f0fdf4', color: '#360e1d' }}>
+                    <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}>
                       {project.category}
                     </span>
                   </div>

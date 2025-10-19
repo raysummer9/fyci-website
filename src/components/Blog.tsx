@@ -110,7 +110,7 @@ export default function Blog() {
                 <div className="p-6">
                   {/* Category Badge */}
                   <div className="mb-3">
-                    <span className="inline-block bg-red-600/20 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
+                    <span className="inline-block px-3 py-1 rounded-full text-sm font-medium" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}>
                       {post.category}
                     </span>
                   </div>
@@ -156,7 +156,10 @@ export default function Blog() {
           transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="text-center"
         >
-          <button className="inline-flex items-center gap-2 bg-red-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-red-700 transition-all duration-300 hover:shadow-lg">
+          <button className="inline-flex items-center gap-2 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg"
+            style={{ backgroundColor: '#360e1d' }}
+            onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#4a1a2a'}
+            onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#360e1d'}>
             Visit Our Blog
             <ArrowRight size={20} />
           </button>

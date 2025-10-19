@@ -87,18 +87,7 @@ export default function ProgrammeAreasPage() {
   };
 
   const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'Gender Rights':
-        return 'bg-purple-100 text-purple-700';
-      case 'Youth Agency':
-        return 'bg-purple-100 text-purple-700';
-      case 'Political Participation':
-        return 'bg-purple-100 text-purple-700';
-      case 'Anti-Corruption':
-        return 'bg-purple-100 text-purple-700';
-      default:
-        return 'bg-purple-100 text-purple-700';
-    }
+    return { backgroundColor: '#e6e1e3', color: '#360e1d' };
   };
 
   return (
@@ -139,13 +128,14 @@ export default function ProgrammeAreasPage() {
                 placeholder="Search projects..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent text-lg placeholder-gray-500"
+                className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent text-lg placeholder-gray-500"
+                style={{ '--tw-ring-color': '#360e1d' } as React.CSSProperties}
               />
             </div>
             
             {/* Filters */}
             <div className="flex flex-wrap gap-2">
-              <button className="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg font-medium hover:bg-purple-200 transition-colors">
+              <button className="px-4 py-2 rounded-lg font-medium transition-colors" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d4d0d1'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e6e1e3'}>
                 All Categories
               </button>
               <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
@@ -199,8 +189,8 @@ export default function ProgrammeAreasPage() {
                   <div className="p-6">
                     {/* Category Tag */}
                     <div className="flex items-center gap-2 mb-3">
-                      <CategoryIcon size={16} />
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(project.category)}`}>
+                      <CategoryIcon size={16} style={{ color: '#360e1d' }} />
+                      <span className="px-3 py-1 rounded-full text-xs font-medium" style={getCategoryColor(project.category)}>
                         {project.category}
                       </span>
                     </div>

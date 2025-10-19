@@ -82,7 +82,10 @@ export default function GenderRightsPage() {
           >
             <Link 
               href="/programme-areas" 
-              className="inline-flex items-center text-purple-600 hover:text-purple-700 mb-6 transition-colors"
+              className="inline-flex items-center mb-6 transition-colors"
+              style={{ color: '#360e1d' }}
+              onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#4a1a2a'}
+              onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#360e1d'}
             >
               <ArrowLeft size={20} className="mr-2" />
               Back to Programme Areas
@@ -153,8 +156,8 @@ export default function GenderRightsPage() {
                 <div className="p-6">
                   {/* Category Tag */}
                   <div className="flex items-center gap-2 mb-3">
-                    <Heart size={16} className="text-purple-600" />
-                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
+                    <Heart size={16} style={{ color: '#360e1d' }} />
+                    <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}>
                       {project.category}
                     </span>
                   </div>
