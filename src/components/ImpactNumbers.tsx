@@ -71,7 +71,7 @@ export default function ImpactNumbers() {
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
             <motion.div
               key={index}
@@ -87,8 +87,8 @@ export default function ImpactNumbers() {
               className="text-left rounded-2xl p-6 transition-all duration-300"
               style={{ backgroundColor: '#e6e1e3' }}
             >
-              <div className="text-5xl sm:text-6xl font-black mb-3" style={{ color: '#360e1d' }}>{stat.number}</div>
-              <div className="text-xl sm:text-2xl font-semibold" style={{ color: '#360e1d' }}>{stat.label}</div>
+              <div className="text-3xl sm:text-5xl lg:text-6xl font-black mb-3 text-gray-900">{stat.number}</div>
+              <div className="text-sm sm:text-xl lg:text-2xl font-semibold text-gray-600 leading-tight">{stat.label}</div>
             </motion.div>
           ))}
         </div>
