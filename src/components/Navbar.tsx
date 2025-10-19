@@ -64,13 +64,22 @@ export default function Navbar() {
                 key={link.href || link.label}
                 className="relative"
               >
-                <button
-                  onClick={() => setActiveDropdown(activeDropdown === link.label ? null : link.label)}
-                  className="px-4 py-2 text-base font-bold text-white rounded-md flex items-center gap-1 cursor-pointer"
-                >
-                  {link.label}
-                  {link.submenu && <ChevronDown size={16} />}
-                </button>
+                {link.submenu ? (
+                  <button
+                    onClick={() => setActiveDropdown(activeDropdown === link.label ? null : link.label)}
+                    className="px-4 py-2 text-base font-bold text-white rounded-md flex items-center gap-1 cursor-pointer"
+                  >
+                    {link.label}
+                    <ChevronDown size={16} />
+                  </button>
+                ) : (
+                  <Link
+                    href={link.href!}
+                    className="px-4 py-2 text-base font-bold text-white rounded-md flex items-center gap-1 cursor-pointer hover:bg-white/10 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                )}
                 
                 {link.submenu && activeDropdown === link.label && (
                   <div 
@@ -208,20 +217,28 @@ export default function Navbar() {
               <div className="space-y-2">
                 {navLinks.map((link) => (
                   <div key={link.href || link.label}>
-                    <button
-                      onClick={() => toggleSubmenu(link.label)}
-                      className="flex items-center justify-between w-full px-4 py-3 text-base font-bold text-white rounded-lg hover:bg-white/10 transition-colors"
-                    >
-                      <span>{link.label}</span>
-                      {link.submenu && (
+                    {link.submenu ? (
+                      <button
+                        onClick={() => toggleSubmenu(link.label)}
+                        className="flex items-center justify-between w-full px-4 py-3 text-base font-bold text-white rounded-lg hover:bg-white/10 transition-colors"
+                      >
+                        <span>{link.label}</span>
                         <ChevronDown
                           size={20}
                           className={`transform transition-transform text-white ${
                             openSubmenu === link.label ? 'rotate-180' : ''
                           }`}
                         />
-                      )}
-                    </button>
+                      </button>
+                    ) : (
+                      <Link
+                        href={link.href!}
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center justify-between w-full px-4 py-3 text-base font-bold text-white rounded-lg hover:bg-white/10 transition-colors"
+                      >
+                        <span>{link.label}</span>
+                      </Link>
+                    )}
                     {link.submenu && openSubmenu === link.label && (
                       <div className="pl-4 space-y-1 mt-2">
                         {link.submenu.map((subLink) => {
