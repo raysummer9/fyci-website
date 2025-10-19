@@ -242,15 +242,13 @@ export default function Navbar() {
                     {link.submenu && openSubmenu === link.label && (
                       <div className="pl-4 space-y-1 mt-2">
                         {link.submenu.map((subLink) => {
-                          const Icon = subLink.icon;
                           return (
                             <Link
                               key={subLink.href}
                               href={subLink.href}
-                              className="flex items-center gap-3 px-4 py-3 text-base font-semibold rounded-lg transition-colors text-white/90 hover:bg-white/10 hover:text-white"
+                              className="block px-4 py-3 text-base font-semibold rounded-lg transition-colors text-white/90 hover:bg-white/10 hover:text-white"
                               onClick={() => setIsOpen(false)}
                             >
-                              <Icon size={20} />
                               {subLink.label}
                             </Link>
                           );
