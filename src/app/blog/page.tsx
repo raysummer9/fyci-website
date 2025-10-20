@@ -198,15 +198,77 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Page Header */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
+            <motion.h1 
+              className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6"
+              style={{ color: '#360e1d' }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              Our Blog
+            </motion.h1>
+            <motion.p 
+              className="text-xl text-gray-600 max-w-4xl"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              Explore insights, stories, and perspectives on youth development, creative expression, and social change from our community and partners.
+            </motion.p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Main Content */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-3 gap-12 items-start">
+          <motion.div 
+            className="grid lg:grid-cols-3 gap-12 items-start"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1, margin: "-50px" }}
+          >
             
             {/* Posts Section - Left Column */}
-            <div className="lg:col-span-2 space-y-16">
-              {/* Featured Post Card */}
-              <div className="bg-white rounded-xl shadow-lg p-8">
+            <motion.div 
+              className="lg:col-span-2 space-y-16"
+              variants={itemVariants}
+            >
+              {/* Featured Post Section */}
+              <motion.div
+                variants={itemVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.1, margin: "-50px" }}
+              >
+                <motion.h2 
+                  className="text-3xl font-bold text-gray-900 mb-8"
+                  variants={itemVariants}
+                >
+                  Featured Post
+                </motion.h2>
+                
+                {/* Featured Post Card */}
+                <motion.div 
+                  className="bg-white rounded-xl shadow-lg p-8"
+                  variants={itemVariants}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.1, margin: "-50px" }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
                 <article className="space-y-6">
                   {/* Featured Image - First */}
                   <div className="relative w-full h-64 lg:h-80 rounded-lg overflow-hidden">
@@ -283,16 +345,34 @@ export default function BlogPage() {
                     </Link>
                   </div>
                 </article>
-              </div>
+                </motion.div>
+              </motion.div>
 
               {/* Blog Grid Section */}
-              <section>
+              <motion.section
+                variants={itemVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.1, margin: "-50px" }}
+              >
+                <motion.h2 
+                  className="text-3xl font-bold text-gray-900 mb-8"
+                  variants={itemVariants}
+                >
+                  All Posts
+                </motion.h2>
+                
                 <div className="w-full">
                   <div className="space-y-6">
                     {currentPosts.map((post, index) => (
-                      <article
+                      <motion.article
                         key={post.id}
                         className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                        variants={itemVariants}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.1, margin: "-50px" }}
+                        transition={{ duration: 0.6, delay: index * 0.1 }}
                       >
                         <Link href={`/blog/${post.slug}`} className="flex flex-col sm:flex-row sm:items-stretch">
                           {/* Post Image - Left Side */}
@@ -365,12 +445,19 @@ export default function BlogPage() {
               </div>
             </div>
                         </Link>
-          </article>
+                      </motion.article>
                     ))}
                   </div>
 
                   {/* Pagination */}
-                  <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-4 mt-12 px-4">
+                  <motion.div 
+                    className="flex flex-wrap justify-center items-center gap-2 sm:gap-4 mt-12 px-4"
+                    variants={itemVariants}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.1, margin: "-50px" }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                  >
                     <button
                       onClick={() => handlePageChange(currentPage - 1)}
                       disabled={currentPage === 1}
@@ -406,14 +493,20 @@ export default function BlogPage() {
                     >
                       Next
                       <ChevronRight size={16} />
-                </button>
-              </div>
+                    </button>
+                  </motion.div>
                 </div>
-              </section>
-            </div>
+              </motion.section>
+            </motion.div>
 
             {/* Sidebar - Right Column */}
-            <aside className="lg:col-span-1">
+            <motion.aside 
+              className="lg:col-span-1"
+              variants={itemVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.1, margin: "-50px" }}
+            >
               <div className="space-y-12">
                 
                 {/* Recent Posts */}
@@ -449,6 +542,27 @@ export default function BlogPage() {
             </div>
                         </Link>
           </article>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Categories */}
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 mb-6 uppercase tracking-wide">
+                    Categories
+                  </h2>
+                  
+                  <div className="space-y-3">
+                    {categories.map((category, index) => (
+                      <div key={category.name}>
+                        <Link
+                          href={`/blog/category/${category.name.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and')}`}
+                          className="flex items-center justify-between py-2 hover:text-gray-600 transition-colors"
+                        >
+                          <span className="text-gray-900 font-medium">{category.name}</span>
+                          <span className="text-gray-500 text-sm">({category.count})</span>
+                        </Link>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -507,30 +621,9 @@ export default function BlogPage() {
                     ))}
                   </div>
                 </div>
-
-                {/* Categories */}
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900 mb-6 uppercase tracking-wide">
-                    Categories
-                  </h2>
-                  
-                  <div className="space-y-3">
-                    {categories.map((category, index) => (
-                      <div key={category.name}>
-                        <Link
-                          href={`/blog/category/${category.name.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and')}`}
-                          className="flex items-center justify-between py-2 hover:text-gray-600 transition-colors"
-                        >
-                          <span className="text-gray-900 font-medium">{category.name}</span>
-                          <span className="text-gray-500 text-sm">({category.count})</span>
-                        </Link>
-                      </div>
-                    ))}
-                  </div>
-                </div>
               </div>
-            </aside>
-          </div>
+            </motion.aside>
+          </motion.div>
         </div>
       </section>
 
