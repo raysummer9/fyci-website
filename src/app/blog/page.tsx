@@ -201,61 +201,41 @@ export default function BlogPage() {
       {/* Page Header */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.h1 
+            className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6"
+            style={{ color: '#360e1d' }}
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
-            <motion.h1 
-              className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6"
-              style={{ color: '#360e1d' }}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              Our Blog
-            </motion.h1>
-            <motion.p 
-              className="text-xl text-gray-600 max-w-4xl"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.8, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              Explore insights, stories, and perspectives on youth development, creative expression, and social change from our community and partners.
-            </motion.p>
-          </motion.div>
+            Our Blog
+          </motion.h1>
+          
+          <motion.p 
+            className="text-xl text-gray-600 max-w-4xl"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
+            Explore insights, stories, and perspectives on youth development, creative expression, and social change from our community and partners.
+          </motion.p>
         </div>
       </section>
 
       {/* Main Content */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
-          <motion.div 
-            className="grid lg:grid-cols-3 gap-12 items-start"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1, margin: "-50px" }}
-          >
+          <div className="grid lg:grid-cols-3 gap-12 items-start">
             
             {/* Posts Section - Left Column */}
-            <motion.div 
-              className="lg:col-span-2 space-y-16"
-              variants={itemVariants}
-            >
+            <div className="lg:col-span-2 space-y-16">
               {/* Featured Post Section */}
-              <motion.div
-                variants={itemVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.1, margin: "-50px" }}
-              >
+              <div>
                 <motion.h2 
                   className="text-3xl font-bold text-gray-900 mb-8"
-                  variants={itemVariants}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
                 >
                   Featured Post
                 </motion.h2>
@@ -263,11 +243,9 @@ export default function BlogPage() {
                 {/* Featured Post Card */}
                 <motion.div 
                   className="bg-white rounded-xl shadow-lg p-8"
-                  variants={itemVariants}
                   initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.1, margin: "-50px" }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
                 >
                 <article className="space-y-6">
                   {/* Featured Image - First */}
@@ -346,18 +324,21 @@ export default function BlogPage() {
                   </div>
                 </article>
                 </motion.div>
-              </motion.div>
+              </div>
 
               {/* Blog Grid Section */}
               <motion.section
-                variants={itemVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.1, margin: "-50px" }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+                viewport={{ once: false, amount: 0.1, margin: "-100px" }}
               >
                 <motion.h2 
                   className="text-3xl font-bold text-gray-900 mb-8"
-                  variants={itemVariants}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  viewport={{ once: false, amount: 0.1, margin: "-100px" }}
                 >
                   All Posts
                 </motion.h2>
@@ -368,11 +349,10 @@ export default function BlogPage() {
                       <motion.article
                         key={post.id}
                         className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-                        variants={itemVariants}
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.1, margin: "-50px" }}
-                        transition={{ duration: 0.6, delay: index * 0.1 }}
+                        viewport={{ once: false, amount: 0.1, margin: "-100px" }}
+                        transition={{ duration: 0.8, delay: 0.2 + (index * 0.1), ease: [0.25, 0.46, 0.45, 0.94] }}
                       >
                         <Link href={`/blog/${post.slug}`} className="flex flex-col sm:flex-row sm:items-stretch">
                           {/* Post Image - Left Side */}
@@ -452,11 +432,10 @@ export default function BlogPage() {
                   {/* Pagination */}
                   <motion.div 
                     className="flex flex-wrap justify-center items-center gap-2 sm:gap-4 mt-12 px-4"
-                    variants={itemVariants}
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.1, margin: "-50px" }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
+                    viewport={{ once: false, amount: 0.1, margin: "-100px" }}
+                    transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                   >
                     <button
                       onClick={() => handlePageChange(currentPage - 1)}
@@ -497,15 +476,14 @@ export default function BlogPage() {
                   </motion.div>
                 </div>
               </motion.section>
-            </motion.div>
+            </div>
 
             {/* Sidebar - Right Column */}
             <motion.aside 
               className="lg:col-span-1"
-              variants={itemVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.1, margin: "-50px" }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               <div className="space-y-12">
                 
@@ -623,7 +601,7 @@ export default function BlogPage() {
                 </div>
               </div>
             </motion.aside>
-          </motion.div>
+          </div>
         </div>
       </section>
 
