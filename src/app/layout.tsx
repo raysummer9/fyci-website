@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import ConditionalNavbar from '@/components/ConditionalNavbar';
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${raleway.variable} antialiased`}>
-        <Navbar />
+        <ConditionalNavbar />
         {children}
       </body>
     </html>
