@@ -32,6 +32,8 @@ export default function ProgrammeForm({ programme, isEditing = false, programmeA
     content: programme?.content || '',
     featured_image: programme?.featured_image || '',
     status: programme?.status || 'draft',
+    start_date: programme?.start_date ? programme.start_date.split('T')[0] : '',
+    end_date: programme?.end_date ? programme.end_date.split('T')[0] : '',
     featured: programme?.featured || false,
     sort_order: programme?.sort_order || 0,
   })
@@ -84,13 +86,17 @@ export default function ProgrammeForm({ programme, isEditing = false, programmeA
       const url = isEditing ? `/admin/api/programmes/${programme?.id}` : '/admin/api/programmes'
       const method = isEditing ? 'PUT' : 'POST'
 
+      const submitData = {
+        ...formData,
+        programme_area_id: programmeAreaId,
+        start_date: formData.start_date ? new Date(formData.start_date).toISOString() : null,
+        end_date: formData.end_date ? new Date(formData.end_date).toISOString() : null,
+      }
+
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          programme_area_id: programmeAreaId
-        })
+        body: JSON.stringify(submitData)
       })
 
       const result = await response.json()
@@ -117,14 +123,18 @@ export default function ProgrammeForm({ programme, isEditing = false, programmeA
       const url = isEditing ? `/admin/api/programmes/${programme?.id}` : '/admin/api/programmes'
       const method = isEditing ? 'PUT' : 'POST'
 
+      const submitData = {
+        ...formData,
+        status: 'draft',
+        programme_area_id: programmeAreaId,
+        start_date: formData.start_date ? new Date(formData.start_date).toISOString() : null,
+        end_date: formData.end_date ? new Date(formData.end_date).toISOString() : null,
+      }
+
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          status: 'draft',
-          programme_area_id: programmeAreaId
-        })
+        body: JSON.stringify(submitData)
       })
 
       const result = await response.json()
@@ -279,8 +289,37 @@ export default function ProgrammeForm({ programme, isEditing = false, programmeA
                 >
                   <option value="draft">Draft</option>
                   <option value="published">Published</option>
+                  <option value="ongoing">Ongoing</option>
+                  <option value="completed">Completed</option>
                   <option value="archived">Archived</option>
                 </select>
+              </CardContent>
+            </Card>
+
+            {/* Programme Dates */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Programme Dates</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="start_date">Start Date</Label>
+                  <Input
+                    id="start_date"
+                    type="date"
+                    value={formData.start_date}
+                    onChange={(e) => handleInputChange('start_date', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="end_date">End Date</Label>
+                  <Input
+                    id="end_date"
+                    type="date"
+                    value={formData.end_date}
+                    onChange={(e) => handleInputChange('end_date', e.target.value)}
+                  />
+                </div>
               </CardContent>
             </Card>
 

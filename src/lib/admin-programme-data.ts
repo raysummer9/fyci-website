@@ -21,7 +21,9 @@ export interface Programme {
   content?: string
   featured_image?: string
   programme_area_id: string
-  status: 'draft' | 'published' | 'archived'
+  status: 'draft' | 'published' | 'archived' | 'ongoing' | 'completed'
+  start_date?: string
+  end_date?: string
   featured: boolean
   sort_order: number
   created_by?: string

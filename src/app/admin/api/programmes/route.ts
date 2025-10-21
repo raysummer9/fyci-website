@@ -66,6 +66,8 @@ export async function POST(request: NextRequest) {
       featured_image,
       programme_area_id,
       status,
+      start_date,
+      end_date,
       featured,
       sort_order
     } = body
@@ -73,6 +75,13 @@ export async function POST(request: NextRequest) {
     if (!title || !slug || !programme_area_id) {
       return NextResponse.json({ 
         error: 'Title, slug, and programme area are required' 
+      }, { status: 400 })
+    }
+
+    // Validate status
+    if (status && !['draft', 'published', 'ongoing', 'completed', 'archived'].includes(status)) {
+      return NextResponse.json({ 
+        error: 'Invalid status. Must be "draft", "published", "ongoing", "completed", or "archived"' 
       }, { status: 400 })
     }
 
@@ -95,6 +104,8 @@ export async function POST(request: NextRequest) {
       featured_image: featured_image || null,
       programme_area_id,
       status: status || 'draft',
+      start_date: start_date || null,
+      end_date: end_date || null,
       featured: featured || false,
       sort_order: sort_order || 0,
       created_by: session.user.id
