@@ -3,6 +3,7 @@ import { getCurrentUser, checkAuth } from '@/lib/auth'
 import { getProgrammeArea } from '@/lib/admin-programme-data'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
+import ProgrammeForm from '@/components/admin/ProgrammeForm'
 
 interface NewProgrammePageProps {
   params: Promise<{
@@ -45,11 +46,7 @@ export default async function NewProgramme({ params }: NewProgrammePageProps) {
         </div>
       </div>
 
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">
-          Programme creation form coming soon...
-        </p>
-      </div>
+      <ProgrammeForm programmeAreaId={id} />
     </div>
   )
 }

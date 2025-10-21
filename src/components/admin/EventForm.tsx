@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -8,69 +8,40 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
-import { Badge } from '@/components/ui/badge'
-import { BlogWithDetails, Tag } from '@/lib/admin-blog-data'
-import { Upload, Plus, X, Save, Eye, FileText } from 'lucide-react'
+import { Event } from '@/lib/admin-programme-data'
+import { Upload, X, Save, FileText } from 'lucide-react'
 import RichTextEditor from './RichTextEditor'
 
-interface Category {
-  id: string
-  name: string
-  slug: string
-}
-
-interface BlogFormProps {
-  blog?: BlogWithDetails | null
+interface EventFormProps {
+  event?: Event | null
   isEditing?: boolean
+  programmeAreaId: string
 }
 
-export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
+export default function EventForm({ event, isEditing = false, programmeAreaId }: EventFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isDraftSaving, setIsDraftSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
-  const [categories, setCategories] = useState<Category[]>([])
-  const [tags, setTags] = useState<Tag[]>([])
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
-  const [newTagName, setNewTagName] = useState('')
 
   const [formData, setFormData] = useState({
-    title: blog?.title || '',
-    slug: blog?.slug || '',
-    excerpt: blog?.excerpt || '',
-    content: blog?.content || '',
-    featured_image: blog?.featured_image || '',
-    category_id: blog?.category_id || '',
-    status: blog?.status || 'draft',
-    featured: blog?.featured || false,
-    read_time: blog?.read_time || null,
-    meta_title: blog?.meta_title || '',
-    meta_description: blog?.meta_description || '',
+    title: event?.title || '',
+    slug: event?.slug || '',
+    description: event?.description || '',
+    content: event?.content || '',
+    featured_image: event?.featured_image || '',
+    status: event?.status || 'upcoming',
+    start_date: event?.start_date ? event.start_date.split('T')[0] + 'T' + event.start_date.split('T')[1].slice(0, 5) : '',
+    end_date: event?.end_date ? event.end_date.split('T')[0] + 'T' + event.end_date.split('T')[1].slice(0, 5) : '',
+    location: event?.location || '',
+    venue: event?.venue || '',
+    is_online: event?.is_online || false,
+    meeting_url: event?.meeting_url || '',
+    registration_url: event?.registration_url || '',
+    max_attendees: event?.max_attendees || '',
+    featured: event?.featured || false,
   })
-
-  useEffect(() => {
-    loadInitialData()
-    if (blog?.tags) {
-      setSelectedTags(blog.tags.map(tag => tag.id))
-    }
-  }, [])
-
-  const loadInitialData = async () => {
-    try {
-      // Load categories (programme areas)
-      const categoriesResponse = await fetch('/admin/api/categories')
-      const categoriesData = await categoriesResponse.json()
-      setCategories(categoriesData || [])
-
-      // Load tags
-      const tagsResponse = await fetch('/admin/api/tags')
-      const tagsData = await tagsResponse.json()
-      setTags(tagsData || [])
-    } catch (error) {
-      console.error('Error loading initial data:', error)
-    }
-  }
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -111,66 +82,39 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
     }
   }
 
-  const handleCreateTag = async () => {
-    if (!newTagName.trim()) return
-
-    try {
-      const response = await fetch('/admin/api/tags', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newTagName.trim() })
-      })
-
-      const result = await response.json()
-
-      if (response.ok) {
-        setTags(prev => [...prev, result])
-        setSelectedTags(prev => [...prev, result.id])
-        setNewTagName('')
-      } else {
-        setError(result.error || 'Failed to create tag')
-      }
-    } catch (error) {
-      setError('Error creating tag')
-    }
-  }
-
-  const handleTagSelect = (tagId: string) => {
-    if (selectedTags.includes(tagId)) {
-      setSelectedTags(prev => prev.filter(id => id !== tagId))
-    } else {
-      setSelectedTags(prev => [...prev, tagId])
-    }
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     setError(null)
 
     try {
-      const url = isEditing ? `/admin/api/blogs/${blog?.id}` : '/admin/api/blogs'
+      const url = isEditing ? `/admin/api/events/${event?.id}` : '/admin/api/events'
       const method = isEditing ? 'PUT' : 'POST'
+
+      const submitData = {
+        ...formData,
+        programme_area_id: programmeAreaId,
+        start_date: formData.start_date ? new Date(formData.start_date).toISOString() : null,
+        end_date: formData.end_date ? new Date(formData.end_date).toISOString() : null,
+        max_attendees: formData.max_attendees ? parseInt(formData.max_attendees) : null,
+      }
 
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          tag_ids: selectedTags
-        })
+        body: JSON.stringify(submitData)
       })
 
       const result = await response.json()
 
       if (response.ok) {
-        router.push('/admin/blogs')
+        router.push(`/admin/programme-areas/${programmeAreaId}`)
         router.refresh()
       } else {
-        setError(result.error || result.details || 'Failed to save blog post')
+        setError(result.error || result.details || 'Failed to save event')
       }
     } catch (error) {
-      console.error('Error saving blog:', error)
+      console.error('Error saving event:', error)
       setError('An unexpected error occurred. Please try again.')
     } finally {
       setIsSubmitting(false)
@@ -182,25 +126,28 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
     setError(null)
 
     try {
-      const url = isEditing ? `/admin/api/blogs/${blog?.id}` : '/admin/api/blogs'
+      const url = isEditing ? `/admin/api/events/${event?.id}` : '/admin/api/events'
       const method = isEditing ? 'PUT' : 'POST'
+
+      const submitData = {
+        ...formData,
+        status: 'upcoming', // For events, we'll use 'upcoming' as the default draft status
+        programme_area_id: programmeAreaId,
+        start_date: formData.start_date ? new Date(formData.start_date).toISOString() : null,
+        end_date: formData.end_date ? new Date(formData.end_date).toISOString() : null,
+        max_attendees: formData.max_attendees ? parseInt(formData.max_attendees) : null,
+      }
 
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          status: 'draft',
-          tag_ids: selectedTags
-        })
+        body: JSON.stringify(submitData)
       })
 
       const result = await response.json()
 
       if (response.ok) {
-        // Don't redirect, just show success message
         setError(null)
-        // You could add a success state here if needed
       } else {
         setError(result.error || result.details || 'Failed to save draft')
       }
@@ -216,18 +163,8 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">
-          {isEditing ? 'Edit Blog Post' : 'Create New Blog Post'}
+          {isEditing ? 'Edit Event' : 'Create New Event'}
         </h1>
-        <div className="flex gap-2">
-          {isEditing && blog && (
-            <Button variant="outline" asChild>
-              <a href={`/blog/${blog.slug}`} target="_blank" rel="noopener noreferrer">
-                <Eye className="h-4 w-4 mr-2" />
-                Preview
-              </a>
-            </Button>
-          )}
-        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -251,7 +188,7 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
                     id="title"
                     value={formData.title}
                     onChange={(e) => handleInputChange('title', e.target.value)}
-                    placeholder="Enter blog post title"
+                    placeholder="Enter event title"
                     required
                   />
                 </div>
@@ -262,28 +199,28 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
                     id="slug"
                     value={formData.slug}
                     onChange={(e) => handleInputChange('slug', e.target.value)}
-                    placeholder="blog-post-slug"
+                    placeholder="event-slug"
                     required
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="excerpt">Excerpt</Label>
+                  <Label htmlFor="description">Description</Label>
                   <Textarea
-                    id="excerpt"
-                    value={formData.excerpt}
-                    onChange={(e) => handleInputChange('excerpt', e.target.value)}
-                    placeholder="Brief description of your blog post"
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => handleInputChange('description', e.target.value)}
+                    placeholder="Brief description of the event"
                     rows={3}
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="content">Content *</Label>
+                  <Label htmlFor="content">Content</Label>
                   <RichTextEditor
                     content={formData.content}
                     onChange={(content) => handleInputChange('content', content)}
-                    placeholder="Write your blog post content here..."
+                    placeholder="Write event details here..."
                   />
                 </div>
               </CardContent>
@@ -346,163 +283,145 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
               </CardContent>
             </Card>
 
-            {/* Category */}
+            {/* Status */}
             <Card>
               <CardHeader>
-                <CardTitle>Category</CardTitle>
+                <CardTitle>Status</CardTitle>
               </CardHeader>
               <CardContent>
                 <select
-                  value={formData.category_id}
-                  onChange={(e) => handleInputChange('category_id', e.target.value)}
+                  value={formData.status}
+                  onChange={(e) => handleInputChange('status', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="">Select category</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
+                  <option value="upcoming">Upcoming</option>
+                  <option value="ongoing">Ongoing</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
                 </select>
               </CardContent>
             </Card>
 
-            {/* Tags */}
+            {/* Event Details */}
             <Card>
               <CardHeader>
-                <CardTitle>Tags</CardTitle>
+                <CardTitle>Event Details</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex gap-2">
+                <div>
+                  <Label htmlFor="start_date">Start Date & Time *</Label>
                   <Input
-                    value={newTagName}
-                    onChange={(e) => setNewTagName(e.target.value)}
-                    placeholder="New tag name"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault()
-                        handleCreateTag()
-                      }
-                    }}
+                    id="start_date"
+                    type="datetime-local"
+                    value={formData.start_date}
+                    onChange={(e) => handleInputChange('start_date', e.target.value)}
+                    required
                   />
-                  <Button
-                    type="button"
-                    onClick={handleCreateTag}
-                    disabled={!newTagName.trim()}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
                 </div>
-
-                <div className="space-y-2">
-                  {tags.map((tag) => (
-                    <div key={tag.id} className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id={`tag-${tag.id}`}
-                        checked={selectedTags.includes(tag.id)}
-                        onChange={() => handleTagSelect(tag.id)}
-                        className="rounded"
-                      />
-                      <Label htmlFor={`tag-${tag.id}`} className="text-sm">
-                        {tag.name}
-                      </Label>
-                    </div>
-                  ))}
+                <div>
+                  <Label htmlFor="end_date">End Date & Time</Label>
+                  <Input
+                    id="end_date"
+                    type="datetime-local"
+                    value={formData.end_date}
+                    onChange={(e) => handleInputChange('end_date', e.target.value)}
+                  />
                 </div>
+                <div>
+                  <Label htmlFor="location">Location</Label>
+                  <Input
+                    id="location"
+                    value={formData.location}
+                    onChange={(e) => handleInputChange('location', e.target.value)}
+                    placeholder="City, Country"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="venue">Venue</Label>
+                  <Input
+                    id="venue"
+                    value={formData.venue}
+                    onChange={(e) => handleInputChange('venue', e.target.value)}
+                    placeholder="Venue name"
+                  />
+                </div>
+              </CardContent>
+            </Card>
 
-                {selectedTags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {selectedTags.map(tagId => {
-                      const tag = tags.find(t => t.id === tagId)
-                      return tag ? (
-                        <Badge key={tagId} variant="secondary" className="text-xs">
-                          {tag.name}
-                          <button
-                            type="button"
-                            onClick={() => handleTagSelect(tagId)}
-                            className="ml-1 hover:text-red-500"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </Badge>
-                      ) : null
-                    })}
+            {/* Online Event */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Online Event</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="is_online"
+                    checked={formData.is_online}
+                    onCheckedChange={(checked) => handleInputChange('is_online', checked)}
+                  />
+                  <Label htmlFor="is_online">This is an online event</Label>
+                </div>
+                {formData.is_online && (
+                  <div>
+                    <Label htmlFor="meeting_url">Meeting URL</Label>
+                    <Input
+                      id="meeting_url"
+                      value={formData.meeting_url}
+                      onChange={(e) => handleInputChange('meeting_url', e.target.value)}
+                      placeholder="https://zoom.us/j/..."
+                    />
                   </div>
                 )}
               </CardContent>
             </Card>
 
-            {/* Settings */}
+            {/* Registration */}
             <Card>
               <CardHeader>
-                <CardTitle>Settings</CardTitle>
+                <CardTitle>Registration</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="status">Status</Label>
-                  <select
-                    id="status"
-                    value={formData.status}
-                    onChange={(e) => handleInputChange('status', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="draft">Draft</option>
-                    <option value="published">Published</option>
-                    <option value="archived">Archived</option>
-                  </select>
+                  <Label htmlFor="registration_url">Registration URL</Label>
+                  <Input
+                    id="registration_url"
+                    value={formData.registration_url}
+                    onChange={(e) => handleInputChange('registration_url', e.target.value)}
+                    placeholder="https://eventbrite.com/..."
+                  />
                 </div>
+                <div>
+                  <Label htmlFor="max_attendees">Max Attendees</Label>
+                  <Input
+                    id="max_attendees"
+                    type="number"
+                    value={formData.max_attendees}
+                    onChange={(e) => handleInputChange('max_attendees', e.target.value)}
+                    placeholder="100"
+                    min="1"
+                  />
+                </div>
+              </CardContent>
+            </Card>
 
+            {/* Featured */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Featured</CardTitle>
+              </CardHeader>
+              <CardContent>
                 <div className="flex items-center space-x-2">
                   <Switch
                     id="featured"
                     checked={formData.featured}
                     onCheckedChange={(checked) => handleInputChange('featured', checked)}
                   />
-                  <Label htmlFor="featured">Featured Post</Label>
-                </div>
-
-                <div>
-                  <Label htmlFor="read_time">Read Time (minutes)</Label>
-                  <Input
-                    id="read_time"
-                    type="number"
-                    value={formData.read_time || ''}
-                    onChange={(e) => handleInputChange('read_time', e.target.value ? parseInt(e.target.value) : null)}
-                    placeholder="5"
-                  />
+                  <Label htmlFor="featured">Featured event</Label>
                 </div>
               </CardContent>
             </Card>
 
-            {/* SEO */}
-            <Card>
-              <CardHeader>
-                <CardTitle>SEO</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="meta_title">Meta Title</Label>
-                  <Input
-                    id="meta_title"
-                    value={formData.meta_title}
-                    onChange={(e) => handleInputChange('meta_title', e.target.value)}
-                    placeholder="SEO title"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="meta_description">Meta Description</Label>
-                  <Textarea
-                    id="meta_description"
-                    value={formData.meta_description}
-                    onChange={(e) => handleInputChange('meta_description', e.target.value)}
-                    placeholder="SEO description"
-                    rows={3}
-                  />
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
 
@@ -535,7 +454,7 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
             ) : (
               <>
                 <Save className="h-4 w-4 mr-2" />
-                {isEditing ? 'Update Post' : 'Create Post'}
+                {isEditing ? 'Update Event' : 'Create Event'}
               </>
             )}
           </Button>

@@ -3,6 +3,7 @@ import { getCurrentUser, checkAuth } from '@/lib/auth'
 import { getProgrammeArea } from '@/lib/admin-programme-data'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
+import CompetitionForm from '@/components/admin/CompetitionForm'
 
 interface NewCompetitionPageProps {
   params: Promise<{
@@ -45,11 +46,7 @@ export default async function NewCompetition({ params }: NewCompetitionPageProps
         </div>
       </div>
 
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">
-          Competition creation form coming soon...
-        </p>
-      </div>
+      <CompetitionForm programmeAreaId={id} />
     </div>
   )
 }

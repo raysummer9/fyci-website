@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
@@ -11,7 +11,38 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [checkingAuth, setCheckingAuth] = useState(true)
   const router = useRouter()
+
+  // Check if user is already authenticated and redirect if so
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        
+        if (user) {
+          router.push('/admin/dashboard')
+          return
+        }
+      } catch (error) {
+        console.error('Auth check error:', error)
+      } finally {
+        setCheckingAuth(false)
+      }
+    }
+
+    checkAuth()
+  }, [router])
+
+  // Show loading while checking authentication
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#360e1d' }}>
+        <div className="text-white">Loading...</div>
+      </div>
+    )
+  }
 
   const containerVariants = {
     hidden: { opacity: 0 },
