@@ -7,20 +7,22 @@ import { Badge } from '@/components/ui/badge'
 import { ArrowLeft, Edit, Plus, Users, Trophy, Calendar, Map } from 'lucide-react'
 
 interface ProgrammeAreaDetailPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default async function ProgrammeAreaDetail({ params }: ProgrammeAreaDetailPageProps) {
   await checkAuth()
   const user = await getCurrentUser()
+  
+  const { id } = await params
 
   const [programmeArea, programmes, competitions, events] = await Promise.all([
-    getProgrammeArea(params.id),
-    getProgrammesByArea(params.id),
-    getCompetitionsByArea(params.id),
-    getEventsByArea(params.id)
+    getProgrammeArea(id),
+    getProgrammesByArea(id),
+    getCompetitionsByArea(id),
+    getEventsByArea(id)
   ])
 
   if (!programmeArea) {

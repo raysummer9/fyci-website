@@ -5,14 +5,15 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 
 interface NewCompetitionPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default async function NewCompetition({ params }: NewCompetitionPageProps) {
   await checkAuth()
-  const programmeArea = await getProgrammeArea(params.id)
+  const { id } = await params
+  const programmeArea = await getProgrammeArea(id)
 
   if (!programmeArea) {
     return (
@@ -31,7 +32,7 @@ export default async function NewCompetition({ params }: NewCompetitionPageProps
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link href={`/admin/programme-areas/${params.id}`}>
+        <Link href={`/admin/programme-areas/${id}`}>
           <Button variant="outline" size="icon">
             <ArrowLeft className="h-4 w-4" />
           </Button>

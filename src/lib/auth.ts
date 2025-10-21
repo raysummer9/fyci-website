@@ -10,13 +10,13 @@ export async function checkAuth() {
     }
 
     const supabase = await createServerSupabaseClient()
-    const { data: { session }, error } = await supabase.auth.getSession()
+    const { data: { user }, error } = await supabase.auth.getUser()
     
-    if (error || !session) {
+    if (error || !user) {
       redirect('/admin/login')
     }
     
-    return session
+    return user
   } catch (error) {
     console.error('Auth check error:', error)
     redirect('/admin/login')
@@ -47,4 +47,21 @@ export async function signOut() {
   const supabase = await createServerSupabaseClient()
   await supabase.auth.signOut()
   redirect('/admin/login')
+}
+
+// Helper function for API routes to get authenticated user securely
+export async function getAuthenticatedUser() {
+  try {
+    const supabase = await createServerSupabaseClient()
+    const { data: { user }, error } = await supabase.auth.getUser()
+    
+    if (error || !user) {
+      return null
+    }
+    
+    return user
+  } catch (error) {
+    console.error('Error getting authenticated user:', error)
+    return null
+  }
 }

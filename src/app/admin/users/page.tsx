@@ -1,8 +1,19 @@
 import { getCurrentUser, checkAuth } from '@/lib/auth'
+import { getUsers, Profile } from '@/lib/admin-user-data'
+import UserListClient from '@/components/admin/UserListClient'
 
 export default async function AdminUsers() {
   await checkAuth()
   const user = await getCurrentUser()
+
+  // Fetch initial users data
+  let initialUsers: Profile[] = []
+  try {
+    initialUsers = await getUsers()
+  } catch (error) {
+    console.error('Error fetching users:', error)
+    // Component will handle empty state
+  }
 
   return (
     <div className="space-y-8">
@@ -13,11 +24,7 @@ export default async function AdminUsers() {
         </p>
       </div>
 
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">
-          User management coming soon...
-        </p>
-      </div>
+      <UserListClient initialUsers={initialUsers} />
     </div>
   )
 }

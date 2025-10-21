@@ -4,15 +4,16 @@ import PublicationForm from '@/components/admin/PublicationForm'
 import { notFound } from 'next/navigation'
 
 interface EditPublicationPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default async function EditPublicationPage({ params }: EditPublicationPageProps) {
   await checkAuth()
+  const { id } = await params
 
-  const publication = await getPublication(params.id)
+  const publication = await getPublication(id)
 
   if (!publication) {
     notFound()

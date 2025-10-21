@@ -3,15 +3,16 @@ import { getBlog } from '@/lib/admin-blog-data'
 import BlogForm from '@/components/admin/BlogForm'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default async function EditBlogPage({ params }: PageProps) {
   await checkAuth()
+  const { id } = await params
   
-  const blog = await getBlog(params.id)
+  const blog = await getBlog(id)
   
   if (!blog) {
     return (

@@ -4,15 +4,16 @@ import PublicationCategoryForm from '@/components/admin/PublicationCategoryForm'
 import { notFound } from 'next/navigation'
 
 interface EditCategoryPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default async function EditPublicationCategoryPage({ params }: EditCategoryPageProps) {
   await checkAuth()
+  const { id } = await params
 
-  const category = await getPublicationCategory(params.id)
+  const category = await getPublicationCategory(id)
 
   if (!category) {
     notFound()

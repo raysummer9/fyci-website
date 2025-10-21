@@ -1,7 +1,9 @@
 import { createBrowserClient, createServerClient } from '@supabase/ssr'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
 // Client-side Supabase client
 export function createClient() {
@@ -62,4 +64,17 @@ export async function createServerSupabaseClient() {
       }
     )
   }
+}
+
+// Admin client with service role key for user management
+export function createAdminClient() {
+  if (!supabaseServiceKey) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY is not configured')
+  }
+  return createSupabaseClient(supabaseUrl, supabaseServiceKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  })
 }

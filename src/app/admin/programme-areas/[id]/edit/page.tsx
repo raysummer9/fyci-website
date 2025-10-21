@@ -6,15 +6,16 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 
 interface EditProgrammeAreaPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default async function EditProgrammeArea({ params }: EditProgrammeAreaPageProps) {
   await checkAuth()
   const user = await getCurrentUser()
-  const programmeArea = await getProgrammeArea(params.id)
+  const { id } = await params
+  const programmeArea = await getProgrammeArea(id)
 
   if (!programmeArea) {
     return (
