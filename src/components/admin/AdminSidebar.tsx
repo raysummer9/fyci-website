@@ -10,7 +10,8 @@ import {
   FileText, 
   BookOpen, 
   Users, 
-  LogOut 
+  LogOut,
+  MessageSquare
 } from 'lucide-react'
 
 interface SidebarProps {
@@ -32,6 +33,11 @@ const navigation = [
     name: 'Blogs',
     href: '/admin/blogs',
     icon: FileText,
+  },
+  {
+    name: 'Comments',
+    href: '/admin/comments',
+    icon: MessageSquare,
   },
   {
     name: 'Publications',

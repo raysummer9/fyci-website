@@ -13,29 +13,53 @@ export function createClient() {
 
 // Server-side Supabase client
 export async function createServerSupabaseClient() {
-  const { cookies } = await import('next/headers')
-  const cookieStore = await cookies()
+  try {
+    const { cookies } = await import('next/headers')
+    const cookieStore = await cookies()
 
-  return createServerClient(
-    supabaseUrl,
-    supabaseAnonKey,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll()
+    return createServerClient(
+      supabaseUrl,
+      supabaseAnonKey,
+      {
+        cookies: {
+          getAll() {
+            try {
+              return cookieStore.getAll()
+            } catch {
+              // Fallback if cookies are not available in this context
+              return []
+            }
+          },
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options)
+              )
+            } catch {
+              // The `setAll` method was called from a Server Component.
+              // This can be ignored if you have middleware refreshing
+              // user sessions.
+            }
+          },
         },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            )
-          } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
-          }
+      }
+    )
+  } catch (error) {
+    console.error('Error creating server supabase client:', error)
+    // Fallback to a basic client without cookie handling
+    return createServerClient(
+      supabaseUrl,
+      supabaseAnonKey,
+      {
+        cookies: {
+          getAll() {
+            return []
+          },
+          setAll() {
+            // No-op in fallback mode
+          },
         },
-      },
-    }
-  )
+      }
+    )
+  }
 }
