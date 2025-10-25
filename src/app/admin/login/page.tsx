@@ -19,11 +19,34 @@ export default function AdminLoginPage() {
     const checkAuth = async () => {
       try {
         const supabase = createClient()
-        const { data: { user } } = await supabase.auth.getUser()
         
-        if (user) {
+        // Get the current session instead of just the user
+        const { data: { session }, error } = await supabase.auth.getSession()
+        
+        if (error) {
+          console.error('Session check error:', error)
+          setCheckingAuth(false)
+          return
+        }
+        
+        // Only redirect if we have a valid session
+        if (session && session.user) {
           router.push('/admin/dashboard')
           return
+        }
+        
+        // Listen for auth state changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+          (event, session) => {
+            if (event === 'SIGNED_IN' && session?.user) {
+              router.push('/admin/dashboard')
+            }
+          }
+        )
+        
+        // Cleanup subscription on unmount
+        return () => {
+          subscription?.unsubscribe()
         }
       } catch (error) {
         console.error('Auth check error:', error)
