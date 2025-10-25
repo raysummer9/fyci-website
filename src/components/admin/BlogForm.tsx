@@ -35,6 +35,21 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [newTagName, setNewTagName] = useState('')
 
+  // Function to calculate read time based on word count
+  const calculateReadTime = (content: string): number => {
+    if (!content) return 0
+    
+    // Remove HTML tags and count words
+    const textContent = content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+    const wordCount = textContent.split(' ').filter(word => word.length > 0).length
+    
+    // Average reading speed: 200 words per minute
+    const wordsPerMinute = 200
+    const readTime = Math.ceil(wordCount / wordsPerMinute)
+    
+    return Math.max(1, readTime) // Minimum 1 minute
+  }
+
   const [formData, setFormData] = useState({
     title: blog?.title || '',
     slug: blog?.slug || '',
@@ -54,6 +69,11 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
     loadInitialData()
     if (blog?.tags) {
       setSelectedTags(blog.tags.map(tag => tag.id))
+    }
+    // Calculate initial read time if blog has content
+    if (blog?.content) {
+      const readTime = calculateReadTime(blog.content)
+      setFormData(prev => ({ ...prev, read_time: readTime }))
     }
   }, [])
 
@@ -82,6 +102,12 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '')
       setFormData(prev => ({ ...prev, slug }))
+    }
+    
+    // Auto-calculate read time when content changes
+    if (field === 'content') {
+      const readTime = calculateReadTime(value)
+      setFormData(prev => ({ ...prev, read_time: readTime }))
     }
   }
 
@@ -470,8 +496,12 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
                     type="number"
                     value={formData.read_time || ''}
                     onChange={(e) => handleInputChange('read_time', e.target.value ? parseInt(e.target.value) : null)}
-                    placeholder="5"
+                    placeholder="Auto-calculated"
+                    className="bg-gray-50"
                   />
+                  <p className="text-sm text-gray-500 mt-1">
+                    Automatically calculated based on content (200 words/minute)
+                  </p>
                 </div>
 
                 <div>
