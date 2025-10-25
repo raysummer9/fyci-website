@@ -97,8 +97,8 @@ export default function AdminLoginPage() {
       if (error) {
         setError(error.message)
       } else {
-        router.push('/admin/dashboard')
-        router.refresh()
+        // Force a full page reload to ensure auth state is properly updated
+        window.location.href = '/admin/dashboard'
       }
     } catch (err) {
       setError('An unexpected error occurred')
