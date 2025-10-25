@@ -3,56 +3,141 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Heart, Target, Vote, Shield } from 'lucide-react';
-import { Project } from '@/types';
+import { ArrowRight, Heart, Target, Vote, Shield, Calendar, Trophy, Users } from 'lucide-react';
+import { Project, Programme, Competition, Event } from '@/types';
+import { useState, useEffect } from 'react';
 
 export default function Projects() {
-  const projects: Project[] = [
-    {
-      id: '1',
-      title: 'Young Voices Against SGBV Competition',
-      description: 'In commemoration of 16 Days of Activism Against Gender-Based Violence, FYCI is instituting the Young Voices Against SGBV Competition.',
-      image: '/img/gender-rights.jpg',
-      linkText: 'Explore programme',
-      linkHref: '/programme-areas/gender-rights',
-      titleColor: 'text-gray-900',
-      programmeArea: 'Gender Rights',
-      icon: Heart
-    },
-    {
-      id: '2',
-      title: 'Creative and Life Skills Training for Youth 2022',
-      description: 'FYCI is organising a programme, titled “Creative and Life Skills Training for Youth” This programme is aimed at imparting creative and life skills in young people to position them for the future..',
-      image: '/img/youth-agency.jpg',
-      linkText: 'Explore programme',
-      linkHref: '/programme-areas/youth-agency',
-      titleColor: 'text-gray-900',
-      programmeArea: 'Youth Agency and Self Esteem',
-      icon: Target
-    },
-    {
-      id: '3',
-      title: 'Youth Political Participation',
-      description: 'Engaging young people in democratic processes through creative campaigns and civic education programs that build political awareness and participation.',
-      image: '/img/anti-corruption.jpg',
-      linkText: 'Explore programme',
-      linkHref: '/programme-areas/youth-political-participation',
-      titleColor: 'text-gray-900',
-      programmeArea: 'Youth Political Participation',
-      icon: Vote
-    },
-    {
-      id: '4',
-      title: 'Anti-Corruption Initiatives',
-      description: 'Promoting transparency and accountability through creative advocacy work and youth-led campaigns for good governance in communities.',
-      image: '/img/anti-corruption.jpg',
-      linkText: 'Explore programme',
-      linkHref: '/programme-areas/anti-corruption',
-      titleColor: 'text-gray-900',
-      programmeArea: 'Anti-Corruption',
-      icon: Shield
-    }
-  ];
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const [programmesRes, competitionsRes, eventsRes] = await Promise.all([
+          fetch('/api/programmes?limit=2'),
+          fetch('/api/competitions?limit=2'),
+          fetch('/api/events?limit=1')
+        ]);
+
+        const programmes: Programme[] = await programmesRes.json();
+        const competitions: Competition[] = await competitionsRes.json();
+        const events: Event[] = await eventsRes.json();
+
+        // Transform data to Project format - prioritize latest content
+        const transformedProjects: Project[] = [];
+        
+        // Always add 1 programme (latest)
+        if (programmes.length > 0) {
+          transformedProjects.push({
+            id: programmes[0].id,
+            title: programmes[0].title,
+            description: programmes[0].description,
+            image: programmes[0].featured_image || '/img/youth-agency.jpg',
+            linkText: 'Explore programme',
+            linkHref: `/programme-areas/${programmes[0].programme_areas?.slug || 'youth-agency'}`,
+            titleColor: 'text-gray-900',
+            programmeArea: programmes[0].programme_areas?.name || 'Youth Agency',
+            icon: Target,
+            type: 'programme' as const
+          });
+        }
+
+        // Always add 1 competition (latest)
+        if (competitions.length > 0) {
+          transformedProjects.push({
+            id: competitions[0].id,
+            title: competitions[0].title,
+            description: competitions[0].description,
+            image: competitions[0].featured_image || '/img/gender-rights.jpg',
+            linkText: 'Join competition',
+            linkHref: `/competitions/${competitions[0].slug}`,
+            titleColor: 'text-gray-900',
+            programmeArea: competitions[0].programme_areas?.name || 'Gender Rights',
+            icon: Trophy,
+            type: 'competition' as const
+          });
+        }
+
+        // Add event if available, otherwise add another competition
+        if (events.length > 0) {
+          transformedProjects.push({
+            id: events[0].id,
+            title: events[0].title,
+            description: events[0].description,
+            image: events[0].featured_image || '/img/anti-corruption.jpg',
+            linkText: 'View event',
+            linkHref: `/events/${events[0].slug}`,
+            titleColor: 'text-gray-900',
+            programmeArea: events[0].programme_areas?.name || 'Anti-Corruption',
+            icon: Calendar,
+            type: 'event' as const
+          });
+        } else if (competitions.length > 1) {
+          // Add second competition if no events available
+          transformedProjects.push({
+            id: competitions[1].id,
+            title: competitions[1].title,
+            description: competitions[1].description,
+            image: competitions[1].featured_image || '/img/gender-rights.jpg',
+            linkText: 'Join competition',
+            linkHref: `/competitions/${competitions[1].slug}`,
+            titleColor: 'text-gray-900',
+            programmeArea: competitions[1].programme_areas?.name || 'Gender Rights',
+            icon: Trophy,
+            type: 'competition' as const
+          });
+        }
+
+        setProjects(transformedProjects);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+        // Fallback to static data if API fails - just 3 cards
+        setProjects([
+          {
+            id: '1',
+            title: 'Creative and Life Skills Training for Youth 2022',
+            description: 'FYCI is organising a programme, titled "Creative and Life Skills Training for Youth" This programme is aimed at imparting creative and life skills in young people to position them for the future.',
+            image: '/img/youth-agency.jpg',
+            linkText: 'Explore programme',
+            linkHref: '/programme-areas/youth-agency',
+            titleColor: 'text-gray-900',
+            programmeArea: 'Youth Agency and Self Esteem',
+            icon: Target,
+            type: 'programme'
+          },
+          {
+            id: '2',
+            title: 'Young Voices Against SGBV Competition',
+            description: 'In commemoration of 16 Days of Activism Against Gender-Based Violence, FYCI is instituting the Young Voices Against SGBV Competition.',
+            image: '/img/gender-rights.jpg',
+            linkText: 'Join competition',
+            linkHref: '/competitions/sgbv-competition',
+            titleColor: 'text-gray-900',
+            programmeArea: 'Gender Rights',
+            icon: Trophy,
+            type: 'competition'
+          },
+          {
+            id: '3',
+            title: 'Youth Leadership Summit 2024',
+            description: 'An annual gathering of young leaders from across the region to discuss pressing issues and develop innovative solutions for community development.',
+            image: '/img/anti-corruption.jpg',
+            linkText: 'View event',
+            linkHref: '/events/youth-leadership-summit',
+            titleColor: 'text-gray-900',
+            programmeArea: 'Youth Political Participation',
+            icon: Calendar,
+            type: 'event'
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -99,13 +184,29 @@ export default function Projects() {
         </motion.div>
 
         {/* Projects Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: false, amount: 0.1, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(3)].map((_, index) => (
+              <div key={index} className="bg-white rounded-xl overflow-hidden shadow-sm animate-pulse">
+                <div className="h-48 bg-gray-200"></div>
+                <div className="p-6">
+                  <div className="h-4 bg-gray-200 rounded mb-3"></div>
+                  <div className="h-6 bg-gray-200 rounded mb-3"></div>
+                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.1, margin: "-100px" }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
           {projects.map((project, index) => {
             const IconComponent = project.icon;
             return (
@@ -164,7 +265,8 @@ export default function Projects() {
               </motion.div>
             );
           })}
-        </motion.div>
+          </motion.div>
+        )}
       </div>
     </section>
   );

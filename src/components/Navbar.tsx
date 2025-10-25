@@ -1,19 +1,148 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, ChevronDown, Users, Building, UserCheck, Heart, Shield, BookOpen, Calendar, FileText, Megaphone, Target, Users2, Vote, Scale } from 'lucide-react';
+
+interface Programme {
+  id: string;
+  title: string;
+  slug: string;
+  description?: string;
+  featured_image?: string;
+}
+
+interface Competition {
+  id: string;
+  title: string;
+  slug: string;
+  description?: string;
+  featured_image?: string;
+  status: string;
+  start_date?: string;
+  end_date?: string;
+}
+
+interface Blog {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  featured_image?: string;
+}
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [hoveredSubItem, setHoveredSubItem] = useState<string | null>(null);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const [programmeData, setProgrammeData] = useState<Record<string, Programme[]>>({});
+  const [competitionData, setCompetitionData] = useState<Record<string, Competition[]>>({});
+  const [blogData, setBlogData] = useState<Record<string, Blog[]>>({});
+  const [loading, setLoading] = useState<Record<string, boolean>>({});
+
+  // Mapping between navbar labels and database slugs
+  const categoryMapping: Record<string, string> = {
+    'Gender Rights': 'gender-rights',
+    'Youth Agency and Self Esteem': 'youth-agency',
+    'Youth Political Participation': 'youth-political-participation',
+    'Anti-Corruption': 'anti-corruption'
+  };
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleSubmenu = (label: string) => {
     setOpenSubmenu(openSubmenu === label ? null : label);
+  };
+
+
+  // Load data from cookies on component mount
+  useEffect(() => {
+    const loadCachedData = () => {
+      try {
+        const cachedProgrammes = localStorage.getItem('navbar-programmes');
+        const cachedCompetitions = localStorage.getItem('navbar-competitions');
+        const cachedBlogs = localStorage.getItem('navbar-blogs');
+
+        if (cachedProgrammes) {
+          setProgrammeData(JSON.parse(cachedProgrammes));
+        }
+        if (cachedCompetitions) {
+          setCompetitionData(JSON.parse(cachedCompetitions));
+        }
+        if (cachedBlogs) {
+          setBlogData(JSON.parse(cachedBlogs));
+        }
+      } catch (error) {
+        console.error('Error loading cached data:', error);
+      }
+    };
+
+    loadCachedData();
+  }, []);
+
+  // Save data to cookies
+  const saveToCache = (categorySlug: string, programmes: Programme[], competitions: Competition[], blogs: Blog[]) => {
+    try {
+      setProgrammeData(prev => {
+        const newData = { ...prev, [categorySlug]: programmes };
+        localStorage.setItem('navbar-programmes', JSON.stringify(newData));
+        return newData;
+      });
+      
+      setCompetitionData(prev => {
+        const newData = { ...prev, [categorySlug]: competitions };
+        localStorage.setItem('navbar-competitions', JSON.stringify(newData));
+        return newData;
+      });
+      
+      setBlogData(prev => {
+        const newData = { ...prev, [categorySlug]: blogs };
+        localStorage.setItem('navbar-blogs', JSON.stringify(newData));
+        return newData;
+      });
+    } catch (error) {
+      console.error('Error saving to cache:', error);
+    }
+  };
+
+  // Fetch data when hovering over a programme area
+  const handleSubItemHover = async (label: string) => {
+    setHoveredSubItem(label);
+    
+    const categorySlug = categoryMapping[label];
+    if (!categorySlug) {
+      return;
+    }
+    
+    if (programmeData[categorySlug] && competitionData[categorySlug] && blogData[categorySlug]) {
+      return;
+    }
+    
+    if (loading[categorySlug]) {
+      return;
+    }
+
+    setLoading(prev => ({ ...prev, [categorySlug]: true }));
+
+    try {
+      const [programmesResponse, competitionsResponse, blogsResponse] = await Promise.all([
+        fetch(`/api/programmes/by-category?category=${categorySlug}`),
+        fetch(`/api/competitions/by-category?category=${categorySlug}`),
+        fetch(`/api/blogs/by-category?category=${categorySlug}`)
+      ]);
+
+      const programmes = await programmesResponse.json();
+      const competitions = await competitionsResponse.json();
+      const blogs = await blogsResponse.json();
+
+      // Save to cache
+      saveToCache(categorySlug, programmes, competitions, blogs);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(prev => ({ ...prev, [categorySlug]: false }));
+    }
   };
 
   const navLinks = [
@@ -56,6 +185,7 @@ export default function Navbar() {
               className="w-48 h-48 object-contain"
             />
           </Link>
+
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-2">
@@ -103,7 +233,7 @@ export default function Navbar() {
                                   key={subLink.href}
                                   href={subLink.href}
                                   className="block py-2 text-sm font-bold text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
-                                  onMouseEnter={() => setHoveredSubItem(subLink.label)}
+                                  onMouseEnter={() => handleSubItemHover(subLink.label)}
                                 >
                                   {subLink.label}
                                 </Link>
@@ -119,31 +249,99 @@ export default function Navbar() {
                                 Explore
                               </h3>
                               <div className="space-y-3">
-                                {hoveredSubItem && (
-                                  <>
-                                    <div className="bg-gray-50 p-4 rounded-lg">
-                                      <h4 className="font-semibold text-sm text-gray-900 mb-2">Latest Programme</h4>
-                                      <div className="text-xs text-gray-600 mb-2">Programme Title</div>
-                                      <div className="w-full h-20 bg-gray-200 rounded mb-3"></div>
-                                      <Link href={`/programme-areas/${hoveredSubItem.toLowerCase().replace(/\s+/g, '-')}`} className="inline-block px-3 py-1 text-white text-xs rounded transition-colors cursor-pointer"
-                                        style={{ backgroundColor: '#360e1d' }}
-                                        onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#4a1a2a'}
-                                        onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#360e1d'}>
-                                        Access Programme
-                                      </Link>
-                                    </div>
-                                    <div className="bg-gray-50 p-4 rounded-lg">
-                                      <h4 className="font-semibold text-sm text-gray-900 mb-2">Latest Blog Post</h4>
-                                      <div className="text-xs text-gray-600 mb-2">Blog post title related to {hoveredSubItem}</div>
-                                      <Link href={`/blog/${hoveredSubItem.toLowerCase().replace(/\s+/g, '-')}`} className="text-xs cursor-pointer transition-colors"
-                                        style={{ color: '#360e1d' }}
-                                        onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#4a1a2a'}
-                                        onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#360e1d'}>
-                                        Read More →
-                                      </Link>
-                                    </div>
-                                  </>
-                                )}
+                                {hoveredSubItem && (() => {
+                                  const categorySlug = categoryMapping[hoveredSubItem];
+                                  const programmes = programmeData[categorySlug] || [];
+                                  const competitions = competitionData[categorySlug] || [];
+                                  const blogs = blogData[categorySlug] || [];
+                                  const isLoading = loading[categorySlug];
+
+                                  // Determine what to show: programmes or competitions
+                                  const hasProgrammes = programmes.length > 0;
+                                  const hasCompetitions = competitions.length > 0;
+                                  const showProgrammes = hasProgrammes && (!hasCompetitions || programmes.length >= competitions.length);
+
+                                  return (
+                                    <>
+                                      <div className="bg-gray-50 p-4 rounded-lg">
+                                        <h4 className="font-semibold text-sm text-gray-900 mb-2">
+                                          {showProgrammes ? 'Latest Programme' : 'Latest Competition'}
+                                        </h4>
+                                        {isLoading ? (
+                                          <div className="text-xs text-gray-500">Loading...</div>
+                                        ) : showProgrammes && programmes.length > 0 ? (
+                                          <>
+                                            <div className="text-xs text-gray-600 mb-2 line-clamp-2">
+                                              {programmes[0].title}
+                                            </div>
+                                            {programmes[0].featured_image && (
+                                              <div className="w-full h-20 bg-gray-200 rounded mb-3 overflow-hidden">
+                                                <Image
+                                                  src={programmes[0].featured_image}
+                                                  alt={programmes[0].title}
+                                                  width={200}
+                                                  height={80}
+                                                  className="w-full h-full object-cover"
+                                                />
+                                              </div>
+                                            )}
+                                            <Link href={`/programme-areas/${programmes[0].slug}`} className="inline-block px-3 py-1 text-white text-xs rounded transition-colors cursor-pointer"
+                                              style={{ backgroundColor: '#360e1d' }}
+                                              onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#4a1a2a'}
+                                              onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#360e1d'}>
+                                              Access Programme
+                                            </Link>
+                                          </>
+                                        ) : !showProgrammes && competitions.length > 0 ? (
+                                          <>
+                                            <div className="text-xs text-gray-600 mb-2 line-clamp-2">
+                                              {competitions[0].title}
+                                            </div>
+                                            {competitions[0].featured_image && (
+                                              <div className="w-full h-20 bg-gray-200 rounded mb-3 overflow-hidden">
+                                                <Image
+                                                  src={competitions[0].featured_image}
+                                                  alt={competitions[0].title}
+                                                  width={200}
+                                                  height={80}
+                                                  className="w-full h-full object-cover"
+                                                />
+                                              </div>
+                                            )}
+                                            <Link href={`/competitions/${competitions[0].slug}`} className="inline-block px-3 py-1 text-white text-xs rounded transition-colors cursor-pointer"
+                                              style={{ backgroundColor: '#360e1d' }}
+                                              onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#4a1a2a'}
+                                              onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#360e1d'}>
+                                              Join Competition
+                                            </Link>
+                                          </>
+                                        ) : (
+                                          <div className="text-xs text-gray-500">No content available</div>
+                                        )}
+                                      </div>
+                                      <div className="bg-gray-50 p-4 rounded-lg">
+                                        <h4 className="font-semibold text-sm text-gray-900 mb-2">Latest Blog Post</h4>
+                                        {isLoading ? (
+                                          <div className="text-xs text-gray-500">Loading...</div>
+                                        ) : blogs.length > 0 ? (
+                                          <>
+                                            <div className="text-xs text-gray-600 mb-2 line-clamp-2">
+                                              {blogs[0].title}
+                                            </div>
+                                            <Link href={`/blog/${blogs[0].slug}`} className="text-xs cursor-pointer transition-colors"
+                                              style={{ color: '#360e1d' }}
+                                              onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#4a1a2a'}
+                                              onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#360e1d'}>
+                                              Read More →
+                                            </Link>
+                                          </>
+                                        ) : (
+                                          <div className="text-xs text-gray-500">No blog posts available</div>
+                                        )}
+                                      </div>
+                                    </>
+                                  );
+                                })()}
                               </div>
                             </div>
                           </>

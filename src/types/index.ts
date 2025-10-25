@@ -39,6 +39,57 @@ export interface Project {
   titleColor: string;
   programmeArea: string;
   icon: React.ComponentType<{ className?: string; size?: number }>;
+  type: 'programme' | 'competition' | 'event';
+}
+
+export interface Programme {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  featured_image?: string;
+  status: string;
+  created_at: string;
+  programme_areas?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+}
+
+export interface Competition {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  featured_image?: string;
+  status: string;
+  start_date?: string;
+  end_date?: string;
+  created_at: string;
+  programme_areas?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+}
+
+export interface Event {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  featured_image?: string;
+  status: string;
+  start_date?: string;
+  end_date?: string;
+  location?: string;
+  created_at: string;
+  programme_areas?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
 }
 
 export interface TeamMember {
