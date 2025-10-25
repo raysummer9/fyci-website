@@ -32,7 +32,7 @@ export interface BlogWithDetails extends Blog {
   tags: {
     id: string
     name: string
-    slug: string
+    slugs: string
   }[]
   author?: {
     id: string
@@ -45,7 +45,7 @@ export interface BlogWithDetails extends Blog {
 export interface Tag {
   id: string
   name: string
-  slug: string
+  slugs: string
   color: string | null
   created_at: string
   updated_at: string
@@ -92,7 +92,7 @@ export async function getBlogs(filters?: {
         *,
         category:categories(id, name, slug),
         blog_tags(
-          tag:tags(id, name, slug)
+          tag:tags(id, name, slugs)
         ),
         author:profiles!created_by(id, full_name, email)
       `)
@@ -110,7 +110,7 @@ export async function getBlogs(filters?: {
       query = query.or(`title.ilike.%${filters.search}%,content.ilike.%${filters.search}%`)
     }
 
-    const { data: blogs, error } = await query.order('created_at', { ascending: false })
+    const { data: blogs, error } = await query.order('published_at', { ascending: false, nullsFirst: false })
 
     if (error) {
       console.error('Error fetching blogs:', error)
@@ -131,15 +131,15 @@ export async function getBlogs(filters?: {
         // Transform tags from the nested structure
         const tags = (blog.blog_tags || []).map((bt: any) => bt.tag).filter(Boolean)
 
-        // Get category from programme_areas (treating category_id as programme_area_id)
+        // Get category from categories table
         let category = blog.category
         if (blog.category_id && !blog.category) {
-          const { data: programmeArea } = await supabase
-            .from('programme_areas')
+          const { data: categoryData } = await supabase
+            .from('categories')
             .select('id, name, slug')
             .eq('id', blog.category_id)
             .single()
-          category = programmeArea
+          category = categoryData
         }
 
         return {
@@ -179,7 +179,7 @@ export async function getBlog(id: string): Promise<BlogWithDetails | null> {
         *,
         category:categories(id, name, slug),
         blog_tags(
-          tag:tags(id, name, slug)
+          tag:tags(id, name, slugs)
         ),
         author:profiles!created_by(id, full_name, email)
       `)
@@ -202,15 +202,15 @@ export async function getBlog(id: string): Promise<BlogWithDetails | null> {
     // Transform tags
     const tags = (data.blog_tags || []).map((bt: any) => bt.tag).filter(Boolean)
 
-    // Get category from programme_areas (treating category_id as programme_area_id)
+    // Get category from categories table
     let category = data.category
     if (data.category_id && !data.category) {
-      const { data: programmeArea } = await supabase
-        .from('programme_areas')
+      const { data: categoryData } = await supabase
+        .from('categories')
         .select('id, name, slug')
         .eq('id', data.category_id)
         .single()
-      category = programmeArea
+      category = categoryData
     }
 
     return {
@@ -237,6 +237,7 @@ export async function createBlog(blogData: {
   read_time?: number
   meta_title?: string
   meta_description?: string
+  published_at?: string
   tag_ids?: string[]
   created_by: string
 }): Promise<Blog | null> {
@@ -254,7 +255,7 @@ export async function createBlog(blogData: {
       .from('blogs')
       .insert([{
         ...blogInsertData,
-        published_at: blogData.status === 'published' ? new Date().toISOString() : null
+        published_at: blogData.published_at || (blogData.status === 'published' ? new Date().toISOString() : null)
       }])
       .select()
       .single()
@@ -300,6 +301,7 @@ export async function updateBlog(id: string, blogData: Partial<{
   read_time: number
   meta_title: string
   meta_description: string
+  published_at: string
   tag_ids: string[]
   updated_by: string
 }>): Promise<Blog | null> {
@@ -315,7 +317,7 @@ export async function updateBlog(id: string, blogData: Partial<{
     // Update blog
     const updatePayload = {
       ...updateData,
-      published_at: blogData.status === 'published' ? new Date().toISOString() : undefined
+      published_at: blogData.published_at || (blogData.status === 'published' ? new Date().toISOString() : undefined)
     }
 
     const { data: blog, error: blogError } = await supabase
@@ -336,7 +338,7 @@ export async function updateBlog(id: string, blogData: Partial<{
       await supabase
         .from('blog_tags')
         .delete()
-        .eq('blog_id', id)
+          .eq('blog_id', id)
 
       // Then, insert new tags
       if (tag_ids.length > 0) {
@@ -421,14 +423,18 @@ export async function createTag(tagData: { name: string; color?: string }): Prom
 
     const supabase = await createServerSupabaseClient()
 
-    const slug = tagData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    const slugs = tagData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+
+    // Create the insert data
+    const insertData = {
+      name: tagData.name,
+      slugs: slugs,
+      color: tagData.color
+    }
 
     const { data, error } = await supabase
       .from('tags')
-      .insert([{
-        ...tagData,
-        slug
-      }])
+      .insert([insertData])
       .select()
       .single()
 
@@ -535,8 +541,8 @@ export async function deleteComment(id: string): Promise<boolean> {
   }
 }
 
-// Get programme areas as categories for blogs
-export async function getProgrammeAreasAsCategories() {
+// Get categories for blogs
+export async function getCategories() {
   try {
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
       return []
@@ -545,19 +551,18 @@ export async function getProgrammeAreasAsCategories() {
     const supabase = await createServerSupabaseClient()
 
     const { data, error } = await supabase
-      .from('programme_areas')
+      .from('categories')
       .select('id, name, slug')
-      .eq('is_active', true)
       .order('sort_order', { ascending: true })
 
     if (error) {
-      console.error('Error fetching programme areas:', error)
+      console.error('Error fetching categories:', error)
       return []
     }
 
     return data || []
   } catch (error) {
-    console.error('Error fetching programme areas:', error)
+    console.error('Error fetching categories:', error)
     return []
   }
 }

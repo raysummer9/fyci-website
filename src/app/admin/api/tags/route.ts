@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Tag with this name already exists' }, { status: 400 })
     }
 
-    const tag = await createTag({ name, color })
+    const tag = await createTag({ name })
 
     if (!tag) {
       return NextResponse.json({ error: 'Failed to create tag' }, { status: 500 })

@@ -16,15 +16,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Get programme areas as categories
+    // Get blog categories
     const { data, error } = await supabase
-      .from('programme_areas')
+      .from('categories')
       .select('id, name, slug')
-      .eq('is_active', true)
       .order('sort_order', { ascending: true })
 
     if (error) {
-      console.error('Error fetching programme areas:', error)
+      console.error('Error fetching categories:', error)
       return NextResponse.json({ error: 'Failed to fetch categories' }, { status: 500 })
     }
 

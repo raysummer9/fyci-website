@@ -47,6 +47,7 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
     read_time: blog?.read_time || null,
     meta_title: blog?.meta_title || '',
     meta_description: blog?.meta_description || '',
+    published_at: blog?.published_at || '',
   })
 
   useEffect(() => {
@@ -471,6 +472,20 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
                     onChange={(e) => handleInputChange('read_time', e.target.value ? parseInt(e.target.value) : null)}
                     placeholder="5"
                   />
+                </div>
+
+                <div>
+                  <Label htmlFor="published_at">Publish Date & Time</Label>
+                  <Input
+                    id="published_at"
+                    type="datetime-local"
+                    value={formData.published_at ? new Date(formData.published_at).toISOString().slice(0, 16) : ''}
+                    onChange={(e) => handleInputChange('published_at', e.target.value ? new Date(e.target.value).toISOString() : '')}
+                    placeholder="Select publish date and time"
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    Leave empty to use current time when publishing
+                  </p>
                 </div>
               </CardContent>
             </Card>

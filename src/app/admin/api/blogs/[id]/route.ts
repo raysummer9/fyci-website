@@ -23,7 +23,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const blog = await getBlog(params.id)
+    const { id } = await params
+    const blog = await getBlog(id)
 
     if (!blog) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 })
@@ -51,6 +52,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const { id } = await params
     const body = await request.json()
     const {
       title,
@@ -64,6 +66,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       read_time,
       meta_title,
       meta_description,
+      published_at,
       tag_ids
     } = body
 
@@ -78,7 +81,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       .from('blogs')
       .select('id')
       .eq('slug', slug)
-      .neq('id', params.id)
+      .neq('id', id)
       .single()
 
     if (existing) {
@@ -97,11 +100,12 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       read_time: read_time || null,
       meta_title: meta_title || null,
       meta_description: meta_description || null,
+      published_at: published_at || null,
       tag_ids: tag_ids || [],
       updated_by: session.user.id
     }
 
-    const blog = await updateBlog(params.id, updateData)
+    const blog = await updateBlog(id, updateData)
 
     if (!blog) {
       return NextResponse.json({ 
@@ -131,7 +135,8 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const success = await deleteBlog(params.id)
+    const { id } = await params
+    const success = await deleteBlog(id)
 
     if (!success) {
       return NextResponse.json({ 

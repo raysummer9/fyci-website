@@ -217,7 +217,7 @@ export default function BlogListClient() {
                       </span>
                       <span className="flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
-                        {new Date(blog.created_at).toLocaleDateString()}
+                        {blog.published_at ? new Date(blog.published_at).toLocaleDateString() : 'Not published'}
                       </span>
                       <span className="flex items-center gap-1">
                         <MessageCircle className="h-4 w-4" />
