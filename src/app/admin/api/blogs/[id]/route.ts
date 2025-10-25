@@ -3,9 +3,9 @@ import { createServerSupabaseClient } from '@/lib/supabase'
 import { getBlog, updateBlog, deleteBlog } from '@/lib/admin-blog-data'
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {

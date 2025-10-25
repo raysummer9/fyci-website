@@ -84,8 +84,8 @@ export default function AntiCorruptionPage() {
               href="/programme-areas" 
               className="inline-flex items-center mb-6 transition-colors"
               style={{ color: '#360e1d' }}
-              onMouseEnter={(e) => e.target.style.color = '#4a1a2a'}
-              onMouseLeave={(e) => e.target.style.color = '#360e1d'}
+              onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#4a1a2a'}
+              onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#360e1d'}
             >
               <ArrowLeft size={20} className="mr-2" />
               Back to Programme Areas

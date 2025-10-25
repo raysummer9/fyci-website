@@ -96,7 +96,7 @@ export default function EventForm({ event, isEditing = false, programmeAreaId }:
         programme_area_id: programmeAreaId,
         start_date: formData.start_date ? new Date(formData.start_date).toISOString() : null,
         end_date: formData.end_date ? new Date(formData.end_date).toISOString() : null,
-        max_attendees: formData.max_attendees ? parseInt(formData.max_attendees) : null,
+        max_attendees: formData.max_attendees ? parseInt(String(formData.max_attendees)) : null,
       }
 
       const response = await fetch(url, {
@@ -135,7 +135,7 @@ export default function EventForm({ event, isEditing = false, programmeAreaId }:
         programme_area_id: programmeAreaId,
         start_date: formData.start_date ? new Date(formData.start_date).toISOString() : null,
         end_date: formData.end_date ? new Date(formData.end_date).toISOString() : null,
-        max_attendees: formData.max_attendees ? parseInt(formData.max_attendees) : null,
+        max_attendees: formData.max_attendees ? parseInt(String(formData.max_attendees)) : null,
       }
 
       const response = await fetch(url, {

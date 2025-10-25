@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase'
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
@@ -22,10 +22,11 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const { id } = await params
     const { data, error } = await supabase
       .from('publication_categories')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .single()
 
     if (error) {
@@ -101,6 +102,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       }
     }
 
+    const { id } = await params
     const body = await request.json()
     const { name, slug, description, sort_order } = body
 
@@ -115,7 +117,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       .from('publication_categories')
       .select('id')
       .eq('slug', slug)
-      .neq('id', params.id)
+      .neq('id', id)
       .single()
 
     if (existing) {
@@ -132,7 +134,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         sort_order: sort_order || 0,
         updated_at: new Date().toISOString()
       })
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single()
 
@@ -166,11 +168,13 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const { id } = await params
+
     // Check if category has publications
     const { data: publications, error: publicationsError } = await supabase
       .from('publications')
       .select('id')
-      .eq('category_id', params.id)
+      .eq('category_id', id)
       .limit(1)
 
     if (publicationsError) {
@@ -188,7 +192,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     const { error } = await supabase
       .from('publication_categories')
       .delete()
-      .eq('id', params.id)
+      .eq('id', id)
 
     if (error) {
       console.error('Error deleting publication category:', error)

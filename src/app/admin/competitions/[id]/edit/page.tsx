@@ -21,7 +21,7 @@ export default async function EditCompetition({ params }: EditCompetitionPagePro
       <div className="text-center py-12">
         <h1 className="text-2xl font-bold mb-4">Competition Not Found</h1>
         <p className="text-muted-foreground mb-4">
-          The competition you're looking for doesn't exist or you don't have access to it.
+          The competition you&apos;re looking for doesn&apos;t exist or you don&apos;t have access to it.
         </p>
         <Link href="/admin/programme-areas">
           <Button>
@@ -44,7 +44,7 @@ export default async function EditCompetition({ params }: EditCompetitionPagePro
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Edit Competition</h1>
           <p className="text-muted-foreground">
-            Update competition details for "{competition.title}"
+            Update competition details for &quot;{competition.title}&quot;
           </p>
         </div>
       </div>

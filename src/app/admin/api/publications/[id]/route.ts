@@ -3,9 +3,9 @@ import { createServerSupabaseClient } from '@/lib/supabase'
 import { getPublication, updatePublication, deletePublication } from '@/lib/admin-publication-data'
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
@@ -23,7 +23,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const publication = await getPublication(params.id)
+    const { id } = await params
+    const publication = await getPublication(id)
 
     if (!publication) {
       return NextResponse.json({ error: 'Publication not found' }, { status: 404 })
@@ -51,6 +52,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const { id } = await params
     const body = await request.json()
     const {
       title,
@@ -77,7 +79,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       .from('publications')
       .select('id')
       .eq('slug', slug)
-      .neq('id', params.id)
+      .neq('id', id)
       .single()
 
     if (existing) {
@@ -99,7 +101,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       updated_by: session.user.id
     }
 
-    const publication = await updatePublication(params.id, updateData)
+    const publication = await updatePublication(id, updateData)
 
     if (!publication) {
       return NextResponse.json({ 
@@ -129,7 +131,8 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const success = await deletePublication(params.id)
+    const { id } = await params
+    const success = await deletePublication(id)
 
     if (!success) {
       return NextResponse.json({ 

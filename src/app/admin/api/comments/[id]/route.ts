@@ -3,9 +3,9 @@ import { createServerSupabaseClient } from '@/lib/supabase'
 import { updateComment, deleteComment } from '@/lib/admin-blog-data'
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
@@ -26,7 +26,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const body = await request.json()
     const { is_approved } = body
 
-    const success = await updateComment(params.id, { is_approved })
+    const { id } = await params
+    const success = await updateComment(id, { is_approved })
 
     if (!success) {
       return NextResponse.json({ error: 'Failed to update comment' }, { status: 500 })
@@ -54,7 +55,8 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const success = await deleteComment(params.id)
+    const { id } = await params
+    const success = await deleteComment(id)
 
     if (!success) {
       return NextResponse.json({ error: 'Failed to delete comment' }, { status: 500 })

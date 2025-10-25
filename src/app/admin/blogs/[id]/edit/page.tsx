@@ -19,7 +19,7 @@ export default async function EditBlogPage({ params }: PageProps) {
       <div className="text-center py-12">
         <h1 className="text-2xl font-bold mb-4">Blog Post Not Found</h1>
         <p className="text-muted-foreground">
-          The blog post you're looking for doesn't exist or you don't have access to it.
+          The blog post you&apos;re looking for doesn&apos;t exist or you don&apos;t have access to it.
         </p>
       </div>
     )

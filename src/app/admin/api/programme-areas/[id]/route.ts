@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase'
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
@@ -22,6 +22,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const { id } = await params
     const body = await request.json()
     const { name, slug, description, icon, color, is_active, sort_order } = body
 
@@ -34,7 +35,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       .from('programme_areas')
       .select('id')
       .eq('slug', slug)
-      .neq('id', params.id)
+      .neq('id', id)
       .single()
 
     if (existing) {
@@ -53,7 +54,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         is_active: is_active ?? true,
         sort_order: sort_order || 0
       })
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single()
 
@@ -91,11 +92,13 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const { id } = await params
+
     // Delete programme area
     const { error } = await supabase
       .from('programme_areas')
       .delete()
-      .eq('id', params.id)
+      .eq('id', id)
 
     if (error) {
       console.error('Error deleting programme area:', error)
@@ -127,10 +130,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const { id } = await params
+
     const { data, error } = await supabase
       .from('programme_areas')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .single()
 
     if (error) {
