@@ -35,6 +35,7 @@ export default function PublicationForm({ publication, isEditing = false }: Publ
     category_id: publication?.category_id || '',
     status: publication?.status || 'draft',
     featured: publication?.featured || false,
+    published_at: publication?.published_at || '',
   })
 
   useEffect(() => {
@@ -125,6 +126,33 @@ export default function PublicationForm({ publication, isEditing = false }: Publ
     } catch (error) {
       console.error('Error uploading file:', error)
       setError(error instanceof Error ? error.message : 'Failed to upload file')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const handleCoverImageUpload = async (file: File) => {
+    if (!file) return
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/admin/api/upload', {
+        method: 'POST',
+        body: formData
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        handleInputChange('cover_image', result.url)
+      } else {
+        setError(result.error || 'Failed to upload cover image')
+      }
+    } catch (error) {
+      setError('Error uploading cover image')
     } finally {
       setUploading(false)
     }
@@ -238,6 +266,20 @@ export default function PublicationForm({ publication, isEditing = false }: Publ
                   <Label htmlFor="featured">Featured Publication</Label>
                 </div>
 
+                <div>
+                  <Label htmlFor="published_at">Publish Date & Time</Label>
+                  <Input
+                    id="published_at"
+                    type="datetime-local"
+                    value={formData.published_at ? new Date(formData.published_at).toISOString().slice(0, 16) : ''}
+                    onChange={(e) => handleInputChange('published_at', e.target.value ? new Date(e.target.value).toISOString() : '')}
+                    placeholder="Select publish date and time"
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    Leave empty to use current time when publishing
+                  </p>
+                </div>
+
                 {/* File Upload */}
                 <div>
                   <Label>PDF File *</Label>
@@ -298,13 +340,52 @@ export default function PublicationForm({ publication, isEditing = false }: Publ
 
                 {/* Cover Image */}
                 <div>
-                  <Label htmlFor="cover_image">Cover Image URL</Label>
-                  <Input
-                    id="cover_image"
-                    value={formData.cover_image}
-                    onChange={(e) => handleInputChange('cover_image', e.target.value)}
-                    placeholder="https://example.com/image.jpg"
-                  />
+                  <Label htmlFor="cover_image">Cover Image</Label>
+                  {formData.cover_image && (
+                    <div className="space-y-2 mb-4">
+                      <img
+                        src={formData.cover_image}
+                        alt="Cover"
+                        className="w-full h-32 object-cover rounded-md"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleInputChange('cover_image', '')}
+                      >
+                        <X className="h-4 w-4 mr-2" />
+                        Remove Image
+                      </Button>
+                    </div>
+                  )}
+                  
+                  <div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) handleCoverImageUpload(file)
+                      }}
+                      className="hidden"
+                      id="cover-image-upload"
+                    />
+                    <Label htmlFor="cover-image-upload">
+                      <div className="w-full border-2 border-dashed border-gray-300 rounded-md p-4 text-center cursor-pointer hover:border-gray-400 transition-colors">
+                        {uploading ? (
+                          <div className="text-sm text-gray-500">Uploading...</div>
+                        ) : (
+                          <div className="space-y-2">
+                            <Upload className="h-8 w-8 mx-auto text-gray-400" />
+                            <div className="text-sm text-gray-500">
+                              Click to upload cover image
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </Label>
+                  </div>
                 </div>
               </div>
             </div>

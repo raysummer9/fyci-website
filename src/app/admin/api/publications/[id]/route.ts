@@ -62,6 +62,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       category_id,
       status,
       featured,
+      published_at,
       file_size
     } = body
 
@@ -93,6 +94,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       category_id: category_id || null,
       status: status || 'draft',
       featured: featured || false,
+      published_at: published_at || (status === 'published' ? new Date().toISOString() : null),
       file_size: file_size || null,
       updated_by: session.user.id
     }

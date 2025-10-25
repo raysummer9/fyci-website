@@ -211,7 +211,7 @@ export async function getPublications(filters?: PublicationFilters): Promise<Pub
           slug
         )
       `)
-      .order('created_at', { ascending: false })
+      .order('published_at', { ascending: false, nullsFirst: false })
 
     // Apply filters
     if (filters?.status) {
@@ -298,6 +298,7 @@ export async function createPublication(publicationData: {
   category_id?: string
   status?: 'draft' | 'published' | 'archived'
   featured?: boolean
+  published_at?: string
   file_size?: number
   created_by: string
 }): Promise<Publication | null> {

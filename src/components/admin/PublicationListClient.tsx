@@ -230,7 +230,7 @@ export default function PublicationListClient() {
                     <div className="flex items-center space-x-1">
                       <Calendar className="h-4 w-4" />
                       <span>
-                        {new Date(publication.created_at).toLocaleDateString()}
+                        {publication.published_at ? new Date(publication.published_at).toLocaleDateString() : 'Not published'}
                       </span>
                     </div>
                     {publication.file_url && (
