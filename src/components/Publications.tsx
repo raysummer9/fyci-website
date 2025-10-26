@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, FileText, ExternalLink } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Publication } from '@/types';
 
 export default function Publications() {
@@ -277,13 +278,13 @@ export default function Publications() {
                 <p className="text-gray-700 mb-6">
                   Browse our complete library of publications, research papers, and educational resources.
                 </p>
-                <a 
+                <Link 
                   href="/publications"
                   className="inline-flex items-center gap-2 font-medium text-gray-900 hover:gap-3 transition-all duration-200 cursor-pointer"
                 >
                   View All Publications
                   <ArrowRight size={16} />
-                </a>
+                </Link>
               </div>
             </div>
           </motion.div>
