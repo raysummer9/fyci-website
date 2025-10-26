@@ -181,6 +181,7 @@ export interface BlogPost {
   read_time?: number;
   published_at?: string;
   created_at: string;
+  comments_count?: number;
   category?: {
     id: string;
     name: string;
