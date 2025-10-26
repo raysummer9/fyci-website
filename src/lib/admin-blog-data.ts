@@ -434,7 +434,7 @@ export async function deleteBlog(id: string): Promise<boolean> {
 }
 
 // Tags CRUD operations
-export async function getTags(): Promise<Tag[]> {
+export async function getTags(search?: string): Promise<Tag[]> {
   try {
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
       return []
@@ -442,10 +442,17 @@ export async function getTags(): Promise<Tag[]> {
 
     const supabase = await createServerSupabaseClient()
 
-    const { data, error } = await supabase
+    let query = supabase
       .from('tags')
       .select('*')
       .order('name')
+
+    // Apply search filter if provided
+    if (search && search.trim()) {
+      query = query.ilike('name', `%${search.trim()}%`)
+    }
+
+    const { data, error } = await query
 
     if (error) {
       console.error('Error fetching tags:', error)

@@ -33,7 +33,11 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
   const [categories, setCategories] = useState<Category[]>([])
   const [tags, setTags] = useState<Tag[]>([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [selectedTagObjects, setSelectedTagObjects] = useState<Tag[]>([])
   const [newTagName, setNewTagName] = useState('')
+  const [tagSearch, setTagSearch] = useState('')
+  const [tagSuggestions, setTagSuggestions] = useState<Tag[]>([])
+  const [showTagSuggestions, setShowTagSuggestions] = useState(false)
 
   // Function to calculate read time based on word count
   const calculateReadTime = (content: string): number => {
@@ -69,6 +73,16 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
     loadInitialData()
     if (blog?.tags) {
       setSelectedTags(blog.tags.map(tag => tag.id))
+      // Convert blog tags to Tag objects
+      const tagObjects: Tag[] = blog.tags.map(tag => ({
+        id: tag.id,
+        name: tag.name,
+        slugs: tag.slugs,
+        color: null,
+        created_at: '',
+        updated_at: ''
+      }))
+      setSelectedTagObjects(tagObjects)
     }
     // Calculate initial read time if blog has content
     if (blog?.content) {
@@ -84,12 +98,34 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
       const categoriesData = await categoriesResponse.json()
       setCategories(categoriesData || [])
 
-      // Load tags
+      // Load only first 5 tags initially
       const tagsResponse = await fetch('/admin/api/tags')
       const tagsData = await tagsResponse.json()
-      setTags(tagsData || [])
+      setTags((tagsData || []).slice(0, 5))
     } catch (error) {
       console.error('Error loading initial data:', error)
+    }
+  }
+
+  const searchTags = async (query: string) => {
+    if (!query.trim()) {
+      setTagSuggestions([])
+      setShowTagSuggestions(false)
+      return
+    }
+
+    try {
+      const response = await fetch(`/admin/api/tags?search=${encodeURIComponent(query)}`)
+      const data = await response.json()
+      const filteredTags = (data || []).filter((tag: Tag) => 
+        !selectedTags.includes(tag.id) && 
+        tag.name.toLowerCase().includes(query.toLowerCase())
+      )
+      setTagSuggestions(filteredTags.slice(0, 10)) // Show max 10 suggestions
+      setShowTagSuggestions(true)
+    } catch (error) {
+      console.error('Error searching tags:', error)
+      setTagSuggestions([])
     }
   }
 
@@ -165,9 +201,27 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
   const handleTagSelect = (tagId: string) => {
     if (selectedTags.includes(tagId)) {
       setSelectedTags(prev => prev.filter(id => id !== tagId))
+      setSelectedTagObjects(prev => prev.filter(tag => tag.id !== tagId))
     } else {
       setSelectedTags(prev => [...prev, tagId])
+      // Find the tag object from tags or tagSuggestions
+      const tagObject = tags.find(t => t.id === tagId) || tagSuggestions.find(t => t.id === tagId)
+      if (tagObject) {
+        setSelectedTagObjects(prev => [...prev, tagObject])
+      }
     }
+  }
+
+  const handleTagSearchChange = (value: string) => {
+    setTagSearch(value)
+    searchTags(value)
+  }
+
+  const handleTagSuggestionSelect = (tag: Tag) => {
+    handleTagSelect(tag.id)
+    setTagSearch('')
+    setShowTagSuggestions(false)
+    setTagSuggestions([])
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -400,6 +454,7 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
                 <CardTitle>Tags</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                {/* Create New Tag */}
                 <div className="flex gap-2">
                   <Input
                     value={newTagName}
@@ -421,40 +476,81 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
                   </Button>
                 </div>
 
-                <div className="space-y-2">
-                  {tags.map((tag) => (
-                    <div key={tag.id} className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id={`tag-${tag.id}`}
-                        checked={selectedTags.includes(tag.id)}
-                        onChange={() => handleTagSelect(tag.id)}
-                        className="rounded"
-                      />
-                      <Label htmlFor={`tag-${tag.id}`} className="text-sm">
-                        {tag.name}
-                      </Label>
+                {/* Search Existing Tags */}
+                <div className="relative">
+                  <Input
+                    value={tagSearch}
+                    onChange={(e) => handleTagSearchChange(e.target.value)}
+                    placeholder="Search existing tags..."
+                    onFocus={() => {
+                      if (tagSuggestions.length > 0) {
+                        setShowTagSuggestions(true)
+                      }
+                    }}
+                    onBlur={() => {
+                      // Delay hiding suggestions to allow clicking on them
+                      setTimeout(() => setShowTagSuggestions(false), 200)
+                    }}
+                  />
+                  
+                  {/* Tag Suggestions Dropdown */}
+                  {showTagSuggestions && tagSuggestions.length > 0 && (
+                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto">
+                      {tagSuggestions.map((tag) => (
+                        <div
+                          key={tag.id}
+                          className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                          onClick={() => handleTagSuggestionSelect(tag)}
+                        >
+                          {tag.name}
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
 
-                {selectedTags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {selectedTags.map(tagId => {
-                      const tag = tags.find(t => t.id === tagId)
-                      return tag ? (
-                        <Badge key={tagId} variant="secondary" className="text-xs">
+                {/* Popular Tags (First 5) */}
+                <div>
+                  <Label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Popular Tags
+                  </Label>
+                  <div className="space-y-2">
+                    {tags.map((tag) => (
+                      <div key={tag.id} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id={`tag-${tag.id}`}
+                          checked={selectedTags.includes(tag.id)}
+                          onChange={() => handleTagSelect(tag.id)}
+                          className="rounded"
+                        />
+                        <Label htmlFor={`tag-${tag.id}`} className="text-sm">
+                          {tag.name}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {selectedTagObjects.length > 0 && (
+                  <div>
+                    <Label className="text-sm font-medium text-gray-700 mb-2 block">
+                      Selected Tags
+                    </Label>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedTagObjects.map(tag => (
+                        <Badge key={tag.id} variant="secondary" className="text-xs">
                           {tag.name}
                           <button
                             type="button"
-                            onClick={() => handleTagSelect(tagId)}
+                            onClick={() => handleTagSelect(tag.id)}
                             className="ml-1 hover:text-red-500"
                           >
                             <X className="h-3 w-3" />
                           </button>
                         </Badge>
-                      ) : null
-                    })}
+                      ))}
+                    </div>
                   </div>
                 )}
               </CardContent>

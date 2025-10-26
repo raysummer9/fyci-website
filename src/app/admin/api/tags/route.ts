@@ -17,7 +17,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const tags = await getTags()
+    // Get search parameter
+    const { searchParams } = new URL(request.url)
+    const search = searchParams.get('search')
+
+    const tags = await getTags(search || undefined)
 
     return NextResponse.json(tags)
   } catch (error) {
