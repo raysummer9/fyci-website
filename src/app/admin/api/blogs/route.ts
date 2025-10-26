@@ -23,17 +23,21 @@ export async function GET(request: NextRequest) {
     const categoryId = searchParams.get('category_id')
     const tagId = searchParams.get('tag_id')
     const search = searchParams.get('search')
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '10')
 
     const filters = {
       status: status || undefined,
       category_id: categoryId || undefined,
       tag_id: tagId || undefined,
       search: search || undefined,
+      page,
+      limit,
     }
 
-    const blogs = await getBlogs(filters)
+    const result = await getBlogs(filters)
 
-    return NextResponse.json(blogs)
+    return NextResponse.json(result)
   } catch (error) {
     console.error('Error in GET /api/blogs:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
@@ -68,6 +72,7 @@ export async function POST(request: NextRequest) {
       read_time,
       meta_title,
       meta_description,
+      published_at,
       tag_ids
     } = body
 
@@ -100,6 +105,7 @@ export async function POST(request: NextRequest) {
       read_time: read_time || null,
       meta_title: meta_title || null,
       meta_description: meta_description || null,
+      published_at: published_at || null,
       tag_ids: tag_ids || [],
       created_by: session.user.id
     }

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { BlogWithDetails, Tag } from '@/lib/admin-blog-data'
-import { Plus, Search, Filter, Edit, Eye, Trash2, MessageCircle, Calendar, User } from 'lucide-react'
+import { Plus, Search, Filter, Edit, Eye, Trash2, MessageCircle, Calendar, User, ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface Category {
   id: string
@@ -26,20 +26,28 @@ export default function BlogListClient() {
     category_id: '',
     tag_id: ''
   })
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    itemsPerPage: 10
+  })
 
   useEffect(() => {
     loadData()
-  }, [filters])
+  }, [filters, pagination.currentPage])
 
   const loadData = async () => {
     setLoading(true)
     try {
-      // Load blogs with filters
+      // Load blogs with filters and pagination
       const blogParams = new URLSearchParams()
       if (filters.search) blogParams.append('search', filters.search)
       if (filters.status) blogParams.append('status', filters.status)
       if (filters.category_id) blogParams.append('category_id', filters.category_id)
       if (filters.tag_id) blogParams.append('tag_id', filters.tag_id)
+      blogParams.append('page', pagination.currentPage.toString())
+      blogParams.append('limit', pagination.itemsPerPage.toString())
 
       const blogResponse = await fetch(`/admin/api/blogs?${blogParams.toString()}`)
       const blogsData = await blogResponse.json()
@@ -52,9 +60,18 @@ export default function BlogListClient() {
       const categoriesResponse = await fetch('/admin/api/categories')
       const categoriesData = await categoriesResponse.json()
 
-      setBlogs(blogsData || [])
+      setBlogs(blogsData.blogs || blogsData || [])
       setTags(tagsData || [])
       setCategories(categoriesData || [])
+      
+      // Update pagination info if available
+      if (blogsData.pagination) {
+        setPagination(prev => ({
+          ...prev,
+          totalPages: blogsData.pagination.totalPages,
+          totalItems: blogsData.pagination.totalItems
+        }))
+      }
     } catch (error) {
       console.error('Error loading data:', error)
     } finally {
@@ -88,6 +105,15 @@ export default function BlogListClient() {
       case 'archived': return 'bg-gray-100 text-gray-800'
       default: return 'bg-gray-100 text-gray-800'
     }
+  }
+
+  const handlePageChange = (page: number) => {
+    setPagination(prev => ({ ...prev, currentPage: page }))
+  }
+
+  const handleFilterChange = (newFilters: any) => {
+    setFilters(newFilters)
+    setPagination(prev => ({ ...prev, currentPage: 1 })) // Reset to first page when filtering
   }
 
   if (loading) {
@@ -126,7 +152,7 @@ export default function BlogListClient() {
                 <Input
                   placeholder="Search blogs..."
                   value={filters.search}
-                  onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                  onChange={(e) => handleFilterChange({ ...filters, search: e.target.value })}
                   className="pl-9"
                 />
               </div>
@@ -136,7 +162,7 @@ export default function BlogListClient() {
               <label className="text-sm font-medium mb-2 block">Status</label>
               <select
                 value={filters.status}
-                onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+                onChange={(e) => handleFilterChange({ ...filters, status: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All Statuses</option>
@@ -150,7 +176,7 @@ export default function BlogListClient() {
               <label className="text-sm font-medium mb-2 block">Category</label>
               <select
                 value={filters.category_id}
-                onChange={(e) => setFilters({ ...filters, category_id: e.target.value })}
+                onChange={(e) => handleFilterChange({ ...filters, category_id: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All Categories</option>
@@ -166,7 +192,7 @@ export default function BlogListClient() {
               <label className="text-sm font-medium mb-2 block">Tag</label>
               <select
                 value={filters.tag_id}
-                onChange={(e) => setFilters({ ...filters, tag_id: e.target.value })}
+                onChange={(e) => handleFilterChange({ ...filters, tag_id: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All Tags</option>
@@ -277,6 +303,64 @@ export default function BlogListClient() {
           ))
         )}
       </div>
+
+      {/* Pagination */}
+      {pagination.totalPages > 1 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
+          <div className="text-sm text-gray-600">
+            Showing {((pagination.currentPage - 1) * pagination.itemsPerPage) + 1} to {Math.min(pagination.currentPage * pagination.itemsPerPage, pagination.totalItems)} of {pagination.totalItems} results
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(pagination.currentPage - 1)}
+              disabled={pagination.currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Previous
+            </Button>
+            
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                let pageNum;
+                if (pagination.totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (pagination.currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (pagination.currentPage >= pagination.totalPages - 2) {
+                  pageNum = pagination.totalPages - 4 + i;
+                } else {
+                  pageNum = pagination.currentPage - 2 + i;
+                }
+                
+                return (
+                  <Button
+                    key={pageNum}
+                    variant={pagination.currentPage === pageNum ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handlePageChange(pageNum)}
+                    className="w-8 h-8 p-0"
+                  >
+                    {pageNum}
+                  </Button>
+                );
+              })}
+            </div>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(pagination.currentPage + 1)}
+              disabled={pagination.currentPage === pagination.totalPages}
+            >
+              Next
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

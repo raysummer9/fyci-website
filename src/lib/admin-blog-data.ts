@@ -78,14 +78,40 @@ export async function getBlogs(filters?: {
   category_id?: string
   tag_id?: string
   search?: string
-}): Promise<BlogWithDetails[]> {
+  page?: number
+  limit?: number
+}): Promise<{ blogs: BlogWithDetails[], pagination: { currentPage: number, totalPages: number, totalItems: number, itemsPerPage: number } }> {
   try {
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      return []
+      return { blogs: [], pagination: { currentPage: 1, totalPages: 1, totalItems: 0, itemsPerPage: 10 } }
     }
 
     const supabase = await createServerSupabaseClient()
+    const page = filters?.page || 1
+    const limit = filters?.limit || 10
+    const offset = (page - 1) * limit
 
+    // First, get the total count for pagination
+    let countQuery = supabase
+      .from('blogs')
+      .select('*', { count: 'exact', head: true })
+
+    // Apply filters to count query
+    if (filters?.status) {
+      countQuery = countQuery.eq('status', filters.status)
+    }
+    
+    if (filters?.category_id) {
+      countQuery = countQuery.eq('category_id', filters.category_id)
+    }
+
+    if (filters?.search) {
+      countQuery = countQuery.or(`title.ilike.%${filters.search}%,content.ilike.%${filters.search}%`)
+    }
+
+    const { count: totalItems } = await countQuery
+
+    // Now get the paginated data
     let query = supabase
       .from('blogs')
       .select(`
@@ -110,14 +136,16 @@ export async function getBlogs(filters?: {
       query = query.or(`title.ilike.%${filters.search}%,content.ilike.%${filters.search}%`)
     }
 
-    const { data: blogs, error } = await query.order('published_at', { ascending: false, nullsFirst: false })
+    const { data: blogs, error } = await query
+      .order('published_at', { ascending: false, nullsFirst: false })
+      .range(offset, offset + limit - 1)
 
     if (error) {
       console.error('Error fetching blogs:', error)
-      return []
+      return { blogs: [], pagination: { currentPage: 1, totalPages: 1, totalItems: 0, itemsPerPage: 10 } }
     }
 
-    if (!blogs) return []
+    if (!blogs) return { blogs: [], pagination: { currentPage: 1, totalPages: 1, totalItems: 0, itemsPerPage: 10 } }
 
     // Transform the data and get comment counts
     const blogsWithDetails = await Promise.all(
@@ -152,16 +180,28 @@ export async function getBlogs(filters?: {
     )
 
     // Filter by tag if specified (after getting all blogs with tags)
+    let filteredBlogs = blogsWithDetails
     if (filters?.tag_id) {
-      return blogsWithDetails.filter(blog => 
+      filteredBlogs = blogsWithDetails.filter(blog => 
         blog.tags.some((tag: { id: string }) => tag.id === filters.tag_id)
       )
     }
 
-    return blogsWithDetails
+    // Calculate pagination info
+    const totalPages = Math.ceil((totalItems || 0) / limit)
+
+    return {
+      blogs: filteredBlogs,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalItems: totalItems || 0,
+        itemsPerPage: limit
+      }
+    }
   } catch (error) {
     console.error('Error fetching blogs:', error)
-    return []
+    return { blogs: [], pagination: { currentPage: 1, totalPages: 1, totalItems: 0, itemsPerPage: 10 } }
   }
 }
 
@@ -255,7 +295,9 @@ export async function createBlog(blogData: {
       .from('blogs')
       .insert([{
         ...blogInsertData,
-        published_at: blogData.published_at || (blogData.status === 'published' ? new Date().toISOString() : null)
+        published_at: blogData.published_at && blogData.published_at.trim() !== '' 
+          ? blogData.published_at 
+          : (blogData.status === 'published' ? new Date().toISOString() : null)
       }])
       .select()
       .single()
@@ -317,7 +359,9 @@ export async function updateBlog(id: string, blogData: Partial<{
     // Update blog
     const updatePayload = {
       ...updateData,
-      published_at: blogData.published_at || (blogData.status === 'published' ? new Date().toISOString() : undefined)
+      published_at: blogData.published_at && blogData.published_at.trim() !== '' 
+        ? blogData.published_at 
+        : (blogData.status === 'published' ? new Date().toISOString() : undefined)
     }
 
     const { data: blog, error: blogError } = await supabase
