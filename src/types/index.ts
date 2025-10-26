@@ -147,10 +147,24 @@ export interface TeamMember {
 export interface Publication {
   id: string;
   title: string;
-  description: string;
-  date: string;
-  type: string;
-  link: string;
+  slug: string;
+  description?: string;
+  content?: string;
+  cover_image?: string;
+  file_url?: string;
+  status: string;
+  published_at?: string;
+  created_at: string;
+  publication_categories?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+  profiles?: {
+    id: string;
+    full_name?: string;
+    avatar_url?: string;
+  };
 }
 
 export interface BlogPost {
