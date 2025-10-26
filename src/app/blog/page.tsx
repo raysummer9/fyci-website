@@ -3,14 +3,21 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Facebook, Twitter, Calendar, User, Share2, ArrowRight, Instagram, Youtube, ChevronLeft, ChevronRight, Eye, MessageCircle, Heart, Clock } from 'lucide-react';
 import Newsletter from '@/components/Newsletter';
 import Footer from '@/components/Footer';
+import { BlogPost } from '@/types';
 
 export default function BlogPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 4;
+  const [featuredPost, setFeaturedPost] = useState<BlogPost | null>(null);
+  const [recentPosts, setRecentPosts] = useState<BlogPost[]>([]);
+  const [categories, setCategories] = useState<{id: string, name: string, slug: string, count: number}[]>([]);
+  const [tags, setTags] = useState<{id: string, name: string, slugs: string, count: number}[]>([]);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -27,165 +34,88 @@ export default function BlogPage() {
     visible: { opacity: 1, y: 0 }
   };
 
-  // Featured post data
-  const featuredPost = {
-    category: "MIND & WELL-BEING",
-    title: "You're not broken, you're just different.",
-    date: "OCTOBER 19, 2025",
-    author: "JENNIFER OBIAGELI PHILIP",
-    excerpt: "I once had a friend tell me she does not want to have children so as not to replicate her genes. She didn't mind adopting, though. It's easy to feel broken when we see parts of ourselves that don't align with what we believe is 'normal' or acceptable. But what if our differences are actually our greatest strengths?",
-    image: "/img/autumn-trees.jpg", // You'll need to add this image
-    slug: "youre-not-broken-youre-just-different",
-    views: 3420,
-    comments: 87,
-    likes: 445,
-    readTime: "8 min read"
+  useEffect(() => {
+    const fetchBlogData = async () => {
+      try {
+        // Fetch featured post
+        const featuredResponse = await fetch('/api/blogs?featured=true&limit=1');
+        if (featuredResponse.ok) {
+          const featuredData = await featuredResponse.json();
+          setFeaturedPost(featuredData[0] || null);
+        }
+
+        // Fetch recent posts
+        const recentResponse = await fetch('/api/blogs?limit=3');
+        if (recentResponse.ok) {
+          const recentData = await recentResponse.json();
+          setRecentPosts(recentData.slice(0, 3));
+        }
+
+        // Fetch categories
+        const categoriesResponse = await fetch('/api/blogs/categories');
+        if (categoriesResponse.ok) {
+          const categoriesData = await categoriesResponse.json();
+          setCategories(categoriesData);
+        }
+
+        // Fetch tags
+        const tagsResponse = await fetch('/api/blogs/tags');
+        if (tagsResponse.ok) {
+          const tagsData = await tagsResponse.json();
+          setTags(tagsData);
+        }
+
+        // Fetch all blog posts for pagination
+        const allPostsResponse = await fetch('/api/blogs?limit=20');
+        if (allPostsResponse.ok) {
+          const allPostsData = await allPostsResponse.json();
+          setBlogPosts(allPostsData);
+        }
+      } catch (error) {
+        console.error('Error fetching blog data:', error);
+        // Set fallback data
+        setFeaturedPost({
+          id: '1',
+          title: "You're not broken, you're just different.",
+          slug: "youre-not-broken-youre-just-different",
+          excerpt: "I once had a friend tell me she does not want to have children so as not to replicate her genes. She didn't mind adopting, though. It's easy to feel broken when we see parts of ourselves that don't align with what we believe is 'normal' or acceptable. But what if our differences are actually our greatest strengths?",
+          published_at: '2025-10-19T00:00:00Z',
+          created_at: '2025-10-19T00:00:00Z',
+          status: 'published',
+          featured: true,
+          views: 3420,
+          likes: 445,
+          read_time: 8,
+          category: { id: '1', name: 'MIND & WELL-BEING', slug: 'mind-well-being' },
+          author: { id: '1', full_name: 'JENNIFER OBIAGELI PHILIP', email: 'jennifer@example.com' },
+          tags: []
+        });
+        setCategories([
+          { id: '1', name: 'LAW & POLICY', slug: 'law-policy', count: 4 },
+          { id: '2', name: 'LIFESTYLE', slug: 'lifestyle', count: 1 },
+          { id: '3', name: 'MIND & WELL-BEING', slug: 'mind-well-being', count: 6 }
+        ]);
+        setTags([
+          { id: '1', name: 'Youth Empowerment', slugs: 'youth-empowerment', count: 5 },
+          { id: '2', name: 'Creative Arts', slugs: 'creative-arts', count: 3 },
+          { id: '3', name: 'Social Change', slugs: 'social-change', count: 4 }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogData();
+  }, []);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long',
+      day: 'numeric'
+    }).toUpperCase();
   };
-
-  // Recent posts data
-  const recentPosts = [
-    {
-      id: 1,
-      title: "Dangote Truck Tragedy: The Death of Phyna's Sister Reveals the Urgent Need for Nigeria's Road Law Reform",
-      date: "SEPTEMBER 9, 2025",
-      image: "/img/traffic-scene.jpg", // You'll need to add this image
-      slug: "dangote-truck-tragedy"
-    }
-  ];
-
-  // Categories data
-  const categories = [
-    { name: "LAW & POLICY", count: 4 },
-    { name: "LIFESTYLE", count: 1 },
-    { name: "MIND & WELL-BEING", count: 6 }
-  ];
-
-  // Tags data
-  const tags = [
-    "Youth Empowerment", "Creative Arts", "Social Change", "Community Development", 
-    "Leadership", "Advocacy", "NGO", "Non-profit", "Nigeria", "Africa"
-  ];
-
-  // Blog posts data
-  const blogPosts = [
-    {
-      id: 1,
-      title: "The Power of Creative Expression in Youth Development",
-      excerpt: "Exploring how creative arts can transform young people's lives and build confidence in their abilities to create positive change.",
-      category: "Creative Arts",
-      date: "October 15, 2025",
-      image: "/img/creative-workshop.jpg",
-      slug: "creative-expression-youth-development",
-      views: 1240,
-      comments: 23,
-      likes: 156,
-      readTime: "5 min read"
-    },
-    {
-      id: 2,
-      title: "Breaking Barriers: Gender Rights and Advocacy in Nigeria",
-      excerpt: "Addressing the challenges and opportunities in promoting gender equality and women's rights across Nigerian communities.",
-      category: "Gender Rights",
-      date: "October 12, 2025",
-      image: "/img/gender-rights.jpg",
-      slug: "gender-rights-advocacy-nigeria",
-      views: 980,
-      comments: 18,
-      likes: 134,
-      readTime: "7 min read"
-    },
-    {
-      id: 3,
-      title: "Political Participation and Youth Voice in Democracy",
-      excerpt: "Understanding how young people can effectively engage in political processes and make their voices heard in democratic systems.",
-      category: "Political Participation",
-      date: "October 10, 2025",
-      image: "/img/youth-politics.jpg",
-      slug: "political-participation-youth-democracy",
-      views: 1567,
-      comments: 31,
-      likes: 189,
-      readTime: "6 min read"
-    },
-    {
-      id: 4,
-      title: "Building Community Resilience Through Art and Culture",
-      excerpt: "How cultural initiatives and artistic programs strengthen community bonds and create lasting positive impact.",
-      category: "Community Development",
-      date: "October 8, 2025",
-      image: "/img/community-art.jpg",
-      slug: "community-resilience-art-culture",
-      views: 892,
-      comments: 15,
-      likes: 112,
-      readTime: "4 min read"
-    },
-    {
-      id: 5,
-      title: "Anti-Corruption Strategies for Young Change Makers",
-      excerpt: "Practical approaches for young people to identify, resist, and work against corruption in their communities and institutions.",
-      category: "Anti-Corruption",
-      date: "October 5, 2025",
-      image: "/img/anti-corruption.jpg",
-      slug: "anti-corruption-strategies-young-changemakers",
-      views: 2134,
-      comments: 42,
-      likes: 267,
-      readTime: "8 min read"
-    },
-    {
-      id: 6,
-      title: "Sustainable Development Goals and Youth Action",
-      excerpt: "How Nigerian youth can contribute to achieving the UN Sustainable Development Goals through creative and innovative approaches.",
-      category: "Development",
-      date: "October 3, 2025",
-      image: "/img/sdg-youth.jpg",
-      slug: "sustainable-development-goals-youth-action",
-      views: 1123,
-      comments: 27,
-      likes: 178,
-      readTime: "6 min read"
-    },
-    {
-      id: 7,
-      title: "Digital Literacy and Modern Youth Empowerment",
-      excerpt: "The importance of digital skills in contemporary youth development and how technology can amplify young voices.",
-      category: "Technology",
-      date: "October 1, 2025",
-      image: "/img/digital-literacy.jpg",
-      slug: "digital-literacy-modern-youth-empowerment",
-      views: 1876,
-      comments: 35,
-      likes: 298,
-      readTime: "5 min read"
-    },
-    {
-      id: 8,
-      title: "Mental Health and Wellbeing in Youth Programs",
-      excerpt: "Integrating mental health support into youth development initiatives and creating safe spaces for emotional growth.",
-      category: "Mental Health",
-      date: "September 28, 2025",
-      image: "/img/mental-health.jpg",
-      slug: "mental-health-wellbeing-youth-program",
-      views: 1456,
-      comments: 29,
-      likes: 203,
-      readTime: "7 min read"
-    },
-    {
-      id: 9,
-      title: "Environmental Activism and Green Leadership",
-      excerpt: "How young environmental activists are leading the charge for climate action and sustainable practices in Nigeria.",
-      category: "Environment",
-      date: "September 25, 2025",
-      image: "/img/environmental-activism.jpg",
-      slug: "environmental-activism-green-leadership",
-      views: 1034,
-      comments: 19,
-      likes: 145,
-      readTime: "4 min read"
-    }
-  ];
 
   // Pagination logic
   const totalPages = Math.ceil(blogPosts.length / postsPerPage);
@@ -241,89 +171,112 @@ export default function BlogPage() {
                 </motion.h2>
                 
                 {/* Featured Post Card */}
-                <motion.div 
-                  className="bg-white rounded-xl shadow-lg p-8"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-                >
-                <article className="space-y-6">
-                  {/* Featured Image - First */}
-                  <div className="relative w-full h-64 lg:h-80 rounded-lg overflow-hidden">
-                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-500">Featured Image</span>
+                {loading ? (
+                  <div className="bg-white rounded-xl shadow-lg p-8 animate-pulse">
+                    <div className="space-y-6">
+                      <div className="w-full h-64 lg:h-80 bg-gray-200 rounded-lg"></div>
+                      <div className="h-6 bg-gray-200 rounded w-24"></div>
+                      <div className="h-8 bg-gray-200 rounded w-3/4"></div>
+                      <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                      <div className="h-4 bg-gray-200 rounded w-full"></div>
+                      <div className="h-4 bg-gray-200 rounded w-2/3"></div>
                     </div>
                   </div>
+                ) : featuredPost ? (
+                  <motion.div 
+                    className="bg-white rounded-xl shadow-lg p-8"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  >
+                    <article className="space-y-6">
+                      {/* Featured Image - First */}
+                      <div className="relative w-full h-64 lg:h-80 rounded-lg overflow-hidden">
+                        {featuredPost.featured_image ? (
+                          <img 
+                            src={featuredPost.featured_image} 
+                            alt={featuredPost.title}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                            <span className="text-gray-500">Featured Image</span>
+                          </div>
+                        )}
+                      </div>
 
-                  {/* Category Tag */}
-                  <div>
-                    <span 
-                      className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
-                      style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
-                    >
-                      {featuredPost.category}
-                    </span>
-                  </div>
+                      {/* Category Tag */}
+                      <div>
+                        <span 
+                          className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                          style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
+                        >
+                          {featuredPost.category?.name || 'Blog'}
+                        </span>
+                      </div>
 
-                  {/* Title */}
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 leading-tight">
-                    {featuredPost.title}
-                  </h1>
+                      {/* Title */}
+                      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 leading-tight">
+                        {featuredPost.title}
+                      </h1>
 
-                  {/* Date */}
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
-                    <span className="font-medium uppercase tracking-wide">{featuredPost.date}</span>
-                  </div>
+                      {/* Date */}
+                      <div className="flex items-center gap-4 text-sm text-gray-500">
+                        <span className="font-medium uppercase tracking-wide">
+                          {formatDate(featuredPost.published_at || featuredPost.created_at)}
+                        </span>
+                      </div>
 
-                  {/* Excerpt */}
-                  <div>
-                    <p className="text-gray-700 leading-relaxed">
-                      {featuredPost.excerpt}
-                    </p>
-                  </div>
+                      {/* Excerpt */}
+                      <div>
+                        <p className="text-gray-700 leading-relaxed">
+                          {featuredPost.excerpt}
+                        </p>
+                      </div>
 
-                  {/* Metadata */}
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
-                    {/* Views */}
-                    <div className="flex items-center gap-1">
-                      <Eye size={14} />
-                      <span>{featuredPost.views.toLocaleString()}</span>
-                    </div>
-                    
-                    {/* Comments */}
-                    <div className="flex items-center gap-1">
-                      <MessageCircle size={14} />
-                      <span>{featuredPost.comments}</span>
-                    </div>
-                    
-                    {/* Likes */}
-                    <div className="flex items-center gap-1">
-                      <Heart size={14} />
-                      <span>{featuredPost.likes}</span>
-                    </div>
-                    
-                    {/* Read Time */}
-                    <div className="flex items-center gap-1">
-                      <Clock size={14} />
-                      <span>{featuredPost.readTime}</span>
-                    </div>
+                      {/* Metadata */}
+                      <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+                        {/* Views */}
+                        <div className="flex items-center gap-1">
+                          <Eye size={14} />
+                          <span>{featuredPost.views.toLocaleString()}</span>
+                        </div>
+                        
+                        {/* Likes */}
+                        <div className="flex items-center gap-1">
+                          <Heart size={14} />
+                          <span>{featuredPost.likes}</span>
+                        </div>
+                        
+                        {/* Read Time */}
+                        {featuredPost.read_time && (
+                          <div className="flex items-center gap-1">
+                            <Clock size={14} />
+                            <span>{featuredPost.read_time} min read</span>
+                          </div>
+                        )}
+                      </div>
+            
+                      {/* View Post Button - Text and Icon */}
+                      <div>
+                        <Link
+                          href={`/blog/${featuredPost.slug}`}
+                          className="inline-flex items-center gap-2 font-semibold text-gray-900 hover:text-gray-600 transition-colors"
+                          style={{ color: '#360e1d' }}
+                          onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#4a1a2a'}
+                          onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#360e1d'}
+                        >
+                          View Post
+                          <ArrowRight size={16} />
+                        </Link>
+                      </div>
+                    </article>
+                  </motion.div>
+                ) : (
+                  <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+                    <p className="text-gray-500">No featured post available</p>
                   </div>
-        
-                  {/* View Post Button - Text and Icon */}
-                  <div>
-                    <Link
-                      href={`/blog/${featuredPost.slug}`}
-                      className="inline-flex items-center gap-2 font-semibold text-gray-900 hover:text-gray-600 transition-colors"
-                      style={{ color: '#360e1d' }}
-                      onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#4a1a2a'}
-                      onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#360e1d'}
-                    >
-                      View Post
-                      <ArrowRight size={16} />
-                    </Link>
-                  </div>
-                </article>
-                </motion.div>
+                )}
               </div>
 
               {/* Blog Grid Section */}
@@ -344,90 +297,113 @@ export default function BlogPage() {
                 </motion.h2>
                 
                 <div className="w-full">
-                  <div className="space-y-6">
-                    {currentPosts.map((post, index) => (
-                      <motion.article
-                        key={post.id}
-                        className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false, amount: 0.1, margin: "-100px" }}
-                        transition={{ duration: 0.8, delay: 0.2 + (index * 0.1), ease: [0.25, 0.46, 0.45, 0.94] }}
-                      >
-                        <Link href={`/blog/${post.slug}`} className="flex flex-col sm:flex-row sm:items-stretch">
-                          {/* Post Image - Left Side */}
-                          <div className="relative w-full sm:w-80 flex-shrink-0 bg-gray-200 overflow-hidden h-48 sm:h-auto sm:min-h-0">
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <span className="text-gray-500 text-sm">Post Image</span>
+                  {loading ? (
+                    <div className="space-y-6">
+                      {Array.from({ length: 4 }).map((_, index) => (
+                        <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse">
+                          <div className="flex flex-col sm:flex-row sm:items-stretch">
+                            <div className="w-full sm:w-80 flex-shrink-0 bg-gray-200 h-48 sm:h-auto sm:min-h-0"></div>
+                            <div className="flex-1 p-6 space-y-4">
+                              <div className="h-6 bg-gray-200 rounded w-24"></div>
+                              <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                              <div className="h-4 bg-gray-200 rounded w-full"></div>
+                              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                              <div className="h-4 bg-gray-200 rounded w-1/3"></div>
                             </div>
                           </div>
-
-                          {/* Post Content - Right Side */}
-                          <div className="flex-1 p-6 space-y-4">
-                            {/* Category */}
-                            <span 
-                              className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
-                              style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
-                            >
-                              {post.category}
-                            </span>
-
-                            {/* Title */}
-                            <h3 className="text-lg font-bold text-gray-900 leading-tight line-clamp-2">
-                              {post.title}
-                            </h3>
-
-                            {/* Excerpt */}
-                            <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                              {post.excerpt}
-                            </p>
-
-                            {/* Date */}
-                            <p className="text-xs text-gray-500 uppercase tracking-wide">
-                              {post.date}
-                            </p>
-
-                            {/* Metadata */}
-                            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
-                              {/* Views */}
-                              <div className="flex items-center gap-1">
-                                <Eye size={14} />
-                                <span>{post.views.toLocaleString()}</span>
-                              </div>
-                              
-                              {/* Comments */}
-                              <div className="flex items-center gap-1">
-                                <MessageCircle size={14} />
-                                <span>{post.comments}</span>
-                              </div>
-                              
-                              {/* Likes */}
-                              <div className="flex items-center gap-1">
-                                <Heart size={14} />
-                                <span>{post.likes}</span>
-                              </div>
-                              
-                              {/* Read Time */}
-                              <div className="flex items-center gap-1">
-                                <Clock size={14} />
-                                <span>{post.readTime}</span>
-                              </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {currentPosts.map((post, index) => (
+                        <motion.article
+                          key={post.id}
+                          className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                          initial={{ opacity: 0, y: 30 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: false, amount: 0.1, margin: "-100px" }}
+                          transition={{ duration: 0.8, delay: 0.2 + (index * 0.1), ease: [0.25, 0.46, 0.45, 0.94] }}
+                        >
+                          <Link href={`/blog/${post.slug}`} className="flex flex-col sm:flex-row sm:items-stretch">
+                            {/* Post Image - Left Side */}
+                            <div className="relative w-full sm:w-80 flex-shrink-0 bg-gray-200 overflow-hidden h-48 sm:h-auto sm:min-h-0">
+                              {post.featured_image ? (
+                                <img 
+                                  src={post.featured_image} 
+                                  alt={post.title}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <span className="text-gray-500 text-sm">Post Image</span>
+                                </div>
+                              )}
                             </div>
 
-                            {/* Read More */}
-                            <div className="pt-2">
-                              <span className="inline-flex items-center gap-2 font-semibold text-sm"
-                                style={{ color: '#360e1d' }}
+                            {/* Post Content - Right Side */}
+                            <div className="flex-1 p-6 space-y-4">
+                              {/* Category */}
+                              <span 
+                                className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                                style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
                               >
-                                Read More
-                                <ArrowRight size={14} />
+                                {post.category?.name || 'Blog'}
                               </span>
-              </div>
-            </div>
-                        </Link>
-                      </motion.article>
-                    ))}
-                  </div>
+
+                              {/* Title */}
+                              <h3 className="text-lg font-bold text-gray-900 leading-tight line-clamp-2">
+                                {post.title}
+                              </h3>
+
+                              {/* Excerpt */}
+                              <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                                {post.excerpt}
+                              </p>
+
+                              {/* Date */}
+                              <p className="text-xs text-gray-500 uppercase tracking-wide">
+                                {formatDate(post.published_at || post.created_at)}
+                              </p>
+
+                              {/* Metadata */}
+                              <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+                                {/* Views */}
+                                <div className="flex items-center gap-1">
+                                  <Eye size={14} />
+                                  <span>{post.views.toLocaleString()}</span>
+                                </div>
+                                
+                                {/* Likes */}
+                                <div className="flex items-center gap-1">
+                                  <Heart size={14} />
+                                  <span>{post.likes}</span>
+                                </div>
+                                
+                                {/* Read Time */}
+                                {post.read_time && (
+                                  <div className="flex items-center gap-1">
+                                    <Clock size={14} />
+                                    <span>{post.read_time} min read</span>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Read More */}
+                              <div className="pt-2">
+                                <span className="inline-flex items-center gap-2 font-semibold text-sm"
+                                  style={{ color: '#360e1d' }}
+                                >
+                                  Read More
+                                  <ArrowRight size={14} />
+                                </span>
+                              </div>
+                            </div>
+                          </Link>
+                        </motion.article>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Pagination */}
                   <motion.div 
@@ -494,33 +470,53 @@ export default function BlogPage() {
                   </h2>
                   
                   <div className="space-y-6">
-                    {recentPosts.map((post, index) => (
-                      <article
-                        key={post.id}
-                        className="group cursor-pointer"
-                      >
-                        <Link href={`/blog/${post.slug}`}>
-                          <div className="flex gap-4">
-                            {/* Post Image */}
-                            <div className="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden bg-gray-200">
-                              <div className="w-full h-full flex items-center justify-center">
-                                <span className="text-xs text-gray-500">Image</span>
+                    {loading ? (
+                      Array.from({ length: 3 }).map((_, index) => (
+                        <div key={index} className="flex gap-4 animate-pulse">
+                          <div className="flex-shrink-0 w-24 h-24 rounded-lg bg-gray-200"></div>
+                          <div className="flex-1 min-w-0">
+                            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                            <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      recentPosts.map((post, index) => (
+                        <article
+                          key={post.id}
+                          className="group cursor-pointer"
+                        >
+                          <Link href={`/blog/${post.slug}`}>
+                            <div className="flex gap-4">
+                              {/* Post Image */}
+                              <div className="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden bg-gray-200">
+                                {post.featured_image ? (
+                                  <img 
+                                    src={post.featured_image} 
+                                    alt={post.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center">
+                                    <span className="text-xs text-gray-500">Image</span>
+                                  </div>
+                                )}
+                              </div>
+              
+                              {/* Post Content */}
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-bold text-gray-900 text-sm leading-tight mb-2 group-hover:text-gray-600 transition-colors">
+                                  {post.title}
+                                </h3>
+                                <p className="text-xs text-gray-500 uppercase tracking-wide">
+                                  {formatDate(post.published_at || post.created_at)}
+                                </p>
                               </div>
                             </div>
-        
-                            {/* Post Content */}
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-bold text-gray-900 text-sm leading-tight mb-2 group-hover:text-gray-600 transition-colors">
-                                {post.title}
-                              </h3>
-                              <p className="text-xs text-gray-500 uppercase tracking-wide">
-                                {post.date}
-                              </p>
-              </div>
-            </div>
-                        </Link>
-          </article>
-                    ))}
+                          </Link>
+                        </article>
+                      ))
+                    )}
                   </div>
                 </div>
 
@@ -531,17 +527,26 @@ export default function BlogPage() {
                   </h2>
                   
                   <div className="space-y-3">
-                    {categories.map((category, index) => (
-                      <div key={category.name}>
-                        <Link
-                          href={`/blog/category/${category.name.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and')}`}
-                          className="flex items-center justify-between py-2 hover:text-gray-600 transition-colors"
-                        >
-                          <span className="text-gray-900 font-medium">{category.name}</span>
-                          <span className="text-gray-500 text-sm">({category.count})</span>
-                        </Link>
-                      </div>
-                    ))}
+                    {loading ? (
+                      Array.from({ length: 3 }).map((_, index) => (
+                        <div key={index} className="flex items-center justify-between py-2 animate-pulse">
+                          <div className="h-4 bg-gray-200 rounded w-24"></div>
+                          <div className="h-4 bg-gray-200 rounded w-8"></div>
+                        </div>
+                      ))
+                    ) : (
+                      categories.map((category, index) => (
+                        <div key={category.id}>
+                          <Link
+                            href={`/blog/category/${category.slug}`}
+                            className="flex items-center justify-between py-2 hover:text-gray-600 transition-colors"
+                          >
+                            <span className="text-gray-900 font-medium">{category.name}</span>
+                            <span className="text-gray-500 text-sm">({category.count})</span>
+                          </Link>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
 
@@ -589,14 +594,20 @@ export default function BlogPage() {
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-2">
-                    {tags.map((tag, index) => (
-                      <span
-                        key={tag}
-                        className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
+                    {loading ? (
+                      Array.from({ length: 5 }).map((_, index) => (
+                        <div key={index} className="h-6 bg-gray-200 rounded-full w-16 animate-pulse"></div>
+                      ))
+                    ) : (
+                      tags.map((tag, index) => (
+                        <span
+                          key={tag.id}
+                          className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer"
+                        >
+                          #{tag.name}
+                        </span>
+                      ))
+                    )}
                   </div>
                 </div>
               </div>

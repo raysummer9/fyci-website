@@ -170,12 +170,32 @@ export interface Publication {
 export interface BlogPost {
   id: string;
   title: string;
-  excerpt: string;
-  date: string;
-  author: string;
-  category: string;
-  image: string;
-  link: string;
+  slug: string;
+  excerpt?: string;
+  content?: string;
+  featured_image?: string;
+  status: string;
+  featured: boolean;
+  views: number;
+  likes: number;
+  read_time?: number;
+  published_at?: string;
+  created_at: string;
+  category?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+  author?: {
+    id: string;
+    full_name?: string;
+    email?: string;
+  };
+  tags?: {
+    id: string;
+    name: string;
+    slugs: string;
+  }[];
 }
 
 export interface Partner {
