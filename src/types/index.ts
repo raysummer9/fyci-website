@@ -47,13 +47,24 @@ export interface Programme {
   title: string;
   slug: string;
   description: string;
+  content?: string;
   featured_image?: string;
   status: string;
+  featured: boolean;
   created_at: string;
+  updated_at: string;
   programme_areas?: {
     id: string;
     name: string;
     slug: string;
+    description?: string;
+    icon?: string;
+    color?: string;
+  };
+  profiles?: {
+    id: string;
+    full_name?: string;
+    avatar_url?: string;
   };
 }
 
@@ -62,15 +73,28 @@ export interface Competition {
   title: string;
   slug: string;
   description: string;
+  content?: string;
   featured_image?: string;
   status: string;
   start_date?: string;
   end_date?: string;
+  rules?: string;
+  prizes?: string;
+  featured: boolean;
   created_at: string;
+  updated_at: string;
   programme_areas?: {
     id: string;
     name: string;
     slug: string;
+    description?: string;
+    icon?: string;
+    color?: string;
+  };
+  profiles?: {
+    id: string;
+    full_name?: string;
+    avatar_url?: string;
   };
 }
 
@@ -79,16 +103,32 @@ export interface Event {
   title: string;
   slug: string;
   description: string;
+  content?: string;
   featured_image?: string;
   status: string;
   start_date?: string;
   end_date?: string;
   location?: string;
+  venue?: string;
+  is_online?: boolean;
+  meeting_url?: string;
+  registration_url?: string;
+  max_attendees?: number;
+  featured: boolean;
   created_at: string;
+  updated_at: string;
   programme_areas?: {
     id: string;
     name: string;
     slug: string;
+    description?: string;
+    icon?: string;
+    color?: string;
+  };
+  profiles?: {
+    id: string;
+    full_name?: string;
+    avatar_url?: string;
   };
 }
 
