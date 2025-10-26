@@ -45,6 +45,11 @@ export default function ProgrammePage({ params }: ProgrammePageProps) {
     fetchProgramme();
   }, [params]);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',

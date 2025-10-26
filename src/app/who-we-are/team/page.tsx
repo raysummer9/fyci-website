@@ -6,7 +6,6 @@ import Image from 'next/image';
 import Partners from '@/components/Partners';
 import Newsletter from '@/components/Newsletter';
 import Footer from '@/components/Footer';
-import GetInvolvedCTA from '@/components/GetInvolvedCTA';
 
 export default function TeamPage() {
   const containerVariants = {
@@ -197,8 +196,6 @@ export default function TeamPage() {
         </div>
       </section>
 
-      {/* Get Involved CTA Section */}
-      <GetInvolvedCTA />
 
       {/* Partners Section */}
       <Partners />

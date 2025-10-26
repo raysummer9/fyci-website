@@ -101,7 +101,7 @@ export default function Hero() {
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
             <Link
-              href="/what-we-do"
+              href="/who-we-are/about"
               className="group inline-flex items-center gap-3 px-10 py-5 bg-white font-bold text-lg rounded-xl hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
               style={{ color: '#360e1d' }}
             >

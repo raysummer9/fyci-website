@@ -93,7 +93,6 @@ npm run dev
 - `/about` - Organization history and team
 - `/programs` - Detailed program information
 - `/impact` - Success stories and metrics
-- `/get-involved` - Ways to support (volunteer, donate, partner)
 - `/contact` - Contact form and information
 - `/donate` - Donation page
 - `/volunteer` - Volunteer application

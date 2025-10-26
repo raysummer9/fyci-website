@@ -8,7 +8,6 @@ import Image from 'next/image';
 import Partners from '@/components/Partners';
 import Newsletter from '@/components/Newsletter';
 import Footer from '@/components/Footer';
-import GetInvolvedCTA from '@/components/GetInvolvedCTA';
 
 export default function AboutPage() {
   const [activeTab, setActiveTab] = useState('biography');
@@ -380,8 +379,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Get Involved CTA Section */}
-      <GetInvolvedCTA />
 
       {/* Partners Section */}
       <Partners />

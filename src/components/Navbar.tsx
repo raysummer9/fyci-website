@@ -151,7 +151,6 @@ export default function Navbar() {
       href: '/who-we-are',
       submenu: [
         { href: '/who-we-are/about', label: 'About Us', icon: Users },
-        { href: '/who-we-are/organisational-structure', label: 'Organisational Structure', icon: Building },
         { href: '/who-we-are/team', label: 'Team', icon: UserCheck },
         { href: '/who-we-are/annual-reports', label: 'Annual Reports', icon: FileText },
       ]
