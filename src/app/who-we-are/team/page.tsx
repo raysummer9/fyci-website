@@ -32,25 +32,22 @@ export default function TeamPage() {
       image: '/img/team/loveth.jpg',
       bio: 'Loveth Olufunto Anthony-Iyortyer is a PRINCE2 certified practitioner and a public health specialist with almost a decade of work experience strategically responding to public health concerns and the impact of crises, illiteracy, poverty, culture and poor governance in Africa through research, monitoring, evaluation and learning. ',
       linkedin: 'https://linkedin.com/in/loveth-olufunto-anthony-iyortyer-753544242',
-  
     },
     {
       id: 2,
-      name: 'Rukky Otive-Igbuzor',
-      role: 'Director of Girls Empowerment Nucleus',
+      name: 'Rukevwe Otive-Igbuzor',
+      role: 'Programmes Director',
       image: '/img/team/rukky.jpeg',
-      bio: 'Rukky Otive-Igbuzor is a lawyer, development worker, writer, and singer. She holds an LLB in Law from University College London and is currently in training at the Nigerian Law School.',
-      linkedin: 'https://linkedin.com/in/michaelokonkwo',
-      twitter: 'https://twitter.com/michaelokonkwo'
+      bio: 'Rukevwe (Rukky) Otive-Igbuzor is a lawyer and researcher. Her experience spans across various research institutes and civil society organisations in the UK and Nigeria. She holds an LLB in Law from University College London and an MA in Human Rights Policy and Practice from the University of Gothenburg, Sweden. She is also admitted to the Nigerian Bar. She enjoys singing and creative writing in her spare time.',
+      linkedin: 'https://www.linkedin.com/in/rukevwe-otive-igbuzor/',
     },
     {
       id: 3,
       name: 'Uvie Otive-Igbuzor',
-      role: 'Director of Boys and Masculinity Nucleus',
+      role: 'Youth and Creativity Director',
       image: '/img/team/uvie.jpg',
       bio: 'Uvie Otive-Igbuzor (aka Uviboy the Rap Priest) is a lyricist, rap artist and music producer. He holds a BSc in Economics from Baze University, Abuja.',
-      linkedin: 'https://linkedin.com/in/amaranwankwo',
-      twitter: 'https://twitter.com/amaranwankwo'
+      twitter: 'http://x.com/uviboy'
     },
     {
       id: 4,
@@ -58,26 +55,7 @@ export default function TeamPage() {
       role: 'Technology and Innovation Lead',
       image: '/img/team/promise.jpg',
       bio: 'Promise is a software engineer with a strong foundation in Computer Science. With extensive experience in programming, graphic design, and technical support, he has successfully developed and implemented innovative solutions that serve users across the globe.',
-      linkedin: 'https://linkedin.com/in/davidmensah',
-      twitter: 'https://twitter.com/davidmensah'
-    },
-    {
-      id: 5,
-      name: 'Fatima Ibrahim',
-      role: 'Youth Engagement Officer',
-      image: '/img/team/member5.jpg', // Update with actual image path
-      bio: 'Builds relationships with youth communities and ensures inclusive participation in FYCI programs and initiatives.',
-      linkedin: 'https://linkedin.com/in/fatimaibrahim',
-      twitter: 'https://twitter.com/fatimaibrahim'
-    },
-    {
-      id: 6,
-      name: 'James Okafor',
-      role: 'Partnerships Coordinator',
-      image: '/img/team/member6.jpg', // Update with actual image path
-      bio: 'Develops strategic partnerships with organizations and stakeholders to expand FYCI\'s reach and impact.',
-      linkedin: 'https://linkedin.com/in/jamesokafor',
-      twitter: 'https://twitter.com/jamesokafor'
+      linkedin: 'https://www.linkedin.com/in/promise-chime-23b55a18a/',
     }
   ];
 

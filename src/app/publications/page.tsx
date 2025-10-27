@@ -92,8 +92,7 @@ export default function PublicationsPage() {
               Publications
             </h1>
             <p className="text-xl text-gray-600 max-w-4xl">
-              Explore our research reports, policy briefs, guides, and other publications that document the impact 
-              of creativity and innovation in youth development across Africa.
+              Explore our reports and resources that document our journey of promoting youth agency and change through the creative arts.
             </p>
           </motion.div>
         </div>

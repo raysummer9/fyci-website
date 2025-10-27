@@ -92,7 +92,7 @@ export default function AnnualReportsPage() {
               className="text-2xl sm:text-3xl lg:text-4xl max-w-5xl"
               style={{ color: '#4a1a2a' }}
             >
-              Review our annual reports to see our impact, achievements, and financial transparency as we work to empower young people across Africa.
+              Review our annual reports to learn about our journey of promoting youth agency in Nigeria and beyond through the creative arts.
             </motion.p>
           </motion.div>
 
