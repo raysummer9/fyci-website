@@ -2,93 +2,66 @@
 
 import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, ExternalLink, Search } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Partners from '@/components/Partners';
 import Newsletter from '@/components/Newsletter';
 import Blog from '@/components/Blog';
 import SuccessStory from '@/components/SuccessStory';
 import Footer from '@/components/Footer';
+import { Publication, PublicationCategory } from '@/types';
 
 export default function PublicationsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('All Types');
+  const [publications, setPublications] = useState<Publication[]>([]);
+  const [categories, setCategories] = useState<PublicationCategory[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const publications = [
-    {
-      id: '1',
-      title: 'Youth Creativity and Innovation Report 2023',
-      description: 'A comprehensive study on how creative programs impact youth development and community engagement. This report documents the transformative power of artistic expression in building confidence, critical thinking skills, and social connections among young people.',
-      date: 'December 2023',
-      type: 'Research Report',
-      link: '#'
-    },
-    {
-      id: '2',
-      title: 'Empowering Young Voices Through Art',
-      description: 'Case studies showcasing how artistic expression helps young people find their voice and advocate for change. This publication highlights real stories of transformation and impact across different communities.',
-      date: 'October 2023',
-      type: 'Case Study',
-      link: '#'
-    },
-    {
-      id: '3',
-      title: 'Digital Skills for Future Leaders',
-      description: 'A guide to developing essential digital competencies for the next generation of creative leaders. This resource provides practical tools and strategies for building digital literacy among African youth.',
-      date: 'August 2023',
-      type: 'Guide',
-      link: '#'
-    },
-    {
-      id: '4',
-      title: 'Creative Arts and Social Change',
-      description: 'Exploring the intersection of artistic expression and social transformation. This publication examines how creative programs contribute to community development and civic engagement.',
-      date: 'June 2023',
-      type: 'Research Report',
-      link: '#'
-    },
-    {
-      id: '5',
-      title: 'Youth Leadership Development Framework',
-      description: 'A comprehensive framework for developing young leaders through creative programs. This guide offers methodologies and best practices for building leadership capacity among youth.',
-      date: 'April 2023',
-      type: 'Framework',
-      link: '#'
-    },
-    {
-      id: '6',
-      title: 'Impact Assessment of Creative Programs',
-      description: 'Measuring the effectiveness of creative arts programs in youth development. This study provides quantitative and qualitative evidence of program impact and outcomes.',
-      date: 'February 2023',
-      type: 'Impact Study',
-      link: '#'
-    },
-    {
-      id: '7',
-      title: 'Youth Engagement Statistics 2023',
-      description: 'Visual representation of youth participation across our programs and their impact on communities.',
-      date: 'January 2024',
-      type: 'Infographics',
-      link: '#'
-    },
-    {
-      id: '8',
-      title: 'Creative Arts Impact Dashboard',
-      description: 'Interactive infographic showcasing the reach and effectiveness of creative arts programs across different regions.',
-      date: 'November 2023',
-      type: 'Infographics',
-      link: '#'
-    }
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [publicationsRes, categoriesRes] = await Promise.all([
+          fetch('/api/publications'),
+          fetch('/api/publications/categories')
+        ]);
+
+        if (publicationsRes.ok) {
+          const publicationsData = await publicationsRes.json();
+          setPublications(publicationsData);
+        }
+
+        if (categoriesRes.ok) {
+          const categoriesData = await categoriesRes.json();
+          setCategories(categoriesData);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const filteredPublications = publications.filter(publication => {
     const matchesSearch = publication.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      publication.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      publication.description.toLowerCase().includes(searchTerm.toLowerCase());
+      (publication.publication_categories?.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (publication.description || '').toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesFilter = selectedFilter === 'All Types' || publication.type === selectedFilter;
+    const matchesFilter = selectedFilter === 'All Types' || publication.publication_categories?.name === selectedFilter;
     
     return matchesSearch && matchesFilter;
   });
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long' 
+    });
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -150,7 +123,7 @@ export default function PublicationsPage() {
             
             {/* Filters */}
             <div className="flex flex-wrap gap-2">
-              {['All Types', 'Research Report', 'Case Study', 'Guide', 'Framework', 'Impact Study', 'Infographics'].map((filter) => (
+              {['All Types', ...categories.map(cat => cat.name)].map((filter) => (
                 <button
                   key={filter}
                   onClick={() => setSelectedFilter(filter)}
@@ -190,57 +163,87 @@ export default function PublicationsPage() {
             animate="visible"
             viewport={{ once: false, amount: 0.2 }}
           >
-            <div className="grid gap-6">
-              {filteredPublications.map((publication, index) => (
-                <motion.div
-                  key={`${publication.id}-${searchTerm}`}
-                  variants={itemVariants}
-                  transition={{ 
-                    duration: 0.6, 
-                    ease: [0.25, 0.46, 0.45, 0.94],
-                    delay: 0.5 + (index * 0.1) 
-                  }}
-                  className="bg-white rounded-xl border border-gray-200/30 p-6 shadow-sm hover:shadow-md transition-all duration-300"
-                >
-                  <div className="flex flex-col sm:flex-row items-start gap-6">
-                    <div className="flex-1 order-2 sm:order-1">
-                      {/* Publication Type Badge */}
-                      <div className="mb-3">
-                        <span className="inline-block px-3 py-1 rounded-full text-sm font-medium" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}>
-                          {publication.type}
-                        </span>
+            {loading ? (
+              // Loading skeleton
+              <div className="grid gap-6">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div key={index} className="bg-white rounded-xl border border-gray-200/30 p-6 shadow-sm animate-pulse">
+                    <div className="flex flex-col sm:flex-row items-start gap-6">
+                      <div className="flex-1 order-2 sm:order-1">
+                        <div className="h-6 bg-gray-200 rounded w-24 mb-3"></div>
+                        <div className="h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
+                        <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                        <div className="h-4 bg-gray-200 rounded w-2/3 mb-4"></div>
+                        <div className="h-4 bg-gray-200 rounded w-20"></div>
                       </div>
-                      
-                      <h3 className="text-xl font-semibold mb-3 text-left text-gray-900">
-                        {publication.title}
-                      </h3>
-                      <p className="text-gray-600 mb-4 text-left leading-relaxed">
-                        {publication.description}
-                      </p>
-                      
-                      {/* Date */}
-                      <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-                        <Calendar size={16} />
-                        <span>{publication.date}</span>
+                      <div className="flex-shrink-0 order-1 sm:order-2">
+                        <div className="w-32 h-48 bg-gray-200 rounded-lg"></div>
                       </div>
-                      
-                      <a
-                        href={publication.link}
-                        className="inline-flex items-center gap-2 font-medium text-gray-900 hover:gap-3 transition-all duration-200 cursor-pointer"
-                      >
-                        View Publication
-                        <ExternalLink size={16} />
-                      </a>
-                    </div>
-                    
-                    {/* Book Cover Placeholder */}
-                    <div className="flex-shrink-0 order-1 sm:order-2">
-                      <div className="w-32 h-48 bg-gray-200 rounded-lg"></div>
                     </div>
                   </div>
-                </motion.div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid gap-6">
+                {filteredPublications.map((publication, index) => (
+                  <motion.div
+                    key={`${publication.id}-${searchTerm}`}
+                    variants={itemVariants}
+                    transition={{ 
+                      duration: 0.6, 
+                      ease: [0.25, 0.46, 0.45, 0.94],
+                      delay: 0.5 + (index * 0.1) 
+                    }}
+                    className="bg-white rounded-xl border border-gray-200/30 p-6 shadow-sm hover:shadow-md transition-all duration-300"
+                  >
+                    <div className="flex flex-col sm:flex-row items-start gap-6">
+                      <div className="flex-1 order-2 sm:order-1">
+                        {/* Publication Type Badge */}
+                        <div className="mb-3">
+                          <span className="inline-block px-3 py-1 rounded-full text-sm font-medium" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}>
+                            {publication.publication_categories?.name || 'Publication'}
+                          </span>
+                        </div>
+                        
+                        <h3 className="text-xl font-semibold mb-3 text-left text-gray-900">
+                          {publication.title}
+                        </h3>
+                        <p className="text-gray-600 mb-4 text-left leading-relaxed">
+                          {publication.description}
+                        </p>
+                        
+                        {/* Date */}
+                        <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                          <Calendar size={16} />
+                          <span>{formatDate(publication.published_at || publication.created_at)}</span>
+                        </div>
+                        
+                        <Link
+                          href={`/publications/${publication.slug}`}
+                          className="inline-flex items-center gap-2 font-medium text-gray-900 hover:gap-3 transition-all duration-200 cursor-pointer"
+                        >
+                          View Publication
+                          <ExternalLink size={16} />
+                        </Link>
+                      </div>
+                      
+                      {/* Book Cover or Placeholder */}
+                      <div className="flex-shrink-0 order-1 sm:order-2">
+                        {publication.cover_image ? (
+                          <img 
+                            src={publication.cover_image} 
+                            alt={publication.title}
+                            className="w-32 h-48 object-cover rounded-lg"
+                          />
+                        ) : (
+                          <div className="w-32 h-48 bg-gray-200 rounded-lg"></div>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
 
             {/* No Results Message */}
             {filteredPublications.length === 0 && (

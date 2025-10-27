@@ -38,30 +38,23 @@ export default function SuccessStory() {
   const testimonials = [
     {
       id: '1',
-      name: 'Sarah M.',
-      role: 'FYCI Alumni, Class of 2022',
-      quote: "FYCI changed my life. I discovered my passion for graphic design and now I'm running my own creative studio. The mentorship and support I received gave me the confidence to pursue my dreams.",
+      name: 'Emmanuella Aisien',
+      role: 'Programme Participant',
+      quote: "I am really lucky to have attended the skills acquisition training because I learnt a lot in a short period of time and as a result, I can put what I've learnt to good use in the future. I'd advice anyone who reads this to attend the next meeting.",
       rating: 5
     },
     {
       id: '2',
-      name: 'Michael T.',
-      role: 'Program Participant',
-      quote: "Through FYCI's creative workshops, I developed skills I never knew I had. The program helped me build confidence and opened doors to opportunities I never imagined possible.",
+      name: 'Eze Harrison Ebuka',
+      role: 'Programme Participant',
+      quote: "I learned how to use Legend and Inshot software applications to make self-branding introductory videos. In addition to this, I learned how to add text and audio to the video. It was an awesome time and I'm delighted to be part of the class. Thanks!",
       rating: 5
     },
     {
       id: '3',
-      name: 'Aisha K.',
-      role: 'Youth Advocate',
-      quote: "FYCI's programs taught me that creativity is a powerful tool for change. I now use my artistic skills to advocate for youth rights in my community.",
-      rating: 5
-    },
-    {
-      id: '4',
-      name: 'David L.',
-      role: 'Entrepreneur',
-      quote: "The business skills I learned through FYCI's mentorship program helped me launch my own digital marketing agency. I'm now helping other young entrepreneurs.",
+      name: 'Igugu Joy Aghogho',
+      role: 'Programme Participant',
+      quote: "I want to use this medium to appreciate the FYCI excos for this wonderful opportunity to be a part of this training or programme. As regards the physical and virtual training, I learnt how to make hair fascinator and also went through a self branding training on how to market myself/business, and how to make and edit videos. I must say, the both training has really helped me so far most especially the self branding training. This has really helped in promoting my shoe business, and it's now of the ways I use in showcasing or advertising my products unlike the usual way. Thanks.",
       rating: 5
     }
   ];

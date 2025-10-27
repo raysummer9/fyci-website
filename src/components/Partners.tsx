@@ -43,6 +43,12 @@ export default function Partners() {
       name: 'Yiaga Africa',
       logo: '/img/partners/yiaga.png',
       website: 'https://yiaga.org'
+    },
+    {
+      id: '5',
+      name: 'Plan International',
+      logo: '/img/partners/plan.png',
+      website: 'https://plan-international.org'
     }
   ];
 
@@ -72,14 +78,14 @@ export default function Partners() {
               className="text-2xl sm:text-3xl lg:text-4xl mb-8"
               style={{ color: '#4a1a2a' }}
             >
-              We work with leading organizations and institutions to amplify our impact and reach more young people across communities.
+              We have worked with leading organisations and institutions to amplify our impact and reach more young people across communities.
             </motion.p>
             <motion.p 
               variants={itemVariants}
               transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
               className="text-gray-600 leading-relaxed"
             >
-              Through strategic partnerships, we leverage collective expertise, resources, and networks to create meaningful change in youth development and community empowerment.
+              Through strategic partnerships, we leverage collective expertise, resources, and networks to create meaningful change.
             </motion.p>
           </motion.div>
 

@@ -147,6 +147,15 @@ export interface TeamMember {
   };
 }
 
+export interface PublicationCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Publication {
   id: string;
   title: string;
@@ -158,11 +167,7 @@ export interface Publication {
   status: string;
   published_at?: string;
   created_at: string;
-  publication_categories?: {
-    id: string;
-    name: string;
-    slug: string;
-  };
+  publication_categories?: PublicationCategory;
   profiles?: {
     id: string;
     full_name?: string;

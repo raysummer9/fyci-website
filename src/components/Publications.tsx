@@ -44,7 +44,13 @@ export default function Publications() {
               published_at: '2023-12-01T00:00:00Z',
               created_at: '2023-12-01T00:00:00Z',
               status: 'published',
-              publication_categories: { id: '1', name: 'Research Report', slug: 'research-report' }
+              publication_categories: { 
+                id: '1', 
+                name: 'Research Report', 
+                slug: 'research-report',
+                created_at: '2023-01-01T00:00:00Z',
+                updated_at: '2023-01-01T00:00:00Z'
+              }
             },
             {
               id: '2',
@@ -54,7 +60,13 @@ export default function Publications() {
               published_at: '2023-10-01T00:00:00Z',
               created_at: '2023-10-01T00:00:00Z',
               status: 'published',
-              publication_categories: { id: '2', name: 'Case Study', slug: 'case-study' }
+              publication_categories: { 
+                id: '2', 
+                name: 'Case Study', 
+                slug: 'case-study',
+                created_at: '2023-01-01T00:00:00Z',
+                updated_at: '2023-01-01T00:00:00Z'
+              }
             },
             {
               id: '3',
@@ -64,7 +76,13 @@ export default function Publications() {
               published_at: '2023-08-01T00:00:00Z',
               created_at: '2023-08-01T00:00:00Z',
               status: 'published',
-              publication_categories: { id: '3', name: 'Guide', slug: 'guide' }
+              publication_categories: { 
+                id: '3', 
+                name: 'Guide', 
+                slug: 'guide',
+                created_at: '2023-01-01T00:00:00Z',
+                updated_at: '2023-01-01T00:00:00Z'
+              }
             }
           ]);
         }
@@ -80,7 +98,13 @@ export default function Publications() {
             published_at: '2023-12-01T00:00:00Z',
             created_at: '2023-12-01T00:00:00Z',
             status: 'published',
-            publication_categories: { id: '1', name: 'Research Report', slug: 'research-report' }
+            publication_categories: { 
+              id: '1', 
+              name: 'Research Report', 
+              slug: 'research-report',
+              created_at: '2023-01-01T00:00:00Z',
+              updated_at: '2023-01-01T00:00:00Z'
+            }
           },
           {
             id: '2',
@@ -90,7 +114,13 @@ export default function Publications() {
             published_at: '2023-10-01T00:00:00Z',
             created_at: '2023-10-01T00:00:00Z',
             status: 'published',
-            publication_categories: { id: '2', name: 'Case Study', slug: 'case-study' }
+            publication_categories: { 
+              id: '2', 
+              name: 'Case Study', 
+              slug: 'case-study',
+              created_at: '2023-01-01T00:00:00Z',
+              updated_at: '2023-01-01T00:00:00Z'
+            }
           },
           {
             id: '3',
@@ -100,7 +130,13 @@ export default function Publications() {
             published_at: '2023-08-01T00:00:00Z',
             created_at: '2023-08-01T00:00:00Z',
             status: 'published',
-            publication_categories: { id: '3', name: 'Guide', slug: 'guide' }
+            publication_categories: { 
+              id: '3', 
+              name: 'Guide', 
+              slug: 'guide',
+              created_at: '2023-01-01T00:00:00Z',
+              updated_at: '2023-01-01T00:00:00Z'
+            }
           }
         ]);
       } finally {
@@ -157,7 +193,7 @@ export default function Publications() {
             className="text-2xl sm:text-3xl lg:text-4xl max-w-5xl"
             style={{ color: '#4a1a2a' }}
           >
-            Explore our research, reports, and resources that document the impact of creativity and innovation in youth development.
+            Explore our reports and resources that document our journey of promoting youth agency and change through the creative arts.
           </motion.p>
         </motion.div>
 
@@ -266,9 +302,9 @@ export default function Publications() {
             <div className="space-y-8">
               <div>
                 <p className="text-gray-600 leading-relaxed mb-6">
-                  Our publications represent years of research, practice, and learning in the field of youth development. 
-                  Through these resources, we share insights, methodologies, and success stories that can inspire and 
-                  guide other organizations working with young people.
+                  Our publications cover our annual reports, magazines, infographics, and other resources related
+                  to our programme areas. Through these resources, we share insights, creative outputs, and
+                  success stories that can inspire and guide other organisations working with young people.
                 </p>
               </div>
 

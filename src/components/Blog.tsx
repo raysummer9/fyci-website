@@ -181,7 +181,7 @@ export default function Blog() {
             className="text-2xl sm:text-3xl lg:text-4xl max-w-5xl mx-auto"
             style={{ color: '#4a1a2a' }}
           >
-            Insights, stories, and perspectives on youth creativity, innovation, and community impact.
+            Insights, stories, and perspectives on youth agency, creativity, and social change.
           </motion.p>
         </motion.div>
 

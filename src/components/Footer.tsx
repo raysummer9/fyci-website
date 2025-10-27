@@ -70,8 +70,7 @@ export default function Footer() {
               />
             </div>
             <p className="text-gray-600 mb-6 leading-relaxed">
-              Empowering young people across Africa through creative initiatives, 
-              leadership development, and community engagement.
+              Promoting youth agency in Nigeria and beyond through the creative arts.
             </p>
             
             {/* Contact Info */}
@@ -79,10 +78,6 @@ export default function Footer() {
               <div className="flex items-center gap-3">
                 <Mail size={16} className="text-gray-600" />
                 <span className="text-gray-600 text-sm">contact@fyci.com</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <MapPin size={16} className="text-gray-600" />
-                <span className="text-gray-600 text-sm">LL4B Sunnyvale Estate, Abuja, Nigeria</span>
               </div>
             </div>
           </motion.div>
