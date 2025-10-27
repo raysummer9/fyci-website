@@ -13,10 +13,9 @@ export default function AboutPage() {
   const [activeTab, setActiveTab] = useState('biography');
 
   const tabs = [
-    { id: 'biography', label: 'Biography' },
+    { id: 'biography', label: 'About' },
     { id: 'mission-vision', label: 'Mission and Vision' },
-    { id: 'values', label: 'Our Values' },
-    { id: 'approach', label: 'Our Approach' }
+    { id: 'values', label: 'Our Values' }
   ];
 
   const containerVariants = {
@@ -74,7 +73,7 @@ export default function AboutPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
-            The Frontline Youth Creativity Initiative (FYCI) is dedicated to empowering young people across Africa to become active citizens and leaders in their communities through innovative programs and civic engagement.
+            Frontline Youth Creativity Initiative (FYCI) is a youth-led, youth-focused organisation working to promote positive social change in Nigeria and beyond through the creative arts.
           </motion.p>
 
           {/* Hero Image */}
@@ -151,15 +150,19 @@ export default function AboutPage() {
                   transition={{ duration: 0.5, ease: "easeOut" }}
                 >
                 <p className="text-gray-700 text-lg leading-relaxed mb-6">
-                  Frontline Youth Creativity Initiative (FYCI) is a non-governmental, non-profit organisation working to empower young girls and boys to speak out against ills in society. Founded in 2021 with headquarters in Abuja, Nigeria, FYCI believes that the creative arts are a powerful force that can be utilised to drive discourses that influence critical stakeholders to make sustainable changes for the good of society.
+                  Frontline Youth Creativity Initiative (FYCI) is a youth-led, youth-focused organisation working to promote positive social change in Nigeria and beyond through the creative arts. Founded in 2021 with headquarters in Abuja, Nigeria, FYCI believes that the creative arts are a powerful force that can be utilised to drive critical discourses, shape attitudes, and spark action.
                 </p>
                 
                 <p className="text-gray-700 text-lg leading-relaxed mb-6">
-                  We aim to address some of the political, socio-cultural and economic vices in Nigeria and Africa as a whole by promoting positive virtues through creative means such as music/rap, spoken word, poetry, prose, drama, fine art, photography/videography, creative writing, dance, etc. Some of the vices we aim to address are poor political participation among young people, gender inequality, low self-esteem among young boys and girls, corruption, and sexual and gender-based violence (SGBV).
+                  We aim to address some of the political, socio-cultural, and economic vices in Nigeria and Africa as a whole by promoting positive virtues through creative means such as music/rap, spoken word, poetry, prose, drama, fine art, photography/videography, creative writing, and dance. Some of the vices we aim to address are poor political participation among young people, gender inequality, low self-esteem among young people, corruption, and sexual and gender-based violence.
                 </p>
                 
                 <p className="text-gray-700 text-lg leading-relaxed mb-6">
-                  Young people have not been given the appropriate mechanisms to express themselves, which has resulted in a stifling of youth voices. Against this context, our target audiences are young boys/ girls and young adults from whom we seek to elicit positive behaviours and attitudes whilst serving as change agents themselves.
+                  Young people have not been given the appropriate mechanisms to express themselves, which has resulted in a stifling of youth voices. Against this context, our target audiences are young people from whom we seek to elicit positive behaviours and attitudes whilst serving as change agents themselves.
+                </p>
+                
+                <p className="text-gray-700 text-lg leading-relaxed mb-6">
+                  Based on the literature on behavioural insights showing the successes of the creative arts in driving change, FYCI seeks to use this same approach to lay the foundation for sustainable positive change in Nigeria and beyond focusing on four programme areas:
                 </p>
                 </motion.div>
               )}
@@ -183,7 +186,7 @@ export default function AboutPage() {
                       <h3 className="text-2xl font-bold text-gray-900">Our Mission</h3>
                     </div>
                     <p className="text-gray-700 text-lg leading-relaxed">
-                      Our mission is to influence and target the content of creative arts by young people to challenge the status quo and promote positive social change.
+                      Our mission is to promote youth agency through the creative arts.
                     </p>
                   </div>
                   
@@ -195,7 +198,7 @@ export default function AboutPage() {
                       <h3 className="text-2xl font-bold text-gray-900">Our Vision</h3>
                     </div>
                     <p className="text-gray-700 text-lg leading-relaxed">
-                      We envision a society in which young people, grounded in ideology targeted at social change, raise their voices as creatives using their craft to engender sustainable development.
+                      We envision a society in which young people use their voices as creatives to engender sustainable development.
                     </p>
                   </div>
                 </div>
@@ -255,25 +258,6 @@ export default function AboutPage() {
                 </motion.div>
               )}
 
-              {activeTab === 'approach' && (
-                <motion.div 
-                  key="approach"
-                  className="prose prose-lg max-w-none"
-                  variants={tabContentVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  transition={{ duration: 0.5, ease: "easeOut" }}
-                >
-                <p className="text-gray-700 text-lg leading-relaxed mb-6">
-                  The use of the creative arts to influence behaviours has been recognised as an effective method in the literature on behavioural insights. As Policy Horizons Canada has pointed out, "creative arts (such as performance arts, photography, music, creative literature, and visual arts) can have the power to evoke powerful emotions and influence behaviour". In recognition of this power of the creative arts to change behaviours, our approach is predicated on the Social Art for Behaviour Change (SABC) approach developed by the One Drop Foundation to encourage healthy behaviours around water.
-                </p>
-                
-                <p className="text-gray-700 text-lg leading-relaxed mb-6">
-                  The SABC approach "integrates a systematic and evidence-based process that takes into consideration behavioural determinants as well as cultural and artistic references, to create locally inspired social art programs". By connecting with the emotional part of the brain through art forms such as circus performances and fine art, One Drop has fostered the adoption of healthy behaviours around water among their beneficiary communities, leading to higher living conditions of almost 2.1 million people in 13 countries across Africa, Asia, and Latin America.
-                </p>
-                </motion.div>
-              )}
             </AnimatePresence>
           </div>
         </div>
@@ -289,7 +273,7 @@ export default function AboutPage() {
             viewport={{ once: false, amount: 0.1, margin: "-100px" }}
           >
             <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 max-w-4xl">
-              Based on the successes of the SABC approach in the context of water, sanitation and hygiene (WASH) projects, FYCI seeks to use this same approach to lay the foundation for sustainable positive change in Nigeria (and Africa), focusing on four major themes:
+              Our four programme areas focus on:
             </h3>
           </motion.div>
 

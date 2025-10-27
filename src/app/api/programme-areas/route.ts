@@ -16,13 +16,10 @@ export async function GET() {
       return NextResponse.json({ error: 'Failed to fetch programme areas' }, { status: 500 });
     }
 
-    // Fetch programmes for each programme area
+    // Fetch programmes
     const { data: programmes, error: programmesError } = await supabase
       .from('programmes')
-      .select(`
-        *,
-        programme_areas!inner(*)
-      `)
+      .select('*')
       .in('status', ['published', 'completed'])
       .order('created_at', { ascending: false });
 
@@ -31,13 +28,10 @@ export async function GET() {
       return NextResponse.json({ error: 'Failed to fetch programmes' }, { status: 500 });
     }
 
-    // Fetch competitions for each programme area
+    // Fetch competitions
     const { data: competitions, error: competitionsError } = await supabase
       .from('competitions')
-      .select(`
-        *,
-        programme_areas!inner(*)
-      `)
+      .select('*')
       .in('status', ['open', 'closed'])
       .order('created_at', { ascending: false });
 
@@ -46,13 +40,10 @@ export async function GET() {
       return NextResponse.json({ error: 'Failed to fetch competitions' }, { status: 500 });
     }
 
-    // Fetch events for each programme area
+    // Fetch events
     const { data: events, error: eventsError } = await supabase
       .from('events')
-      .select(`
-        *,
-        programme_areas!inner(*)
-      `)
+      .select('*')
       .in('status', ['published', 'completed'])
       .order('created_at', { ascending: false });
 
@@ -63,9 +54,9 @@ export async function GET() {
 
     // Group content by programme area
     const contentByProgrammeArea = programmeAreas.map(area => {
-      const areaProgrammes = programmes.filter(p => p.programme_areas?.id === area.id);
-      const areaCompetitions = competitions.filter(c => c.programme_areas?.id === area.id);
-      const areaEvents = events.filter(e => e.programme_areas?.id === area.id);
+      const areaProgrammes = programmes.filter(p => p.programme_area_id === area.id);
+      const areaCompetitions = competitions.filter(c => c.programme_area_id === area.id);
+      const areaEvents = events.filter(e => e.programme_area_id === area.id);
 
       return {
         ...area,
@@ -76,11 +67,25 @@ export async function GET() {
       };
     });
 
+    // Add fallback data if no content is found
+    const fallbackData = {
+      programmeAreas: programmeAreas.map(area => ({
+        ...area,
+        programmes: [],
+        competitions: [],
+        events: [],
+        totalContent: 0
+      })),
+      totalProgrammes: programmes?.length || 0,
+      totalCompetitions: competitions?.length || 0,
+      totalEvents: events?.length || 0
+    };
+
     return NextResponse.json({
-      programmeAreas: contentByProgrammeArea,
-      totalProgrammes: programmes.length,
-      totalCompetitions: competitions.length,
-      totalEvents: events.length
+      programmeAreas: contentByProgrammeArea || fallbackData.programmeAreas,
+      totalProgrammes: programmes?.length || 0,
+      totalCompetitions: competitions?.length || 0,
+      totalEvents: events?.length || 0
     });
 
   } catch (error) {
