@@ -4,68 +4,71 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, Calendar, Target, ArrowLeft, ArrowRight } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Partners from '@/components/Partners';
 import Newsletter from '@/components/Newsletter';
 import Blog from '@/components/Blog';
 import SuccessStory from '@/components/SuccessStory';
 import Footer from '@/components/Footer';
+import { Programme, Competition } from '@/types';
 
 export default function YouthAgencyPage() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [programmes, setProgrammes] = useState<Programme[]>([]);
+  const [competitions, setCompetitions] = useState<Competition[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const projects = [
-    {
-      id: 1,
-      title: "Creative Confidence Building",
-      category: "Youth Agency",
-      date: "Dec 10, 2024",
-      image: "/img/youth-agency.jpg",
-      description: "Helping young people discover their creative potential and build self-esteem through artistic expression and peer support."
-    },
-    {
-      id: 2,
-      title: "Leadership Development Program",
-      category: "Youth Agency",
-      date: "Nov 25, 2024",
-      image: "/img/youth-agency.jpg",
-      description: "Building leadership skills and capacity among young people to become effective agents of change in their communities."
-    },
-    {
-      id: 3,
-      title: "Youth Talent Showcase",
-      category: "Youth Agency",
-      date: "Oct 15, 2024",
-      image: "/img/youth-agency.jpg",
-      description: "Providing platforms for young people to showcase their talents and gain recognition for their creative abilities."
-    },
-    {
-      id: 4,
-      title: "Peer Mentorship Network",
-      category: "Youth Agency",
-      date: "Sep 18, 2024",
-      image: "/img/youth-agency.jpg",
-      description: "Connecting young people with mentors and peers to build supportive networks and personal development opportunities."
-    },
-    {
-      id: 5,
-      title: "Skills Development Workshops",
-      category: "Youth Agency",
-      date: "Aug 12, 2024",
-      image: "/img/youth-agency.jpg",
-      description: "Creative workshops and masterclasses to help young people develop artistic skills and build confidence in their abilities."
-    },
-    {
-      id: 6,
-      title: "Community Engagement Initiative",
-      category: "Youth Agency",
-      date: "Jul 22, 2024",
-      image: "/img/youth-agency.jpg",
-      description: "Encouraging young people to take ownership of their communities and become active participants in local development."
-    }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch programmes and competitions for Youth Agency programme area
+        const [programmesRes, competitionsRes] = await Promise.all([
+          fetch('/api/programmes/by-category?category=youth-agency'),
+          fetch('/api/competitions/by-category?category=youth-agency')
+        ]);
+
+        if (programmesRes.ok) {
+          const programmesData = await programmesRes.json();
+          setProgrammes(programmesData);
+        }
+
+        if (competitionsRes.ok) {
+          const competitionsData = await competitionsRes.json();
+          setCompetitions(competitionsData);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Combine programmes and competitions for display
+  const allProjects = [
+    ...programmes.map(programme => ({
+      id: programme.id,
+      title: programme.title,
+      description: programme.description || '',
+      date: programme.created_at,
+      type: 'Programme',
+      slug: programme.slug,
+      image: programme.featured_image || '/img/youth-agency.jpg'
+    })),
+    ...competitions.map(competition => ({
+      id: competition.id,
+      title: competition.title,
+      description: competition.description || '',
+      date: competition.created_at,
+      type: 'Competition',
+      slug: competition.slug,
+      image: competition.featured_image || '/img/youth-agency.jpg'
+    }))
   ];
 
-  const filteredProjects = projects.filter(project =>
+  const filteredProjects = allProjects.filter(project =>
     project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     project.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -95,8 +98,7 @@ export default function YouthAgencyPage() {
               Youth Agency and Self-Esteem
             </h1>
             <p className="text-xl text-gray-600 max-w-4xl">
-              Building confidence and agency among young people to become active agents of change in their communities. 
-              Our projects focus on personal development, leadership skills, and creative expression.
+              Our projects seeks to build confidence and agency among young people, turning them into active agents of change in their communities.
             </p>
           </motion.div>
         </div>
@@ -127,72 +129,95 @@ export default function YouthAgencyPage() {
       {/* Projects Grid Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            key={searchTerm}
-          >
-            {filteredProjects.map((project, index) => (
-              <motion.div
-                key={`${project.id}-${searchTerm}`}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 + (index * 0.1) }}
-                className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-              >
-                {/* Project Image */}
-                <div className="relative h-48 overflow-hidden">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover hover:scale-105 transition-transform duration-300"
-                  />
+          {loading ? (
+            // Loading skeleton
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className="bg-white rounded-xl overflow-hidden shadow-lg animate-pulse">
+                  <div className="h-48 bg-gray-200"></div>
+                  <div className="p-6">
+                    <div className="h-4 bg-gray-200 rounded w-24 mb-3"></div>
+                    <div className="h-4 bg-gray-200 rounded w-20 mb-3"></div>
+                    <div className="h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
+                    <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-2/3 mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-20"></div>
+                  </div>
                 </div>
-                
-                {/* Project Content */}
-                <div className="p-6">
-                  {/* Category Tag */}
-                  <div className="flex items-center gap-2 mb-3">
-                    <Target size={16} style={{ color: '#360e1d' }} />
-                    <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}>
-                      {project.category}
-                    </span>
+              ))}
+            </div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              key={searchTerm}
+            >
+              {filteredProjects.map((project, index) => (
+                <motion.div
+                  key={`${project.id}-${searchTerm}`}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.5 + (index * 0.1) }}
+                  className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                >
+                  {/* Project Image */}
+                  <div className="relative h-48 overflow-hidden">
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover hover:scale-105 transition-transform duration-300"
+                    />
                   </div>
                   
-                  {/* Date */}
-                  <div className="flex items-center gap-2 mb-3 text-gray-500 text-sm">
-                    <Calendar size={16} />
-                    {project.date}
+                  {/* Project Content */}
+                  <div className="p-6">
+                    {/* Type Tag */}
+                    <div className="flex items-center gap-2 mb-3">
+                      <Target size={16} style={{ color: '#360e1d' }} />
+                      <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}>
+                        {project.type}
+                      </span>
+                    </div>
+                    
+                    {/* Date */}
+                    <div className="flex items-center gap-2 mb-3 text-gray-500 text-sm">
+                      <Calendar size={16} />
+                      {new Date(project.date).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </div>
+                    
+                    {/* Title */}
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 text-left">
+                      {project.title}
+                    </h3>
+                    
+                    {/* Description */}
+                    <p className="text-gray-600 leading-relaxed text-left mb-4">
+                      {project.description}
+                    </p>
+                    
+                    {/* Read More Button */}
+                    <Link
+                      href={`/${project.type.toLowerCase()}s/${project.slug}`}
+                      className="inline-flex items-center gap-2 font-medium text-gray-900 hover:gap-3 transition-all duration-200 cursor-pointer"
+                    >
+                      Read more
+                      <ArrowRight size={16} />
+                    </Link>
                   </div>
-                  
-                  {/* Title */}
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 text-left">
-                    {project.title}
-                  </h3>
-                  
-                  {/* Description */}
-                  <p className="text-gray-600 leading-relaxed text-left mb-4">
-                    {project.description}
-                  </p>
-                  
-                  {/* Read More Button */}
-                  <a
-                    href="#"
-                    className="inline-flex items-center gap-2 font-medium text-gray-900 hover:gap-3 transition-all duration-200 cursor-pointer"
-                  >
-                    Read more
-                    <ArrowRight size={16} />
-                  </a>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
 
           {/* No Results Message */}
-          {filteredProjects.length === 0 && (
+          {!loading && filteredProjects.length === 0 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
