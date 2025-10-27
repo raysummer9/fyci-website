@@ -14,104 +14,51 @@ export default function Projects() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const [programmesRes, competitionsRes, eventsRes] = await Promise.all([
-          fetch('/api/programmes?limit=2'),
-          fetch('/api/competitions?limit=2'),
-          fetch('/api/events?limit=1')
-        ]);
-
-        const programmes: Programme[] = await programmesRes.json();
+        const competitionsRes = await fetch('/api/competitions?limit=10');
         const competitions: Competition[] = await competitionsRes.json();
-        const events: Event[] = await eventsRes.json();
 
-        // Transform data to Project format - prioritize latest content
+        // Transform competitions to Project format and sort by end date
         const transformedProjects: Project[] = [];
         
-        // Always add 1 programme (latest)
-        if (programmes.length > 0) {
+        // Add competitions
+        competitions.forEach(competition => {
           transformedProjects.push({
-            id: programmes[0].id,
-            title: programmes[0].title,
-            description: programmes[0].description,
-            image: programmes[0].featured_image || '/img/youth-agency.jpg',
+            id: competition.id,
+            title: competition.title,
+            description: competition.description,
+            image: competition.featured_image || '/img/gender-rights.jpg',
             linkText: 'Explore programme',
-            linkHref: `/programmes/${programmes[0].slug}`,
+            linkHref: `/competitions/${competition.slug}`,
             titleColor: 'text-gray-900',
-            programmeArea: programmes[0].programme_areas?.name || 'Youth Agency',
-            icon: Target,
-            type: 'programme' as const
-          });
-        }
-
-        // Always add 1 competition (latest)
-        if (competitions.length > 0) {
-          transformedProjects.push({
-            id: competitions[0].id,
-            title: competitions[0].title,
-            description: competitions[0].description,
-            image: competitions[0].featured_image || '/img/gender-rights.jpg',
-            linkText: 'Join competition',
-            linkHref: `/competitions/${competitions[0].slug}`,
-            titleColor: 'text-gray-900',
-            programmeArea: competitions[0].programme_areas?.name || 'Gender Rights',
+            programmeArea: competition.programme_areas?.name || 'Gender Rights',
             icon: Trophy,
-            type: 'competition' as const
+            type: 'competition' as const,
+            endDate: competition.end_date
           });
-        }
+        });
 
-        // Add event if available, otherwise add another competition
-        if (events.length > 0) {
-          transformedProjects.push({
-            id: events[0].id,
-            title: events[0].title,
-            description: events[0].description,
-            image: events[0].featured_image || '/img/anti-corruption.jpg',
-            linkText: 'View event',
-            linkHref: `/events/${events[0].slug}`,
-            titleColor: 'text-gray-900',
-            programmeArea: events[0].programme_areas?.name || 'Anti-Corruption',
-            icon: Calendar,
-            type: 'event' as const
-          });
-        } else if (competitions.length > 1) {
-          // Add second competition if no events available
-          transformedProjects.push({
-            id: competitions[1].id,
-            title: competitions[1].title,
-            description: competitions[1].description,
-            image: competitions[1].featured_image || '/img/gender-rights.jpg',
-            linkText: 'Join competition',
-            linkHref: `/competitions/${competitions[1].slug}`,
-            titleColor: 'text-gray-900',
-            programmeArea: competitions[1].programme_areas?.name || 'Gender Rights',
-            icon: Trophy,
-            type: 'competition' as const
-          });
-        }
+        // Sort by end date in reverse chronological order (newest first)
+        transformedProjects.sort((a, b) => {
+          if (!a.endDate && !b.endDate) return 0;
+          if (!a.endDate) return 1;
+          if (!b.endDate) return -1;
+          return new Date(b.endDate).getTime() - new Date(a.endDate).getTime();
+        });
 
-        setProjects(transformedProjects);
+        // Take only the first 3 projects
+        const limitedProjects = transformedProjects.slice(0, 3);
+
+        setProjects(limitedProjects);
       } catch (error) {
         console.error('Error fetching projects:', error);
-        // Fallback to static data if API fails - just 3 cards
+        // Fallback to static data if API fails - just 3 competition cards
         setProjects([
           {
             id: '1',
-            title: 'Creative and Life Skills Training for Youth 2022',
-            description: 'FYCI is organising a programme, titled "Creative and Life Skills Training for Youth" This programme is aimed at imparting creative and life skills in young people to position them for the future.',
-            image: '/img/youth-agency.jpg',
-            linkText: 'Explore programme',
-            linkHref: '/programmes/creative-life-skills-training',
-            titleColor: 'text-gray-900',
-            programmeArea: 'Youth Agency and Self Esteem',
-            icon: Target,
-            type: 'programme'
-          },
-          {
-            id: '2',
             title: 'Young Voices Against SGBV Competition',
             description: 'In commemoration of 16 Days of Activism Against Gender-Based Violence, FYCI is instituting the Young Voices Against SGBV Competition.',
             image: '/img/gender-rights.jpg',
-            linkText: 'Join competition',
+            linkText: 'Explore programme',
             linkHref: '/competitions/young-voices-against-sgbv',
             titleColor: 'text-gray-900',
             programmeArea: 'Gender Rights',
@@ -119,16 +66,28 @@ export default function Projects() {
             type: 'competition'
           },
           {
-            id: '3',
-            title: 'Youth Leadership Summit 2024',
-            description: 'An annual gathering of young leaders from across the region to discuss pressing issues and develop innovative solutions for community development.',
-            image: '/img/anti-corruption.jpg',
-            linkText: 'View event',
-            linkHref: '/events/youth-leadership-summit-2024',
+            id: '2',
+            title: 'Creative Arts Competition 2024',
+            description: 'A platform for young artists to showcase their creative talents and compete for recognition in various artistic disciplines.',
+            image: '/img/youth-agency.jpg',
+            linkText: 'Explore programme',
+            linkHref: '/competitions/creative-arts-2024',
             titleColor: 'text-gray-900',
-            programmeArea: 'Youth Political Participation',
-            icon: Calendar,
-            type: 'event'
+            programmeArea: 'Youth Agency and Self Esteem',
+            icon: Trophy,
+            type: 'competition'
+          },
+          {
+            id: '3',
+            title: 'Digital Innovation Challenge',
+            description: 'Encouraging young innovators to develop digital solutions that address social challenges in their communities.',
+            image: '/img/anti-corruption.jpg',
+            linkText: 'Explore programme',
+            linkHref: '/competitions/digital-innovation-challenge',
+            titleColor: 'text-gray-900',
+            programmeArea: 'Anti-Corruption',
+            icon: Trophy,
+            type: 'competition'
           }
         ]);
       } finally {
@@ -179,7 +138,8 @@ export default function Projects() {
             className="text-2xl sm:text-3xl lg:text-4xl max-w-5xl"
             style={{ color: '#4a1a2a' }}
           >
-            Explore our latest initiatives and discover how we're making a difference in communities around the world through creative youth empowerment.
+            Explore our latest initiatives and discover how we're making a difference through the creative
+            arts.
           </motion.p>
         </motion.div>
 

@@ -46,7 +46,7 @@ export default function YouTubeChannel() {
             className="text-2xl sm:text-3xl lg:text-4xl max-w-5xl"
             style={{ color: '#4a1a2a' }}
           >
-            Subscribe to our YouTube channel to stay updated with our latest projects, success stories, and youth empowerment initiatives.
+            Subscribe to our YouTube channel to explore a selection of our creative outputs.
           </motion.p>
         </motion.div>
 
@@ -61,7 +61,7 @@ export default function YouTubeChannel() {
             className="order-1 lg:order-1"
           >
             <div className="relative rounded-2xl overflow-hidden shadow-lg bg-gray-100">
-              {/* YouTube Video Embed - Replace with your actual video ID */}
+              {/* YouTube Video Embed */}
               <div className="relative w-full h-0 pb-[56.25%]">
                 <iframe
                   className="absolute top-0 left-0 w-full h-full"
@@ -96,9 +96,8 @@ export default function YouTubeChannel() {
             <div className="space-y-8">
               <div>
                 <p className="text-gray-600 leading-relaxed mb-6">
-                  Our YouTube channel is your gateway to seeing FYCI's impact in action. From workshop highlights 
-                  to participant testimonials, we share the stories of transformation and empowerment that happen 
-                  every day in our programs.
+                  Our YouTube channel is your gateway to seeing FYCI's impact in action. From webinar
+                  recordings to spoken word and music videos, each output comes with a powerful message.
                 </p>
               </div>
 
@@ -124,22 +123,22 @@ export default function YouTubeChannel() {
                   <li className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full"
                     style={{ backgroundColor: '#360e1d' }}></div>
-                    Project highlights and success stories
+                    Webinar recordings
                   </li>
                   <li className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full"
                     style={{ backgroundColor: '#360e1d' }}></div>
-                    Workshop and training session footage
+                    Spoken word and music videos
                   </li>
                   <li className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full"
                     style={{ backgroundColor: '#360e1d' }}></div>
-                    Participant testimonials and interviews
+                    Creative compilations from the FYCI team and ambassadors
                   </li>
                   <li className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full"
                     style={{ backgroundColor: '#360e1d' }}></div>
-                    Behind-the-scenes content from our programs
+                    Compilation of entries to our competitions
                   </li>
                 </ul>
               </div>

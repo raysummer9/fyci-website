@@ -40,6 +40,7 @@ export interface Project {
   programmeArea: string;
   icon: React.ComponentType<{ className?: string; size?: number }>;
   type: 'programme' | 'competition' | 'event';
+  endDate?: string;
 }
 
 export interface Programme {
@@ -50,6 +51,8 @@ export interface Programme {
   content?: string;
   featured_image?: string;
   status: string;
+  start_date?: string;
+  end_date?: string;
   featured: boolean;
   created_at: string;
   updated_at: string;

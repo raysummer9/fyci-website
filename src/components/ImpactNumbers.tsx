@@ -66,7 +66,8 @@ export default function ImpactNumbers() {
             className="text-2xl sm:text-3xl lg:text-4xl max-w-5xl"
             style={{ color: '#4a1a2a' }}
           >
-            Through our dedicated programs and initiatives, we've made a measurable difference in the lives of young people and communities across the region.
+            Through our dedicated programs and initiatives, we've made a measurable difference in the lives
+            of young people and communities across Nigeria and beyond.
           </motion.p>
         </motion.div>
 

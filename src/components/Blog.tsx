@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, User, Tag } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { BlogPost } from '@/types';
 
 export default function Blog() {
@@ -292,13 +293,16 @@ export default function Blog() {
           transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="text-center"
         >
-          <button className="inline-flex items-center gap-2 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg"
+          <Link 
+            href="/blog"
+            className="inline-flex items-center gap-2 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg"
             style={{ backgroundColor: '#360e1d' }}
             onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#4a1a2a'}
-            onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#360e1d'}>
+            onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#360e1d'}
+          >
             Visit Our Blog
             <ArrowRight size={20} />
-          </button>
+          </Link>
         </motion.div>
       </div>
     </section>

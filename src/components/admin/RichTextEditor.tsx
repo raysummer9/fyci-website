@@ -9,6 +9,10 @@ import { TextStyle } from '@tiptap/extension-text-style'
 import Color from '@tiptap/extension-color'
 import TextAlign from '@tiptap/extension-text-align'
 import Underline from '@tiptap/extension-underline'
+import { Table } from '@tiptap/extension-table'
+import { TableRow } from '@tiptap/extension-table-row'
+import { TableHeader } from '@tiptap/extension-table-header'
+import { TableCell } from '@tiptap/extension-table-cell'
 import { 
   Bold, 
   Italic, 
@@ -25,11 +29,15 @@ import {
   Redo,
   Link as LinkIcon,
   Unlink,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Table as TableIcon,
+  Palette,
+  Plus,
+  Minus
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 
 interface RichTextEditorProps {
   content: string
@@ -68,7 +76,26 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
   const [imageUrl, setImageUrl] = useState('')
   const [showLinkInput, setShowLinkInput] = useState(false)
   const [showImageInput, setShowImageInput] = useState(false)
+  const [showColorPicker, setShowColorPicker] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const colorPickerRef = useRef<HTMLDivElement>(null)
+
+  // Close color picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (colorPickerRef.current && !colorPickerRef.current.contains(event.target as Node)) {
+        setShowColorPicker(false)
+      }
+    }
+
+    if (showColorPicker) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showColorPicker])
 
   const editor = useEditor({
     extensions: [
@@ -102,6 +129,12 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
         types: ['heading', 'paragraph'],
       }),
       Underline,
+      Table.configure({
+        resizable: true,
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
     ],
     content,
     immediatelyRender: false,
@@ -303,6 +336,113 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
             title="Justify"
           >
             <span className="text-xs font-bold">J</span>
+          </MenuButton>
+        </div>
+
+        {/* Color Picker */}
+        <div className="flex gap-1 mr-2">
+          <div className="relative" ref={colorPickerRef}>
+            <MenuButton
+              onClick={() => setShowColorPicker(!showColorPicker)}
+              title="Text Color"
+            >
+              <Palette className="h-4 w-4" />
+            </MenuButton>
+            {showColorPicker && (
+              <div className="absolute top-full left-0 mt-1 p-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                <div className="grid grid-cols-6 gap-1">
+                  {[
+                    '#000000', '#374151', '#6b7280', '#9ca3af', '#d1d5db', '#ffffff',
+                    '#dc2626', '#ea580c', '#d97706', '#ca8a04', '#65a30d', '#16a34a',
+                    '#059669', '#0891b2', '#0284c7', '#2563eb', '#4f46e5', '#7c3aed',
+                    '#9333ea', '#c026d3', '#db2777', '#e11d48', '#f43f5e', '#fb7185'
+                  ].map((color) => (
+                    <button
+                      key={color}
+                      type="button"
+                      className="w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                      style={{ backgroundColor: color }}
+                      onClick={() => {
+                        editor.chain().focus().setColor(color).run()
+                        setShowColorPicker(false)
+                      }}
+                      title={color}
+                    />
+                  ))}
+                </div>
+                <div className="mt-2 pt-2 border-t border-gray-200">
+                  <button
+                    type="button"
+                    className="text-xs text-gray-600 hover:text-gray-800"
+                    onClick={() => {
+                      editor.chain().focus().unsetColor().run()
+                      setShowColorPicker(false)
+                    }}
+                  >
+                    Remove Color
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Table Controls */}
+        <div className="flex gap-1 mr-2">
+          <MenuButton
+            onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
+            title="Insert Table"
+          >
+            <TableIcon className="h-4 w-4" />
+          </MenuButton>
+          <MenuButton
+            onClick={() => editor.chain().focus().addColumnBefore().run()}
+            disabled={!editor.isActive('table')}
+            title="Add Column Before"
+          >
+            <Plus className="h-4 w-4" />
+          </MenuButton>
+          <MenuButton
+            onClick={() => editor.chain().focus().addColumnAfter().run()}
+            disabled={!editor.isActive('table')}
+            title="Add Column After"
+          >
+            <Plus className="h-4 w-4" />
+          </MenuButton>
+          <MenuButton
+            onClick={() => editor.chain().focus().deleteColumn().run()}
+            disabled={!editor.isActive('table')}
+            title="Delete Column"
+          >
+            <Minus className="h-4 w-4" />
+          </MenuButton>
+          <MenuButton
+            onClick={() => editor.chain().focus().addRowBefore().run()}
+            disabled={!editor.isActive('table')}
+            title="Add Row Before"
+          >
+            <Plus className="h-4 w-4" />
+          </MenuButton>
+          <MenuButton
+            onClick={() => editor.chain().focus().addRowAfter().run()}
+            disabled={!editor.isActive('table')}
+            title="Add Row After"
+          >
+            <Plus className="h-4 w-4" />
+          </MenuButton>
+          <MenuButton
+            onClick={() => editor.chain().focus().deleteRow().run()}
+            disabled={!editor.isActive('table')}
+            title="Delete Row"
+          >
+            <Minus className="h-4 w-4" />
+          </MenuButton>
+          <MenuButton
+            onClick={() => editor.chain().focus().deleteTable().run()}
+            disabled={!editor.isActive('table')}
+            title="Delete Table"
+          >
+            <TableIcon className="h-4 w-4" />
           </MenuButton>
         </div>
 
@@ -541,6 +681,63 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
         .ProseMirror pre code {
           background: none;
           padding: 0;
+        }
+
+        .ProseMirror table {
+          border-collapse: collapse;
+          table-layout: fixed;
+          width: 100%;
+          margin: 1rem 0;
+          overflow: hidden;
+        }
+
+        .ProseMirror table td,
+        .ProseMirror table th {
+          min-width: 1em;
+          border: 1px solid #d1d5db;
+          padding: 0.5rem;
+          vertical-align: top;
+          box-sizing: border-box;
+          position: relative;
+        }
+
+        .ProseMirror table th {
+          font-weight: bold;
+          text-align: left;
+          background-color: #f9fafb;
+        }
+
+        .ProseMirror table .selectedCell:after {
+          z-index: 2;
+          position: absolute;
+          content: "";
+          left: 0; right: 0; top: 0; bottom: 0;
+          background: rgba(200, 200, 255, 0.4);
+          pointer-events: none;
+        }
+
+        .ProseMirror table .column-resize-handle {
+          position: absolute;
+          right: -2px;
+          top: 0;
+          bottom: -2px;
+          width: 4px;
+          background-color: #3b82f6;
+          pointer-events: none;
+        }
+
+        .ProseMirror table p {
+          margin: 0;
+        }
+
+        .ProseMirror .tableWrapper {
+          padding: 1rem 0;
+          overflow-x: auto;
+        }
+
+        .ProseMirror .resize-cursor {
+          cursor: ew-resize;
+          cursor: col-resize;
         }
       `}</style>
     </div>
