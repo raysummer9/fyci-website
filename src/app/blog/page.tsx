@@ -147,7 +147,7 @@ export default function BlogPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
-            Explore insights, stories, and perspectives on youth development, creative expression, and social change from our community and partners.
+            Explore insights, stories, and perspectives on youth agency, creativity, and social change.
           </motion.p>
         </div>
       </section>

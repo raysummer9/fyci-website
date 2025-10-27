@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, User } from 'lucide-react';
+import { Mail, Send, User } from 'lucide-react';
 import { useState } from 'react';
 import YouTubeChannel from '@/components/YouTubeChannel';
 import Newsletter from '@/components/Newsletter';
@@ -76,7 +76,7 @@ export default function ContactPage() {
               className="text-xl max-w-4xl"
               style={{ color: '#360e1d' }}
             >
-              Get in touch with us for inquiries, partnerships, or to learn more about how you can be part of our mission to empower young people through creative expression and community engagement.
+              Get in touch with us for inquiries, partnerships, or to learn more about how you can be part of our mission to promote youth agency through the creative arts.
             </motion.p>
           </motion.div>
         </div>
@@ -100,8 +100,8 @@ export default function ContactPage() {
             >
               <h2 className="text-3xl font-bold text-gray-900 mb-8">Get in Touch</h2>
               
-              {/* Contact Details Grid - 2 items per row */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {/* Contact Details - Only Email */}
+              <div className="space-y-6">
                 {/* Email Address */}
                 <motion.div
                   variants={itemVariants}
@@ -114,41 +114,6 @@ export default function ContactPage() {
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">Email Address</h3>
                     <p className="text-gray-600">contact@fyci.org</p>
-                    <p className="text-gray-600">fycinitiative@gmail.com</p>
-                  </div>
-                </motion.div>
-
-                {/* Phone Number */}
-                <motion.div
-                  variants={itemVariants}
-                  transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }}
-                  className="flex items-start gap-4"
-                >
-                  <div className="flex-shrink-0 p-3 rounded-lg" style={{ backgroundColor: '#e6e1e3' }}>
-                    <Phone size={24} style={{ color: '#360e1d' }} />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Phone Number</h3>
-                    <p className="text-gray-600">+234 (0) 123 456 7890</p>
-                    <p className="text-gray-600">+234 (0) 987 654 3210</p>
-                  </div>
-                </motion.div>
-
-                {/* Office Address - spans full width */}
-                <motion.div
-                  variants={itemVariants}
-                  transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.3 }}
-                  className="flex items-start gap-4 sm:col-span-2"
-                >
-                  <div className="flex-shrink-0 p-3 rounded-lg" style={{ backgroundColor: '#e6e1e3' }}>
-                    <MapPin size={24} style={{ color: '#360e1d' }} />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Office Address</h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      LL4B Sunnyvale Estate<br />
-                      Abuja, Nigeria
-                    </p>
                   </div>
                 </motion.div>
               </div>
@@ -257,13 +222,6 @@ export default function ContactPage() {
                 </motion.button>
               </motion.form>
 
-              <motion.p 
-                variants={itemVariants}
-                transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="text-gray-600 text-sm mt-6 leading-relaxed"
-              >
-                We'll get back to you within 24-48 hours. For urgent matters, please call us directly.
-              </motion.p>
             </motion.div>
           </motion.div>
         </div>
