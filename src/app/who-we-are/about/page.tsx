@@ -319,7 +319,7 @@ export default function AboutPage() {
               </div>
             </motion.div>
 
-            {/* Gender Rights */}
+            {/* Women's Rights */}
             <motion.div 
               className="bg-white rounded-lg p-6 shadow-sm"
               whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
@@ -327,14 +327,14 @@ export default function AboutPage() {
               <div className="flex items-center gap-4">
                 <div className="p-3 rounded-lg w-16 h-16 flex items-center justify-center" style={{ backgroundColor: '#360e1d' }}>
                   <Image
-                    src="/img/about-icons/gender-rights.svg"
-                    alt="Gender Rights"
+                    src="/img/about-icons/womens-rights.svg"
+                    alt="Women's Rights"
                     width={48}
                     height={48}
                     className="filter brightness-0 invert w-12 h-12 object-contain"
                   />
                 </div>
-                <h4 className="text-lg font-bold text-gray-900">Gender Rights</h4>
+                <h4 className="text-lg font-bold text-gray-900">Women\'s Rights</h4>
               </div>
             </motion.div>
 

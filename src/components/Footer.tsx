@@ -30,7 +30,7 @@ export default function Footer() {
   ];
 
   const programmeAreas = [
-    { name: 'Gender Rights', href: '/programme-areas/gender-rights' },
+    { name: 'Women\'s Rights', href: '/programme-areas/womens-rights' },
     { name: 'Youth Agency', href: '/programme-areas/youth-agency' },
     { name: 'Political Participation', href: '/programme-areas/youth-political-participation' },
     { name: 'Anti-Corruption', href: '/programme-areas/anti-corruption' }

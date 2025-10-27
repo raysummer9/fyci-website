@@ -719,7 +719,7 @@ ON CONFLICT (name) DO NOTHING;
 
 -- Insert default programme areas
 INSERT INTO programme_areas (name, slug, description, color, sort_order) VALUES
-    ('Gender Rights', 'gender-rights', 'Promoting gender equality and women''s rights', '#FF6B6B', 1),
+    ('Women''s Rights', 'womens-rights', 'Promoting women''s rights and gender equality', '#FF6B6B', 1),
     ('Youth Agency and Self Esteem', 'youth-agency', 'Building confidence and agency in young people', '#4ECDC4', 2),
     ('Youth Political Participation', 'youth-political-participation', 'Encouraging civic engagement and political participation', '#45B7D1', 3),
     ('Anti-Corruption', 'anti-corruption', 'Fighting corruption and promoting transparency', '#96CEB4', 4)

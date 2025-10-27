@@ -44,7 +44,7 @@ export default function Navbar() {
 
   // Mapping between navbar labels and database slugs
   const categoryMapping: Record<string, string> = {
-    'Gender Rights': 'gender-rights',
+    'Women\'s Rights': 'womens-rights',
     'Youth Agency and Self Esteem': 'youth-agency',
     'Youth Political Participation': 'youth-political-participation',
     'Anti-Corruption': 'anti-corruption'
@@ -159,7 +159,7 @@ export default function Navbar() {
       label: 'Programme Areas',
       href: '/programme-areas',
       submenu: [
-        { href: '/programme-areas/gender-rights', label: 'Gender Rights', icon: Heart },
+        { href: '/programme-areas/womens-rights', label: 'Women\'s Rights', icon: Heart },
         { href: '/programme-areas/youth-agency', label: 'Youth Agency and Self Esteem', icon: Target },
         { href: '/programme-areas/youth-political-participation', label: 'Youth Political Participation', icon: Vote },
         { href: '/programme-areas/anti-corruption', label: 'Anti-Corruption', icon: Shield },

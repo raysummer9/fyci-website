@@ -18,9 +18,9 @@ export default function ProgrammeAreasPage() {
     {
       id: 1,
       title: "Creative Arts for Gender Equality",
-      category: "Gender Rights",
+      category: "Women's Rights",
       date: "Dec 15, 2024",
-      image: "/img/gender-rights.jpg",
+      image: "/img/womens-rights.jpg",
       description: "Using music, drama, and visual arts to challenge gender stereotypes and promote women's rights in communities across Nigeria."
     },
     {
@@ -50,9 +50,9 @@ export default function ProgrammeAreasPage() {
     {
       id: 5,
       title: "Women's Voice Initiative",
-      category: "Gender Rights",
+      category: "Women's Rights",
       date: "Aug 05, 2024",
-      image: "/img/gender-rights.jpg",
+      image: "/img/womens-rights.jpg",
       description: "Empowering young women to speak out against discrimination and advocate for their rights in their communities."
     },
     {
@@ -73,7 +73,7 @@ export default function ProgrammeAreasPage() {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'Gender Rights':
+      case 'Women\'s Rights':
         return Heart;
       case 'Youth Agency':
         return Target;
@@ -139,7 +139,7 @@ export default function ProgrammeAreasPage() {
                 All Categories
               </button>
               <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
-                Gender Rights
+                Women's Rights
               </button>
               <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
                 Youth Agency

@@ -18,49 +18,49 @@ export default function GenderRightsPage() {
     {
       id: 1,
       title: "Women's Voice Initiative",
-      category: "Gender Rights",
+      category: "Women's Rights",
       date: "Dec 15, 2024",
-      image: "/img/gender-rights.jpg",
+      image: "/img/womens-rights.jpg",
       description: "Empowering young women to speak out against discrimination and advocate for their rights in their communities through creative arts."
     },
     {
       id: 2,
       title: "Breaking Gender Stereotypes Through Art",
-      category: "Gender Rights",
+      category: "Women's Rights",
       date: "Nov 28, 2024",
-      image: "/img/gender-rights.jpg",
+      image: "/img/womens-rights.jpg",
       description: "Using music, drama, and visual arts to challenge harmful gender stereotypes and traditional practices that limit opportunities for women."
     },
     {
       id: 3,
       title: "Safe Spaces for Women",
-      category: "Gender Rights",
+      category: "Women's Rights",
       date: "Oct 12, 2024",
-      image: "/img/gender-rights.jpg",
+      image: "/img/womens-rights.jpg",
       description: "Creating safe spaces for young women to discuss gender issues, share experiences, and build supportive networks."
     },
     {
       id: 4,
       title: "Gender Equality Advocacy Campaign",
-      category: "Gender Rights",
+      category: "Women's Rights",
       date: "Sep 20, 2024",
-      image: "/img/gender-rights.jpg",
+      image: "/img/womens-rights.jpg",
       description: "Community dialogues and advocacy campaigns promoting gender equality and women's rights through creative expression."
     },
     {
       id: 5,
       title: "Creative Mentorship for Girls",
-      category: "Gender Rights",
+      category: "Women's Rights",
       date: "Aug 05, 2024",
-      image: "/img/gender-rights.jpg",
+      image: "/img/womens-rights.jpg",
       description: "Mentorship programs connecting young girls with successful women leaders in creative fields and advocacy."
     },
     {
       id: 6,
       title: "Art Against Gender-Based Violence",
-      category: "Gender Rights",
+      category: "Women's Rights",
       date: "Jul 18, 2024",
-      image: "/img/gender-rights.jpg",
+      image: "/img/womens-rights.jpg",
       description: "Using creative arts to raise awareness about gender-based violence and advocate for prevention and support services."
     }
   ];
@@ -92,7 +92,7 @@ export default function GenderRightsPage() {
             </Link>
             
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-6">
-              Gender Rights
+              Women's Rights
             </h1>
             <p className="text-xl text-gray-600 max-w-4xl">
               Promoting gender equality and empowering young women and girls to challenge discrimination and claim their rights. 
