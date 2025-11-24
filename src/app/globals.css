@@ -333,7 +333,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --primary: oklch(0.205 0 0);
+  --primary: #360e1d;
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -359,7 +359,7 @@
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary: #360e1d;
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
@@ -369,8 +369,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --primary: #5920a4;
-    --primary-foreground: #1f2937;
+    --primary: #360e1d;
+    --primary-foreground: #faf8f9;
     --secondary: #2dd4bf;
     --secondary-foreground: #1f2937;
     --accent: #fbbf24;
@@ -381,7 +381,7 @@
 }
 
 body {
-  background: #5920a4;
+  background: #360e1d;
   font-family: 'Lota Grotesque', sans-serif;
 }
 
@@ -453,7 +453,7 @@ body {
   --chart-5: oklch(0.645 0.246 16.439);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary: #360e1d;
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);

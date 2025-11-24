@@ -124,13 +124,13 @@ export default function SuccessStory() {
                     }}
                     className="absolute inset-0"
                   >
-                    <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-purple-100 to-emerald-100 h-full">
+                    <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#f5eef0] to-emerald-100 h-full">
                       {/* Testimonial Content */}
                       <div className="p-8">
                         {/* Quote Icon */}
                         <div className="flex justify-center mb-6">
                           <div className="bg-white/80 backdrop-blur-sm rounded-full p-4">
-                            <Quote size={24} className="text-purple-600" />
+                            <Quote size={24} className="text-[#360e1d]" />
                           </div>
                         </div>
                         
@@ -141,8 +141,8 @@ export default function SuccessStory() {
                         
                         {/* Author */}
                         <div className="flex flex-col items-center gap-4">
-                          <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
-                            <UserCheck size={24} className="text-purple-600" />
+                          <div className="w-16 h-16 bg-[#f5eef0] rounded-full flex items-center justify-center">
+                            <UserCheck size={24} className="text-[#360e1d]" />
                           </div>
                           <div className="text-center">
                             <div className="font-semibold text-gray-900">{testimonials[currentTestimonial].name}</div>
@@ -177,7 +177,7 @@ export default function SuccessStory() {
               </div>
 
               {/* Call to Action */}
-              <div className="bg-purple-50 rounded-xl p-8">
+              <div className="bg-[#faf8f9] rounded-xl p-8">
                 <h3 className="text-xl font-bold mb-3 text-gray-900">Be Our Next Success Story</h3>
                 <p className="text-gray-700 mb-6">
                   Join our programmes and start your journey of creative discovery and personal growth.

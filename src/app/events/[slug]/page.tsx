@@ -274,8 +274,8 @@ export default function EventPage({ params }: EventPageProps) {
                     )}
                     {event.venue && (
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                          <MapPin size={20} className="text-purple-400" />
+                        <div className="w-10 h-10 rounded-lg bg-[#360e1d]/20 flex items-center justify-center">
+                          <MapPin size={20} className="text-[#6b1a35]" />
                         </div>
                         <div>
                           <p className="text-gray-600 text-sm">Venue</p>

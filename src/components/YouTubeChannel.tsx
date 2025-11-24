@@ -117,7 +117,7 @@ export default function YouTubeChannel() {
               </div>
 
               {/* Additional Info */}
-              <div className="bg-purple-50 rounded-xl p-6">
+              <div className="bg-[#faf8f9] rounded-xl p-6">
                 <h4 className="font-semibold text-gray-900 mb-2">What You'll Find:</h4>
                 <ul className="space-y-2 text-gray-600">
                   <li className="flex items-center gap-2">

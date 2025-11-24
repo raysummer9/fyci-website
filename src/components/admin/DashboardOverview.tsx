@@ -29,8 +29,8 @@ export default function DashboardOverview({ stats }: DashboardOverviewProps) {
       value: stats.publications,
       description: 'Available publications',
       icon: BookOpen,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100'
+      color: 'text-[#360e1d]',
+      bgColor: 'bg-[#f5eef0]'
     },
     {
       title: 'Users',
