@@ -47,51 +47,8 @@ ON competition_applications(created_at DESC);
 ALTER TABLE competition_applications ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies
--- Allow anyone to insert (submit applications)
-CREATE POLICY "Anyone can submit competition applications"
-    ON competition_applications
-    FOR INSERT
-    TO anon, authenticated
-    WITH CHECK (true);
-
--- Only authenticated users with admin/editor role can view applications
-CREATE POLICY "Admins and editors can view competition applications"
-    ON competition_applications
-    FOR SELECT
-    TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM profiles
-            WHERE profiles.id = auth.uid()
-            AND profiles.role IN ('admin', 'editor')
-        )
-    );
-
--- Only admins can update applications
-CREATE POLICY "Admins can update competition applications"
-    ON competition_applications
-    FOR UPDATE
-    TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM profiles
-            WHERE profiles.id = auth.uid()
-            AND profiles.role = 'admin'
-        )
-    );
-
--- Only admins can delete applications
-CREATE POLICY "Admins can delete competition applications"
-    ON competition_applications
-    FOR DELETE
-    TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM profiles
-            WHERE profiles.id = auth.uid()
-            AND profiles.role = 'admin'
-        )
-    );
+-- Note: RLS policies are created in a separate migration file
+-- See: fix_competition_applications_rls.sql
 
 -- Add comment for documentation
 COMMENT ON COLUMN competitions.application_form IS 'JSONB field storing form field configuration. Format: {"fields": [{"id": "field1", "label": "Field Label", "type": "text|email|phone|textarea|select|file", "required": true, "options": []}]}';

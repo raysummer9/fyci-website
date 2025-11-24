@@ -428,9 +428,9 @@ CREATE POLICY "Admins and editors full access to programme areas" ON programme_a
 -- PROGRAMMES POLICIES
 -- ==============================================
 
--- Public read access for published programmes
-CREATE POLICY "Public read access for published programmes" ON programmes
-    FOR SELECT USING (status = 'published');
+-- Public read access for all visible programmes (excluding draft)
+CREATE POLICY "Public read access for programmes" ON programmes
+    FOR SELECT USING (status IN ('published', 'ongoing', 'completed'));
 
 -- Admins and editors can do everything
 CREATE POLICY "Admins and editors full access to programmes" ON programmes
@@ -454,9 +454,9 @@ CREATE POLICY "Authors can manage own programmes" ON programmes
 -- COMPETITIONS POLICIES
 -- ==============================================
 
--- Public read access for open and completed competitions
+-- Public read access for all visible competitions (excluding draft)
 CREATE POLICY "Public read access for competitions" ON competitions
-    FOR SELECT USING (status IN ('open', 'judging', 'completed'));
+    FOR SELECT USING (status IN ('open', 'closed', 'judging', 'completed'));
 
 -- Admins and editors can do everything
 CREATE POLICY "Admins and editors full access to competitions" ON competitions
