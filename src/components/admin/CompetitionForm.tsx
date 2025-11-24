@@ -36,8 +36,6 @@ export default function CompetitionForm({ competition, isEditing = false, progra
     status: competition?.status || 'open',
     start_date: competition?.start_date ? competition.start_date.split('T')[0] : '',
     end_date: competition?.end_date ? competition.end_date.split('T')[0] : '',
-    rules: competition?.rules || '',
-    prizes: competition?.prizes || '',
     featured: competition?.featured || false,
     application_form: (competition as any)?.application_form || null,
   })
@@ -218,24 +216,6 @@ export default function CompetitionForm({ competition, isEditing = false, progra
                     content={formData.content}
                     onChange={(content) => handleInputChange('content', content)}
                     placeholder="Write competition details here..."
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="rules">Rules</Label>
-                  <RichTextEditor
-                    content={formData.rules}
-                    onChange={(content) => handleInputChange('rules', content)}
-                    placeholder="Competition rules and guidelines..."
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="prizes">Prizes</Label>
-                  <RichTextEditor
-                    content={formData.prizes}
-                    onChange={(content) => handleInputChange('prizes', content)}
-                    placeholder="Prize information..."
                   />
                 </div>
               </CardContent>
