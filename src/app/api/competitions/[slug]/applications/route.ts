@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase'
 
 interface RouteParams {
-  params: Promise<{ id: string }>
+  params: Promise<{ slug: string }>
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
@@ -11,7 +11,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Database not configured' }, { status: 500 })
     }
 
-    const { id } = await params
+    const { slug } = await params
     const supabase = await createServerSupabaseClient()
 
     // Check if user is authenticated and has admin/editor role
@@ -31,11 +31,22 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
+    // First, get the competition ID from the slug
+    const { data: competition, error: competitionError } = await supabase
+      .from('competitions')
+      .select('id')
+      .eq('slug', slug)
+      .single()
+
+    if (competitionError || !competition) {
+      return NextResponse.json({ error: 'Competition not found' }, { status: 404 })
+    }
+
     // Fetch applications for this competition
     const { data: applications, error } = await supabase
       .from('competition_applications')
       .select('*')
-      .eq('competition_id', id)
+      .eq('competition_id', competition.id)
       .order('created_at', { ascending: false })
 
     if (error) {
@@ -45,7 +56,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json(applications || [])
   } catch (error) {
-    console.error('Error in GET /api/competitions/[id]/applications:', error)
+    console.error('Error in GET /api/competitions/[slug]/applications:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -56,7 +67,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Database not configured' }, { status: 500 })
     }
 
-    const { id } = await params
+    const { slug } = await params
     const body = await request.json()
     const supabase = await createServerSupabaseClient()
 
@@ -77,22 +88,42 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
+    // First, get the competition ID from the slug
+    const { data: competition, error: competitionError } = await supabase
+      .from('competitions')
+      .select('id')
+      .eq('slug', slug)
+      .single()
+
+    if (competitionError || !competition) {
+      return NextResponse.json({ error: 'Competition not found' }, { status: 404 })
+    }
+
     const { application_id, status, notes } = body
 
     if (!application_id) {
       return NextResponse.json({ error: 'application_id is required' }, { status: 400 })
     }
 
+    // Build update object
+    const updateData: any = {
+      updated_at: new Date().toISOString()
+    }
+    
+    if (status !== undefined) {
+      updateData.status = status
+    }
+    
+    if (notes !== undefined) {
+      updateData.notes = notes
+    }
+
     // Update application
     const { data: application, error } = await supabase
       .from('competition_applications')
-      .update({
-        status: status || undefined,
-        notes: notes !== undefined ? notes : undefined,
-        updated_at: new Date().toISOString()
-      })
+      .update(updateData)
       .eq('id', application_id)
-      .eq('competition_id', id)
+      .eq('competition_id', competition.id)
       .select()
       .single()
 
@@ -103,7 +134,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json(application)
   } catch (error) {
-    console.error('Error in PATCH /api/competitions/[id]/applications:', error)
+    console.error('Error in PATCH /api/competitions/[slug]/applications:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

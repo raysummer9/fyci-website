@@ -11,7 +11,8 @@ import {
   BookOpen, 
   Users, 
   LogOut,
-  MessageSquare
+  MessageSquare,
+  ClipboardList
 } from 'lucide-react'
 
 interface SidebarProps {
@@ -38,6 +39,11 @@ const navigation = [
     name: 'Comments',
     href: '/admin/comments',
     icon: MessageSquare,
+  },
+  {
+    name: 'Applications',
+    href: '/admin/applications',
+    icon: ClipboardList,
   },
   {
     name: 'Publications',

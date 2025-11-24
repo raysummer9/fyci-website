@@ -22,6 +22,7 @@ const FIELD_TYPES = [
   { value: 'select', label: 'Select (Dropdown)' },
   { value: 'number', label: 'Number' },
   { value: 'file', label: 'File Upload' },
+  { value: 'checkbox', label: 'Checkbox' },
 ]
 
 export default function CompetitionFormBuilder({ formConfig, onChange }: CompetitionFormBuilderProps) {
@@ -206,7 +207,7 @@ export default function CompetitionFormBuilder({ formConfig, onChange }: Competi
                             </div>
                           </div>
 
-                          {field.type !== 'select' && (
+                          {field.type !== 'select' && field.type !== 'checkbox' && (
                             <div>
                               <Label>Placeholder</Label>
                               <Input
@@ -214,6 +215,20 @@ export default function CompetitionFormBuilder({ formConfig, onChange }: Competi
                                 onChange={(e) => updateField(field.id, { placeholder: e.target.value })}
                                 placeholder="Enter placeholder text"
                               />
+                            </div>
+                          )}
+
+                          {field.type === 'checkbox' && (
+                            <div>
+                              <Label>Checkbox Text (shown next to checkbox)</Label>
+                              <Input
+                                value={field.placeholder || ''}
+                                onChange={(e) => updateField(field.id, { placeholder: e.target.value })}
+                                placeholder="Enter text to display next to checkbox"
+                              />
+                              <p className="text-xs text-gray-500 mt-1">
+                                This text will be displayed next to the checkbox. The field label will be used as the question.
+                              </p>
                             </div>
                           )}
 

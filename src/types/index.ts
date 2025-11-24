@@ -74,7 +74,7 @@ export interface Programme {
 export interface CompetitionFormField {
   id: string;
   label: string;
-  type: 'text' | 'email' | 'phone' | 'textarea' | 'select' | 'file' | 'number';
+  type: 'text' | 'email' | 'phone' | 'textarea' | 'select' | 'file' | 'number' | 'checkbox';
   required: boolean;
   placeholder?: string;
   options?: string[]; // For select fields
