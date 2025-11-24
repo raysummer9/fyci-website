@@ -419,6 +419,9 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
                           <div className="text-sm text-gray-500">
                             Click to upload image
                           </div>
+                          <div className="text-xs text-gray-400 mt-1">
+                            Recommended: 1200 × 675px (16:9) or 1920 × 1080px
+                          </div>
                         </div>
                       )}
                     </div>
