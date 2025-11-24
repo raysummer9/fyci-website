@@ -118,11 +118,24 @@ export default function CompetitionApplicationForm({ competition }: CompetitionA
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Prevent double submission
+    if (isSubmitting) {
+      return
+    }
+    
     setSubmitStatus('idle')
     setErrorMessage('')
 
     if (!validateForm()) {
       setSubmitStatus('error')
+      // Scroll to error on mobile
+      setTimeout(() => {
+        const errorElement = document.querySelector('[data-error-message]')
+        if (errorElement) {
+          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+      }, 100)
       return
     }
 
@@ -132,19 +145,24 @@ export default function CompetitionApplicationForm({ competition }: CompetitionA
       // Upload files first if any
       const fileUrls: Record<string, string> = {}
       for (const [fieldId, file] of Object.entries(files)) {
-        const formData = new FormData()
-        formData.append('file', file)
+        const uploadFormData = new FormData()
+        uploadFormData.append('file', file)
 
-        const uploadResponse = await fetch('/admin/api/upload', {
+        const uploadResponse = await fetch('/api/competitions/upload', {
           method: 'POST',
-          body: formData
+          body: uploadFormData
         })
 
-        if (uploadResponse.ok) {
-          const result = await uploadResponse.json()
+        if (!uploadResponse.ok) {
+          const errorResult = await uploadResponse.json().catch(() => ({ error: 'Failed to upload file' }))
+          throw new Error(errorResult.error || 'Failed to upload file')
+        }
+
+        const result = await uploadResponse.json()
+        if (result.url) {
           fileUrls[fieldId] = result.url
         } else {
-          throw new Error('Failed to upload file')
+          throw new Error('No URL returned from upload')
         }
       }
 
@@ -209,20 +227,33 @@ export default function CompetitionApplicationForm({ competition }: CompetitionA
         })
       })
 
+      if (!response.ok) {
+        const errorResult = await response.json().catch(() => ({ error: 'Failed to submit application' }))
+        throw new Error(errorResult.error || 'Failed to submit application. Please try again.')
+      }
+
       const result = await response.json()
 
-      if (response.ok) {
+      if (result.success || result.application_id) {
         setSubmitStatus('success')
         setFormData({})
         setFiles({})
       } else {
-        setErrorMessage(result.error || 'Failed to submit application. Please try again.')
-        setSubmitStatus('error')
+        throw new Error(result.error || 'Failed to submit application. Please try again.')
       }
     } catch (error) {
       console.error('Error submitting application:', error)
-      setErrorMessage('An unexpected error occurred. Please try again.')
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred. Please try again.'
+      setErrorMessage(errorMessage)
       setSubmitStatus('error')
+      
+      // Scroll to error message on mobile
+      setTimeout(() => {
+        const errorElement = document.querySelector('[data-error-message]')
+        if (errorElement) {
+          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+      }, 100)
     } finally {
       setIsSubmitting(false)
     }
@@ -379,7 +410,7 @@ export default function CompetitionApplicationForm({ competition }: CompetitionA
       
       <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
         {submitStatus === 'error' && errorMessage && (
-          <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4">
+          <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4" data-error-message>
             <div className="flex items-start gap-3">
               <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
               <p className="text-red-700 text-sm sm:text-base">{errorMessage}</p>
@@ -461,7 +492,7 @@ export default function CompetitionApplicationForm({ competition }: CompetitionA
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-6 text-base font-semibold rounded-lg shadow-md hover:shadow-lg transition-all"
+          className="w-full py-6 text-base font-semibold rounded-lg shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           size="lg"
         >
           {isSubmitting ? (
@@ -473,6 +504,12 @@ export default function CompetitionApplicationForm({ competition }: CompetitionA
             formConfig.submitButtonText || 'Submit Application'
           )}
         </Button>
+        
+        {isSubmitting && (
+          <p className="text-sm text-gray-500 text-center mt-2">
+            Please wait, this may take a moment...
+          </p>
+        )}
       </form>
     </div>
   )
