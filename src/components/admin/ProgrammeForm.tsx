@@ -153,7 +153,7 @@ export default function ProgrammeForm({ programme, isEditing = false, programmeA
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">
           {isEditing ? 'Edit Programme' : 'Create New Programme'}
@@ -167,9 +167,9 @@ export default function ProgrammeForm({ programme, isEditing = false, programmeA
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-3 space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Basic Information</CardTitle>
@@ -221,7 +221,7 @@ export default function ProgrammeForm({ programme, isEditing = false, programmeA
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="lg:col-span-1 space-y-6">
             {/* Featured Image */}
             <Card>
               <CardHeader>

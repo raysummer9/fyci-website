@@ -43,7 +43,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         )
       `)
       .eq('slug', slug)
-      .in('status', ['published', 'completed'])
+      .in('status', ['published', 'ongoing', 'completed'])
       .single()
 
     if (error) {

@@ -71,6 +71,27 @@ export interface Programme {
   };
 }
 
+export interface CompetitionFormField {
+  id: string;
+  label: string;
+  type: 'text' | 'email' | 'phone' | 'textarea' | 'select' | 'file' | 'number';
+  required: boolean;
+  placeholder?: string;
+  options?: string[]; // For select fields
+  validation?: {
+    min?: number;
+    max?: number;
+    pattern?: string;
+  };
+}
+
+export interface CompetitionApplicationForm {
+  enabled: boolean;
+  fields: CompetitionFormField[];
+  submitButtonText?: string;
+  successMessage?: string;
+}
+
 export interface Competition {
   id: string;
   title: string;
@@ -84,6 +105,7 @@ export interface Competition {
   rules?: string;
   prizes?: string;
   featured: boolean;
+  application_form?: CompetitionApplicationForm;
   created_at: string;
   updated_at: string;
   programme_areas?: {
@@ -99,6 +121,19 @@ export interface Competition {
     full_name?: string;
     avatar_url?: string;
   };
+}
+
+export interface CompetitionApplication {
+  id: string;
+  competition_id: string;
+  applicant_name: string;
+  applicant_email: string;
+  applicant_phone?: string;
+  form_data: Record<string, any>;
+  status: 'pending' | 'reviewed' | 'accepted' | 'rejected';
+  notes?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Event {

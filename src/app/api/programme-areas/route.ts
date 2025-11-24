@@ -20,7 +20,7 @@ export async function GET() {
     const { data: programmes, error: programmesError } = await supabase
       .from('programmes')
       .select('*')
-      .in('status', ['published', 'completed'])
+      .in('status', ['published', 'ongoing', 'completed'])
       .order('created_at', { ascending: false });
 
     if (programmesError) {
@@ -32,7 +32,7 @@ export async function GET() {
     const { data: competitions, error: competitionsError } = await supabase
       .from('competitions')
       .select('*')
-      .in('status', ['open', 'closed'])
+      .in('status', ['open', 'closed', 'completed'])
       .order('created_at', { ascending: false });
 
     if (competitionsError) {

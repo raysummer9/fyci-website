@@ -36,6 +36,7 @@ export default async function CompetitionPage({ params }: CompetitionPageProps) 
           rules,
           prizes,
           featured,
+          application_form,
           created_at,
           updated_at,
           programme_areas!programme_area_id (

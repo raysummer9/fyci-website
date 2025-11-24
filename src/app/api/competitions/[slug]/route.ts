@@ -30,6 +30,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         rules,
         prizes,
         featured,
+        application_form,
         created_at,
         updated_at,
         programme_areas!programme_area_id (

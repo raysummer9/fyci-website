@@ -11,6 +11,8 @@ import { Switch } from '@/components/ui/switch'
 import { Competition } from '@/lib/admin-programme-data'
 import { Upload, X, Save, FileText } from 'lucide-react'
 import RichTextEditor from './RichTextEditor'
+import CompetitionFormBuilder from './CompetitionFormBuilder'
+import { CompetitionApplicationForm } from '@/types'
 
 interface CompetitionFormProps {
   competition?: Competition | null
@@ -37,6 +39,7 @@ export default function CompetitionForm({ competition, isEditing = false, progra
     rules: competition?.rules || '',
     prizes: competition?.prizes || '',
     featured: competition?.featured || false,
+    application_form: (competition as any)?.application_form || null,
   })
 
   const handleInputChange = (field: string, value: any) => {
@@ -154,7 +157,7 @@ export default function CompetitionForm({ competition, isEditing = false, progra
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">
           {isEditing ? 'Edit Competition' : 'Create New Competition'}
@@ -168,9 +171,9 @@ export default function CompetitionForm({ competition, isEditing = false, progra
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-3 space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Basic Information</CardTitle>
@@ -237,10 +240,18 @@ export default function CompetitionForm({ competition, isEditing = false, progra
                 </div>
               </CardContent>
             </Card>
+
+            {/* Application Form Builder */}
+            <CompetitionFormBuilder
+              formConfig={formData.application_form}
+              onChange={(formConfig: CompetitionApplicationForm) => {
+                setFormData(prev => ({ ...prev, application_form: formConfig }))
+              }}
+            />
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="lg:col-span-1 space-y-6">
             {/* Featured Image */}
             <Card>
               <CardHeader>
@@ -308,6 +319,8 @@ export default function CompetitionForm({ competition, isEditing = false, progra
                 >
                   <option value="open">Open</option>
                   <option value="closed">Closed</option>
+                  <option value="judging">Judging</option>
+                  <option value="completed">Completed</option>
                 </select>
               </CardContent>
             </Card>

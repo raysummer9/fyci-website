@@ -39,12 +39,30 @@ export interface Competition {
   content?: string
   featured_image?: string
   programme_area_id: string
-  status: 'open' | 'closed'
+  status: 'open' | 'closed' | 'judging' | 'completed'
   start_date?: string
   end_date?: string
   rules?: string
   prizes?: string
   featured: boolean
+  application_form?: {
+    enabled: boolean
+    fields: Array<{
+      id: string
+      label: string
+      type: 'text' | 'email' | 'phone' | 'textarea' | 'select' | 'file' | 'number'
+      required: boolean
+      placeholder?: string
+      options?: string[]
+      validation?: {
+        min?: number
+        max?: number
+        pattern?: string
+      }
+    }>
+    submitButtonText?: string
+    successMessage?: string
+  }
   created_by?: string
   created_at: string
   updated_at: string

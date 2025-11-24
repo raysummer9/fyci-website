@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
           slug
         )
       `)
-      .in('status', ['open', 'closed'])
+      .in('status', ['open', 'closed', 'completed'])
       .order('created_at', { ascending: false, nullsFirst: false })
       .limit(parseInt(limit))
 

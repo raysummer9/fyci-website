@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
           slug
         )
       `)
-      .in('status', ['published', 'completed'])
+      .in('status', ['published', 'ongoing', 'completed'])
       .order('created_at', { ascending: false, nullsFirst: false })
       .limit(parseInt(limit))
 

@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
         created_at
       `)
       .eq('programme_area_id', programmeArea.id)
-      .in('status', ['open', 'closed'])
+      .in('status', ['open', 'closed', 'completed'])
       .order('created_at', { ascending: false })
       .limit(3)
 

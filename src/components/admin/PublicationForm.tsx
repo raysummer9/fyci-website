@@ -159,7 +159,7 @@ export default function PublicationForm({ publication, isEditing = false }: Publ
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       <Card>
         <CardHeader>
           <CardTitle>
@@ -174,9 +174,9 @@ export default function PublicationForm({ publication, isEditing = false }: Publ
           )}
           
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Main Content */}
-              <div className="space-y-6">
+              <div className="lg:col-span-2 space-y-6">
                 <div>
                   <Label htmlFor="title">Title *</Label>
                   <Input
@@ -226,7 +226,7 @@ export default function PublicationForm({ publication, isEditing = false }: Publ
               </div>
 
               {/* Sidebar */}
-              <div className="space-y-6">
+              <div className="lg:col-span-1 space-y-6">
                 <div>
                   <Label htmlFor="category_id">Category</Label>
                   <Select value={formData.category_id} onValueChange={(value) => handleInputChange('category_id', value)}>

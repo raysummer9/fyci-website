@@ -70,7 +70,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       end_date,
       rules,
       prizes,
-      featured
+      featured,
+      application_form
     } = body
 
     if (!title || !slug || !programme_area_id) {
@@ -80,9 +81,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     // Validate status
-    if (status && !['open', 'closed'].includes(status)) {
+    if (status && !['open', 'closed', 'judging', 'completed'].includes(status)) {
       return NextResponse.json({ 
-        error: 'Invalid status. Must be "open" or "closed"' 
+        error: 'Invalid status. Must be "open", "closed", "judging", or "completed"' 
       }, { status: 400 })
     }
 
@@ -113,6 +114,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         rules: rules || null,
         prizes: prizes || null,
         featured: featured || false,
+        application_form: application_form !== undefined ? application_form : null,
       })
       .eq('id', id)
       .select()

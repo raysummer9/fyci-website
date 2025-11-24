@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Calendar, User, ArrowLeft, Clock, MapPin, Trophy, Award, Users } from 'lucide-react';
 import { Competition } from '@/types';
 import ShareButtons from '@/components/ShareButtons';
+import CompetitionApplicationForm from '@/components/CompetitionApplicationForm';
 
 interface CompetitionPageClientProps {
   competition: Competition;
@@ -282,6 +283,13 @@ export default function CompetitionPageClient({ competition }: CompetitionPageCl
                       </div>
                     </div>
                   </div>
+                </div>
+              )}
+
+              {/* Application Form */}
+              {competition.status === 'open' && competition.application_form?.enabled && (
+                <div className="mb-8">
+                  <CompetitionApplicationForm competition={competition} />
                 </div>
               )}
 

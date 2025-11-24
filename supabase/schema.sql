@@ -2,7 +2,9 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Create custom types
-CREATE TYPE content_status AS ENUM ('draft', 'published', 'archived');
+-- Note: content_status enum has been extended to include 'ongoing' and 'completed' statuses
+-- The actual enum in the database is: ('draft', 'published', 'archived', 'ongoing', 'completed')
+CREATE TYPE content_status AS ENUM ('draft', 'published', 'archived', 'ongoing', 'completed');
 CREATE TYPE event_status AS ENUM ('upcoming', 'ongoing', 'completed', 'cancelled');
 CREATE TYPE competition_status AS ENUM ('open', 'closed', 'judging', 'completed');
 
