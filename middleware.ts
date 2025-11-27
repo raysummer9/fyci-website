@@ -41,11 +41,26 @@ export async function middleware(request: NextRequest) {
   try {
     const {
       data: { user },
+      error,
     } = await supabase.auth.getUser()
+
+    // Handle refresh token errors by clearing invalid cookies
+    if (error && (error as any).code === 'refresh_token_not_found') {
+      // Clear auth cookies
+      response.cookies.delete('sb-access-token')
+      response.cookies.delete('sb-refresh-token')
+      response.cookies.delete('supabase-auth-token')
+      
+      // If on admin route, redirect to login
+      if (request.nextUrl.pathname.startsWith('/admin') && request.nextUrl.pathname !== '/admin/login') {
+        return NextResponse.redirect(new URL('/admin/login', request.url))
+      }
+      return response
+    }
 
     // Check if the route is an admin route (excluding login)
     if (request.nextUrl.pathname.startsWith('/admin') && request.nextUrl.pathname !== '/admin/login') {
-      if (!user) {
+      if (!user || error) {
         return NextResponse.redirect(new URL('/admin/login', request.url))
       }
     }
@@ -54,7 +69,21 @@ export async function middleware(request: NextRequest) {
     if (request.nextUrl.pathname === '/admin/login' && user) {
       return NextResponse.redirect(new URL('/admin/dashboard', request.url))
     }
-  } catch (error) {
+  } catch (error: any) {
+    // Handle refresh token errors specifically
+    if (error?.code === 'refresh_token_not_found' || error?.message?.includes('refresh_token_not_found')) {
+      // Clear auth cookies
+      response.cookies.delete('sb-access-token')
+      response.cookies.delete('sb-refresh-token')
+      response.cookies.delete('supabase-auth-token')
+      
+      // If on admin route, redirect to login
+      if (request.nextUrl.pathname.startsWith('/admin') && request.nextUrl.pathname !== '/admin/login') {
+        return NextResponse.redirect(new URL('/admin/login', request.url))
+      }
+      return response
+    }
+    
     // If there's an error with Supabase, allow access for development
     console.warn('Supabase auth error:', error)
   }

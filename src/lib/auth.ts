@@ -12,12 +12,21 @@ export async function checkAuth() {
     const supabase = await createServerSupabaseClient()
     const { data: { user }, error } = await supabase.auth.getUser()
     
+    // Handle refresh token errors gracefully
+    if (error && (error as any).code === 'refresh_token_not_found') {
+      redirect('/admin/login')
+    }
+    
     if (error || !user) {
       redirect('/admin/login')
     }
     
     return user
-  } catch (error) {
+  } catch (error: any) {
+    // Handle refresh token errors specifically
+    if (error?.code === 'refresh_token_not_found' || error?.message?.includes('refresh_token_not_found')) {
+      redirect('/admin/login')
+    }
     console.error('Auth check error:', error)
     redirect('/admin/login')
   }
@@ -33,12 +42,21 @@ export async function getCurrentUser() {
     const supabase = await createServerSupabaseClient()
     const { data: { user }, error } = await supabase.auth.getUser()
     
+    // Handle refresh token errors gracefully - return null instead of throwing
+    if (error && (error as any).code === 'refresh_token_not_found') {
+      return null
+    }
+    
     if (error) {
       return null
     }
     
     return user
-  } catch (error) {
+  } catch (error: any) {
+    // Handle refresh token errors specifically
+    if (error?.code === 'refresh_token_not_found' || error?.message?.includes('refresh_token_not_found')) {
+      return null
+    }
     return null
   }
 }
@@ -55,12 +73,21 @@ export async function getAuthenticatedUser() {
     const supabase = await createServerSupabaseClient()
     const { data: { user }, error } = await supabase.auth.getUser()
     
+    // Handle refresh token errors gracefully
+    if (error && (error as any).code === 'refresh_token_not_found') {
+      return null
+    }
+    
     if (error || !user) {
       return null
     }
     
     return user
-  } catch (error) {
+  } catch (error: any) {
+    // Handle refresh token errors specifically
+    if (error?.code === 'refresh_token_not_found' || error?.message?.includes('refresh_token_not_found')) {
+      return null
+    }
     console.error('Error getting authenticated user:', error)
     return null
   }
