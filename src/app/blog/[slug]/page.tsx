@@ -19,8 +19,23 @@ export default function BlogPostPage() {
   const [categories, setCategories] = useState<{id: string, name: string, slug: string, count: number}[]>([]);
   const [tags, setTags] = useState<{id: string, name: string, slugs: string, count: number}[]>([]);
   const [viewCount, setViewCount] = useState<number>(0);
+  const [likeCount, setLikeCount] = useState<number>(0);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [isLiking, setIsLiking] = useState<boolean>(false);
   const viewTrackedRef = useRef(false);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const likePollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Generate or retrieve guest ID for anonymous users
+  const getGuestId = (): string => {
+    if (typeof window === 'undefined') return '';
+    let guestId = localStorage.getItem('blog_guest_id');
+    if (!guestId) {
+      guestId = `guest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem('blog_guest_id', guestId);
+    }
+    return guestId;
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -83,6 +98,92 @@ export default function BlogPostPage() {
     };
   }, [slug]);
 
+  // Fetch initial like status and count
+  useEffect(() => {
+    if (!slug) return;
+
+    const fetchLikeStatus = async () => {
+      try {
+        const guestId = getGuestId();
+        const response = await fetch(`/api/blogs/${slug}/like?guest_id=${guestId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setLikeCount(data.likes || 0);
+          setIsLiked(data.is_liked || false);
+          // Update blog state
+          setBlog((prev) => prev ? { ...prev, likes: data.likes || 0 } : null);
+        }
+      } catch (error) {
+        console.error('Error fetching like status:', error);
+      }
+    };
+
+    fetchLikeStatus();
+  }, [slug]);
+
+  // Poll for like count updates
+  useEffect(() => {
+    if (!slug) return;
+
+    const pollLikeCount = async () => {
+      try {
+        const guestId = getGuestId();
+        const response = await fetch(`/api/blogs/${slug}/like?guest_id=${guestId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setLikeCount(data.likes || 0);
+          setIsLiked(data.is_liked || false);
+          // Update blog state
+          setBlog((prev) => prev ? { ...prev, likes: data.likes || 0 } : null);
+        }
+      } catch (error) {
+        console.error('Error polling like count:', error);
+      }
+    };
+
+    // Start polling every 5 seconds
+    likePollingIntervalRef.current = setInterval(pollLikeCount, 5000);
+
+    // Cleanup interval on unmount
+    return () => {
+      if (likePollingIntervalRef.current) {
+        clearInterval(likePollingIntervalRef.current);
+        likePollingIntervalRef.current = null;
+      }
+    };
+  }, [slug]);
+
+  // Handle like/unlike action
+  const handleLike = async () => {
+    if (isLiking || !slug) return;
+
+    setIsLiking(true);
+    try {
+      const guestId = getGuestId();
+      const response = await fetch(`/api/blogs/${slug}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ guest_id: guestId }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setLikeCount(data.likes || 0);
+        setIsLiked(data.is_liked || false);
+        // Update blog state
+        setBlog((prev) => prev ? { ...prev, likes: data.likes || 0 } : null);
+      } else {
+        console.error('Failed to toggle like');
+      }
+    } catch (error) {
+      console.error('Error toggling like:', error);
+    } finally {
+      setIsLiking(false);
+    }
+  };
+
   // Fetch initial view count
   useEffect(() => {
     if (!slug) return;
@@ -111,6 +212,7 @@ export default function BlogPostPage() {
           const data = await response.json();
           setBlog(data);
           setViewCount(data.views || 0);
+          setLikeCount(data.likes || 0);
         } else if (response.status === 404) {
           setError('Blog post not found');
         } else {
@@ -249,6 +351,7 @@ export default function BlogPostPage() {
                 <p className="font-medium text-gray-900">{(viewCount || blog.views || 0).toLocaleString()}</p>
               </div>
             </div>
+
           </div>
         </section>
 
@@ -423,6 +526,35 @@ export default function BlogPostPage() {
           </div>
         </motion.section>
       </main>
+
+      {/* Floating Like Button */}
+      {blog && (
+        <div className="fixed right-6 bottom-6 z-50">
+          <button
+            onClick={handleLike}
+            disabled={isLiking}
+            className={`flex flex-col items-center gap-1 px-5 py-4 rounded-full shadow-lg transition-all duration-200 ${
+              isLiked
+                ? 'bg-[#360e1d] text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+            } ${isLiking ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+            aria-label={isLiked ? 'Unlike this post' : 'Like this post'}
+          >
+            <Heart 
+              size={24} 
+              className={isLiked ? 'fill-current' : ''}
+            />
+            <span className="text-xs font-medium">
+              {(likeCount || blog.likes || 0).toLocaleString()}
+            </span>
+            {!isLiked && (
+              <span className="text-[10px] font-medium text-gray-600 mt-0.5 whitespace-nowrap">
+                Like this post
+              </span>
+            )}
+          </button>
+        </div>
+      )}
       
       <Footer />
     </>
