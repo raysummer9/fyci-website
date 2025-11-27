@@ -6,6 +6,11 @@
 .prose,
 .prose-enhanced {
   color: #374151;
+}
+
+/* Only apply max-width if not explicitly overridden with max-w-none */
+.prose:not(.max-w-none),
+.prose-enhanced:not(.max-w-none) {
   max-width: 65ch;
 }
 
