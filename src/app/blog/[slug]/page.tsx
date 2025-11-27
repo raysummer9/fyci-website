@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -18,10 +18,89 @@ export default function BlogPostPage() {
   const [recentPosts, setRecentPosts] = useState<BlogPost[]>([]);
   const [categories, setCategories] = useState<{id: string, name: string, slug: string, count: number}[]>([]);
   const [tags, setTags] = useState<{id: string, name: string, slugs: string, count: number}[]>([]);
+  const [viewCount, setViewCount] = useState<number>(0);
+  const viewTrackedRef = useRef(false);
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // Track view count increment
+  useEffect(() => {
+    if (!blog?.id || viewTrackedRef.current) return;
+
+    const trackView = async () => {
+      try {
+        // Debounce: wait 2 seconds before tracking view
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        const response = await fetch(`/api/blogs/${slug}/views`, {
+          method: 'POST',
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setViewCount(data.views);
+          viewTrackedRef.current = true;
+        }
+      } catch (error) {
+        console.error('Error tracking view:', error);
+      }
+    };
+
+    trackView();
+  }, [blog?.id, slug]);
+
+  // Poll for view count updates (works without Supabase Realtime)
+  useEffect(() => {
+    if (!slug) return;
+
+    // Poll every 5 seconds for view count updates
+    const pollViewCount = async () => {
+      try {
+        const response = await fetch(`/api/blogs/${slug}/views`);
+        if (response.ok) {
+          const data = await response.json();
+          setViewCount(data.views);
+          // Update blog state with new view count
+          setBlog((prev) => prev ? { ...prev, views: data.views } : null);
+        }
+      } catch (error) {
+        console.error('Error polling view count:', error);
+      }
+    };
+
+    // Start polling
+    pollingIntervalRef.current = setInterval(pollViewCount, 5000);
+
+    // Cleanup interval on unmount
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
+    };
+  }, [slug]);
+
+  // Fetch initial view count
+  useEffect(() => {
+    if (!slug) return;
+
+    const fetchViewCount = async () => {
+      try {
+        const response = await fetch(`/api/blogs/${slug}/views`);
+        if (response.ok) {
+          const data = await response.json();
+          setViewCount(data.views);
+        }
+      } catch (error) {
+        console.error('Error fetching view count:', error);
+      }
+    };
+
+    fetchViewCount();
+  }, [slug]);
 
   useEffect(() => {
     const fetchBlogData = async () => {
@@ -31,6 +110,7 @@ export default function BlogPostPage() {
         if (response.ok) {
           const data = await response.json();
           setBlog(data);
+          setViewCount(data.views || 0);
         } else if (response.status === 404) {
           setError('Blog post not found');
         } else {
@@ -166,7 +246,7 @@ export default function BlogPostPage() {
 
               <div>
                 <p className="uppercase tracking-wide text-xs text-gray-500 mb-1">Views</p>
-                <p className="font-medium text-gray-900">{blog.views.toLocaleString()}</p>
+                <p className="font-medium text-gray-900">{(viewCount || blog.views || 0).toLocaleString()}</p>
               </div>
             </div>
           </div>
