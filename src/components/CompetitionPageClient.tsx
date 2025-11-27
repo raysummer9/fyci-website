@@ -86,7 +86,7 @@ export default function CompetitionPageClient({ competition }: CompetitionPageCl
               </span>
             )}
 
-            <h1 className="text-5xl sm:text-6xl lg:text-[4.5rem] font-semibold text-[#0f2a20] leading-tight max-w-4xl">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-[#0f2a20] leading-tight max-w-4xl">
               {competition.title}
             </h1>
 
