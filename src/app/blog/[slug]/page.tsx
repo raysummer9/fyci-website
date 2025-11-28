@@ -8,6 +8,7 @@ import { Calendar, User, Clock, Eye, Heart, MessageCircle, Tag } from 'lucide-re
 import { BlogPost } from '@/types';
 import Footer from '@/components/Footer';
 import ShareButtons from '@/components/ShareButtons';
+import BlogComments from '@/components/BlogComments';
 
 export default function BlogPostPage() {
   const params = useParams();
@@ -418,6 +419,11 @@ export default function BlogPostPage() {
                   </div>
                 </motion.div>
               )}
+
+              {/* Comments Section */}
+              <motion.div variants={itemVariants}>
+                <BlogComments blogSlug={slug} />
+              </motion.div>
 
               <motion.div variants={itemVariants}>
                 <div className="rounded-2xl border border-gray-200 p-6 sm:p-8">
