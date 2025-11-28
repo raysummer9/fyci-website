@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { BlogWithDetails, Tag } from '@/lib/admin-blog-data'
-import { Plus, Search, Filter, Edit, Eye, Trash2, MessageCircle, Calendar, User, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Plus, Search, Filter, Edit, Eye, Trash2, MessageCircle, Calendar, User, ChevronLeft, ChevronRight, Heart } from 'lucide-react'
 
 interface Category {
   id: string
@@ -246,8 +246,16 @@ export default function BlogListClient() {
                         {blog.published_at ? new Date(blog.published_at).toLocaleDateString() : 'Not published'}
                       </span>
                       <span className="flex items-center gap-1">
+                        <Eye className="h-4 w-4" />
+                        {blog.views || 0} views
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Heart className="h-4 w-4" />
+                        {blog.likes || 0} likes
+                      </span>
+                      <span className="flex items-center gap-1">
                         <MessageCircle className="h-4 w-4" />
-                        {blog.comments_count} comments
+                        {blog.comments_count || 0} comments
                       </span>
                     </CardDescription>
                   </div>
