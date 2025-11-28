@@ -53,39 +53,39 @@ export default function Projects() {
         console.error('Error fetching projects:', error);
         // Fallback to static data if API fails - just 3 competition cards
         setProjects([
-          {
-            id: '1',
-            title: 'Young Voices Against SGBV Competition',
-            description: 'In commemoration of 16 Days of Activism Against Gender-Based Violence, FYCI is instituting the Young Voices Against SGBV Competition.',
+    {
+      id: '1',
+      title: 'Young Voices Against SGBV Competition',
+      description: 'In commemoration of 16 Days of Activism Against Gender-Based Violence, FYCI is instituting the Young Voices Against SGBV Competition.',
             image: '/img/womens-rights.jpg',
-            linkText: 'Explore programme',
+      linkText: 'Explore programme',
             linkHref: '/competitions/young-voices-against-sgbv',
-            titleColor: 'text-gray-900',
+      titleColor: 'text-gray-900',
             programmeArea: 'Women\'s Rights',
             icon: Trophy,
             type: 'competition'
-          },
-          {
-            id: '2',
+    },
+    {
+      id: '2',
             title: 'Creative Arts Competition 2024',
             description: 'A platform for young artists to showcase their creative talents and compete for recognition in various artistic disciplines.',
-            image: '/img/youth-agency.jpg',
-            linkText: 'Explore programme',
+      image: '/img/youth-agency.jpg',
+      linkText: 'Explore programme',
             linkHref: '/competitions/creative-arts-2024',
-            titleColor: 'text-gray-900',
-            programmeArea: 'Youth Agency and Self Esteem',
+      titleColor: 'text-gray-900',
+      programmeArea: 'Youth Agency and Self Esteem',
             icon: Trophy,
             type: 'competition'
-          },
-          {
-            id: '3',
+    },
+    {
+      id: '3',
             title: 'Digital Innovation Challenge',
             description: 'Encouraging young innovators to develop digital solutions that address social challenges in their communities.',
-            image: '/img/anti-corruption.jpg',
-            linkText: 'Explore programme',
+      image: '/img/anti-corruption.jpg',
+      linkText: 'Explore programme',
             linkHref: '/competitions/digital-innovation-challenge',
-            titleColor: 'text-gray-900',
-            programmeArea: 'Anti-Corruption',
+      titleColor: 'text-gray-900',
+      programmeArea: 'Anti-Corruption',
             icon: Trophy,
             type: 'competition'
           }
@@ -160,13 +160,13 @@ export default function Projects() {
             ))}
           </div>
         ) : (
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: false, amount: 0.1, margin: "-100px" }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.1, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
           {projects.map((project, index) => {
             const IconComponent = project.icon;
             return (
@@ -225,7 +225,7 @@ export default function Projects() {
               </motion.div>
             );
           })}
-          </motion.div>
+        </motion.div>
         )}
       </div>
     </section>

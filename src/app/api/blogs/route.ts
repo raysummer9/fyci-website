@@ -72,10 +72,20 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch blogs' }, { status: 500 })
     }
 
-    // Transform the data to flatten tags
-    const transformedBlogs = (blogs || []).map(blog => ({
-      ...blog,
-      tags: blog.blog_tags?.map((bt: any) => bt.tag).filter(Boolean) || []
+    // Transform the data to flatten tags and add comment counts
+    const transformedBlogs = await Promise.all((blogs || []).map(async (blog) => {
+      // Get comment count for each blog
+      const { count: commentsCount } = await supabase
+        .from('comments')
+        .select('*', { count: 'exact', head: true })
+        .eq('blog_id', blog.id)
+        .eq('is_approved', true)
+
+      return {
+        ...blog,
+        tags: blog.blog_tags?.map((bt: any) => bt.tag).filter(Boolean) || [],
+        comments_count: commentsCount || 0
+      }
     }))
 
     return NextResponse.json(transformedBlogs)

@@ -76,15 +76,15 @@ export default function BlogPage() {
         // Set fallback data
         setFeaturedPost({
           id: '1',
-          title: "You're not broken, you're just different.",
+    title: "You're not broken, you're just different.",
           slug: "youre-not-broken-youre-just-different",
-          excerpt: "I once had a friend tell me she does not want to have children so as not to replicate her genes. She didn't mind adopting, though. It's easy to feel broken when we see parts of ourselves that don't align with what we believe is 'normal' or acceptable. But what if our differences are actually our greatest strengths?",
+    excerpt: "I once had a friend tell me she does not want to have children so as not to replicate her genes. She didn't mind adopting, though. It's easy to feel broken when we see parts of ourselves that don't align with what we believe is 'normal' or acceptable. But what if our differences are actually our greatest strengths?",
           published_at: '2025-10-19T00:00:00Z',
           created_at: '2025-10-19T00:00:00Z',
           status: 'published',
           featured: true,
-          views: 3420,
-          likes: 445,
+    views: 3420,
+    likes: 445,
           read_time: 8,
           category: { id: '1', name: 'MIND & WELL-BEING', slug: 'mind-well-being' },
           author: { id: '1', full_name: 'JENNIFER OBIAGELI PHILIP', email: 'jennifer@example.com' },
@@ -183,15 +183,15 @@ export default function BlogPage() {
                     </div>
                   </div>
                 ) : featuredPost ? (
-                  <motion.div 
-                    className="bg-white rounded-xl shadow-lg p-8"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  >
-                    <article className="space-y-6">
-                      {/* Featured Image - First */}
-                      <div className="relative w-full h-64 lg:h-80 rounded-lg overflow-hidden">
+                <motion.div 
+                  className="bg-white rounded-xl shadow-lg p-8"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+                >
+                <article className="space-y-6">
+                  {/* Featured Image - First */}
+                  <div className="relative w-full h-64 lg:h-80 rounded-lg overflow-hidden">
                         {featuredPost.featured_image ? (
                           <img 
                             src={featuredPost.featured_image} 
@@ -199,79 +199,85 @@ export default function BlogPage() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                            <span className="text-gray-500">Featured Image</span>
-                          </div>
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500">Featured Image</span>
+                    </div>
                         )}
-                      </div>
+                  </div>
 
-                      {/* Category Tag */}
-                      <div>
-                        <span 
-                          className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
-                          style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
-                        >
+                  {/* Category Tag */}
+                  <div>
+                    <span 
+                      className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                      style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
+                    >
                           {featuredPost.category?.name || 'Blog'}
-                        </span>
-                      </div>
+                    </span>
+                  </div>
 
-                      {/* Title */}
-                      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 leading-tight">
-                        {featuredPost.title}
-                      </h1>
+                  {/* Title */}
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 leading-tight">
+                    {featuredPost.title}
+                  </h1>
 
-                      {/* Date */}
-                      <div className="flex items-center gap-4 text-sm text-gray-500">
+                  {/* Date */}
+                  <div className="flex items-center gap-4 text-sm text-gray-500">
                         <span className="font-medium uppercase tracking-wide">
                           {formatDate(featuredPost.published_at || featuredPost.created_at)}
                         </span>
-                      </div>
+                  </div>
 
-                      {/* Excerpt */}
-                      <div>
-                        <p className="text-gray-700 leading-relaxed">
-                          {featuredPost.excerpt}
-                        </p>
-                      </div>
+                  {/* Excerpt */}
+                  <div>
+                    <p className="text-gray-700 leading-relaxed">
+                      {featuredPost.excerpt}
+                    </p>
+                  </div>
 
-                      {/* Metadata */}
-                      <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
-                        {/* Views */}
-                        <div className="flex items-center gap-1">
-                          <Eye size={14} />
-                          <span>{featuredPost.views.toLocaleString()}</span>
-                        </div>
-                        
-                        {/* Likes */}
-                        <div className="flex items-center gap-1">
-                          <Heart size={14} />
-                          <span>{featuredPost.likes}</span>
-                        </div>
-                        
-                        {/* Read Time */}
+                  {/* Metadata */}
+                  <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+                    {/* Views */}
+                    <div className="flex items-center gap-1">
+                      <Eye size={14} />
+                      <span>{featuredPost.views.toLocaleString()}</span>
+                    </div>
+                    
+                    {/* Likes */}
+                    <div className="flex items-center gap-1">
+                      <Heart size={14} />
+                      <span>{featuredPost.likes}</span>
+                    </div>
+                    
+                    {/* Comments */}
+                    <div className="flex items-center gap-1">
+                      <MessageCircle size={14} />
+                      <span>{featuredPost.comments_count || 0}</span>
+                    </div>
+                    
+                    {/* Read Time */}
                         {featuredPost.read_time && (
-                          <div className="flex items-center gap-1">
-                            <Clock size={14} />
-                            <span>{featuredPost.read_time} min read</span>
-                          </div>
-                        )}
-                      </div>
-            
-                      {/* View Post Button - Text and Icon */}
-                      <div>
-                        <Link
-                          href={`/blog/${featuredPost.slug}`}
-                          className="inline-flex items-center gap-2 font-semibold text-gray-900 hover:text-gray-600 transition-colors"
-                          style={{ color: '#360e1d' }}
-                          onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#4a1a2a'}
-                          onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#360e1d'}
-                        >
-                          View Post
-                          <ArrowRight size={16} />
-                        </Link>
-                      </div>
-                    </article>
-                  </motion.div>
+                    <div className="flex items-center gap-1">
+                      <Clock size={14} />
+                      <span>{featuredPost.read_time} min read</span>
+                    </div>
+                    )}
+                  </div>
+        
+                  {/* View Post Button - Text and Icon */}
+                  <div>
+                    <Link
+                      href={`/blog/${featuredPost.slug}`}
+                      className="inline-flex items-center gap-2 font-semibold text-gray-900 hover:text-gray-600 transition-colors"
+                      style={{ color: '#360e1d' }}
+                      onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#4a1a2a'}
+                      onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#360e1d'}
+                    >
+                      View Post
+                      <ArrowRight size={16} />
+                    </Link>
+                  </div>
+                </article>
+                </motion.div>
                 ) : (
                   <div className="bg-white rounded-xl shadow-lg p-8 text-center">
                     <p className="text-gray-500">No featured post available</p>
@@ -315,19 +321,19 @@ export default function BlogPage() {
                       ))}
                     </div>
                   ) : (
-                    <div className="space-y-6">
-                      {currentPosts.map((post, index) => (
-                        <motion.article
-                          key={post.id}
-                          className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-                          initial={{ opacity: 0, y: 30 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: false, amount: 0.1, margin: "-100px" }}
-                          transition={{ duration: 0.8, delay: 0.2 + (index * 0.1), ease: [0.25, 0.46, 0.45, 0.94] }}
-                        >
-                          <Link href={`/blog/${post.slug}`} className="flex flex-col sm:flex-row sm:items-stretch">
-                            {/* Post Image - Left Side */}
-                            <div className="relative w-full sm:w-80 flex-shrink-0 bg-gray-200 overflow-hidden h-48 sm:h-auto sm:min-h-0">
+                  <div className="space-y-6">
+                    {currentPosts.map((post, index) => (
+                      <motion.article
+                        key={post.id}
+                        className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: false, amount: 0.1, margin: "-100px" }}
+                        transition={{ duration: 0.8, delay: 0.2 + (index * 0.1), ease: [0.25, 0.46, 0.45, 0.94] }}
+                      >
+                        <Link href={`/blog/${post.slug}`} className="flex flex-col sm:flex-row sm:items-stretch">
+                          {/* Post Image - Left Side */}
+                          <div className="relative w-full sm:w-80 flex-shrink-0 bg-gray-200 overflow-hidden h-48 sm:h-auto sm:min-h-0">
                               {post.featured_image ? (
                                 <img 
                                   src={post.featured_image} 
@@ -335,74 +341,80 @@ export default function BlogPage() {
                                   className="w-full h-full object-cover"
                                 />
                               ) : (
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <span className="text-gray-500 text-sm">Post Image</span>
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <span className="text-gray-500 text-sm">Post Image</span>
                                 </div>
                               )}
-                            </div>
+                          </div>
 
-                            {/* Post Content - Right Side */}
-                            <div className="flex-1 p-6 space-y-4">
-                              {/* Category */}
-                              <span 
-                                className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
-                                style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
-                              >
+                          {/* Post Content - Right Side */}
+                          <div className="flex-1 p-6 space-y-4">
+                            {/* Category */}
+                            <span 
+                              className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                              style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
+                            >
                                 {post.category?.name || 'Blog'}
-                              </span>
+                            </span>
 
-                              {/* Title */}
-                              <h3 className="text-lg font-bold text-gray-900 leading-tight line-clamp-2">
-                                {post.title}
-                              </h3>
+                            {/* Title */}
+                            <h3 className="text-lg font-bold text-gray-900 leading-tight line-clamp-2">
+                              {post.title}
+                            </h3>
 
-                              {/* Excerpt */}
-                              <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                                {post.excerpt}
-                              </p>
+                            {/* Excerpt */}
+                            <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                              {post.excerpt}
+                            </p>
 
-                              {/* Date */}
-                              <p className="text-xs text-gray-500 uppercase tracking-wide">
+                            {/* Date */}
+                            <p className="text-xs text-gray-500 uppercase tracking-wide">
                                 {formatDate(post.published_at || post.created_at)}
-                              </p>
+                            </p>
 
-                              {/* Metadata */}
-                              <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
-                                {/* Views */}
-                                <div className="flex items-center gap-1">
-                                  <Eye size={14} />
-                                  <span>{post.views.toLocaleString()}</span>
-                                </div>
-                                
-                                {/* Likes */}
-                                <div className="flex items-center gap-1">
-                                  <Heart size={14} />
-                                  <span>{post.likes}</span>
-                                </div>
-                                
-                                {/* Read Time */}
+                            {/* Metadata */}
+                            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+                              {/* Views */}
+                              <div className="flex items-center gap-1">
+                                <Eye size={14} />
+                                <span>{post.views.toLocaleString()}</span>
+                              </div>
+                              
+                              {/* Likes */}
+                              <div className="flex items-center gap-1">
+                                <Heart size={14} />
+                                <span>{post.likes}</span>
+                              </div>
+                              
+                              {/* Comments */}
+                              <div className="flex items-center gap-1">
+                                <MessageCircle size={14} />
+                                <span>{post.comments_count || 0}</span>
+                              </div>
+                              
+                              {/* Read Time */}
                                 {post.read_time && (
-                                  <div className="flex items-center gap-1">
-                                    <Clock size={14} />
+                              <div className="flex items-center gap-1">
+                                <Clock size={14} />
                                     <span>{post.read_time} min read</span>
                                   </div>
                                 )}
-                              </div>
-
-                              {/* Read More */}
-                              <div className="pt-2">
-                                <span className="inline-flex items-center gap-2 font-semibold text-sm"
-                                  style={{ color: '#360e1d' }}
-                                >
-                                  Read More
-                                  <ArrowRight size={14} />
-                                </span>
-                              </div>
                             </div>
-                          </Link>
-                        </motion.article>
-                      ))}
-                    </div>
+
+                            {/* Read More */}
+                            <div className="pt-2">
+                              <span className="inline-flex items-center gap-2 font-semibold text-sm"
+                                style={{ color: '#360e1d' }}
+                              >
+                                Read More
+                                <ArrowRight size={14} />
+                              </span>
+              </div>
+            </div>
+                        </Link>
+                      </motion.article>
+                    ))}
+                  </div>
                   )}
 
                   {/* Pagination */}
@@ -482,14 +494,14 @@ export default function BlogPage() {
                       ))
                     ) : (
                       recentPosts.map((post, index) => (
-                        <article
-                          key={post.id}
-                          className="group cursor-pointer"
-                        >
-                          <Link href={`/blog/${post.slug}`}>
-                            <div className="flex gap-4">
-                              {/* Post Image */}
-                              <div className="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden bg-gray-200">
+                      <article
+                        key={post.id}
+                        className="group cursor-pointer"
+                      >
+                        <Link href={`/blog/${post.slug}`}>
+                          <div className="flex gap-4">
+                            {/* Post Image */}
+                            <div className="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden bg-gray-200">
                                 {post.featured_image ? (
                                   <img 
                                     src={post.featured_image} 
@@ -497,24 +509,24 @@ export default function BlogPage() {
                                     className="w-full h-full object-cover"
                                   />
                                 ) : (
-                                  <div className="w-full h-full flex items-center justify-center">
-                                    <span className="text-xs text-gray-500">Image</span>
+                              <div className="w-full h-full flex items-center justify-center">
+                                <span className="text-xs text-gray-500">Image</span>
                                   </div>
                                 )}
-                              </div>
-              
-                              {/* Post Content */}
-                              <div className="flex-1 min-w-0">
-                                <h3 className="font-bold text-gray-900 text-sm leading-tight mb-2 group-hover:text-gray-600 transition-colors">
-                                  {post.title}
-                                </h3>
-                                <p className="text-xs text-gray-500 uppercase tracking-wide">
-                                  {formatDate(post.published_at || post.created_at)}
-                                </p>
-                              </div>
                             </div>
-                          </Link>
-                        </article>
+        
+                            {/* Post Content */}
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-bold text-gray-900 text-sm leading-tight mb-2 group-hover:text-gray-600 transition-colors">
+                                {post.title}
+                              </h3>
+                              <p className="text-xs text-gray-500 uppercase tracking-wide">
+                                  {formatDate(post.published_at || post.created_at)}
+                              </p>
+              </div>
+            </div>
+                        </Link>
+          </article>
                       ))
                     )}
                   </div>
@@ -537,14 +549,14 @@ export default function BlogPage() {
                     ) : (
                       categories.map((category, index) => (
                         <div key={category.id}>
-                          <Link
+                        <Link
                             href={`/blog/category/${category.slug}`}
-                            className="flex items-center justify-between py-2 hover:text-gray-600 transition-colors"
-                          >
-                            <span className="text-gray-900 font-medium">{category.name}</span>
-                            <span className="text-gray-500 text-sm">({category.count})</span>
-                          </Link>
-                        </div>
+                          className="flex items-center justify-between py-2 hover:text-gray-600 transition-colors"
+                        >
+                          <span className="text-gray-900 font-medium">{category.name}</span>
+                          <span className="text-gray-500 text-sm">({category.count})</span>
+                        </Link>
+                      </div>
                       ))
                     )}
                   </div>
@@ -600,12 +612,12 @@ export default function BlogPage() {
                       ))
                     ) : (
                       tags.map((tag, index) => (
-                        <span
+                      <span
                           key={tag.id}
-                          className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer"
-                        >
+                        className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer"
+                      >
                           #{tag.name}
-                        </span>
+                      </span>
                       ))
                     )}
                   </div>

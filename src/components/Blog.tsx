@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, Calendar, User, Tag } from 'lucide-react';
+import { ArrowRight, Calendar, User, Tag, Eye, Heart, MessageCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { BlogPost } from '@/types';
@@ -263,6 +263,23 @@ export default function Blog() {
                           <span>{post.author.full_name}</span>
                         </div>
                       )}
+                      <div className="flex items-center gap-4 text-sm text-gray-500 flex-wrap">
+                        {/* Views */}
+                        <div className="flex items-center gap-1">
+                          <Eye size={14} />
+                          <span>{(post.views || 0).toLocaleString()}</span>
+                        </div>
+                        {/* Likes */}
+                        <div className="flex items-center gap-1">
+                          <Heart size={14} />
+                          <span>{post.likes || 0}</span>
+                        </div>
+                        {/* Comments */}
+                        <div className="flex items-center gap-1">
+                          <MessageCircle size={14} />
+                          <span>{post.comments_count || 0}</span>
+                        </div>
+                      </div>
                       {post.read_time && (
                         <div className="flex items-center gap-2 text-sm text-gray-500">
                           <span>{post.read_time} min read</span>

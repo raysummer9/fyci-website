@@ -148,73 +148,73 @@ export default function YouthPoliticalParticipationPage() {
               ))}
             </div>
           ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-              key={searchTerm}
-            >
-              {filteredProjects.map((project, index) => (
-                <motion.div
-                  key={`${project.id}-${searchTerm}`}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5 + (index * 0.1) }}
-                  className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-                >
-                  {/* Project Image */}
-                  <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      className="object-cover hover:scale-105 transition-transform duration-300"
-                    />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            key={searchTerm}
+          >
+            {filteredProjects.map((project, index) => (
+              <motion.div
+                key={`${project.id}-${searchTerm}`}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 + (index * 0.1) }}
+                className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+              >
+                {/* Project Image */}
+                <div className="relative h-48 overflow-hidden">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                
+                {/* Project Content */}
+                <div className="p-6">
+                    {/* Type Tag */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <Vote size={16} style={{ color: '#360e1d' }} />
+                    <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}>
+                        {project.type}
+                    </span>
                   </div>
                   
-                  {/* Project Content */}
-                  <div className="p-6">
-                    {/* Type Tag */}
-                    <div className="flex items-center gap-2 mb-3">
-                      <Vote size={16} style={{ color: '#360e1d' }} />
-                      <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}>
-                        {project.type}
-                      </span>
-                    </div>
-                    
-                    {/* Date */}
-                    <div className="flex items-center gap-2 mb-3 text-gray-500 text-sm">
-                      <Calendar size={16} />
+                  {/* Date */}
+                  <div className="flex items-center gap-2 mb-3 text-gray-500 text-sm">
+                    <Calendar size={16} />
                       {new Date(project.date).toLocaleDateString('en-US', { 
                         year: 'numeric', 
                         month: 'long',
                         day: 'numeric'
                       })}
-                    </div>
-                    
-                    {/* Title */}
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 text-left">
-                      {project.title}
-                    </h3>
-                    
-                    {/* Description */}
-                    <p className="text-gray-600 leading-relaxed text-left mb-4">
-                      {project.description}
-                    </p>
-                    
-                    {/* Read More Button */}
+                  </div>
+                  
+                  {/* Title */}
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 text-left">
+                    {project.title}
+                  </h3>
+                  
+                  {/* Description */}
+                  <p className="text-gray-600 leading-relaxed text-left mb-4">
+                    {project.description}
+                  </p>
+                  
+                  {/* Read More Button */}
                     <Link
                       href={`/${project.type.toLowerCase()}s/${project.slug}`}
-                      className="inline-flex items-center gap-2 font-medium text-gray-900 hover:gap-3 transition-all duration-200 cursor-pointer"
-                    >
-                      Read more
-                      <ArrowRight size={16} />
+                    className="inline-flex items-center gap-2 font-medium text-gray-900 hover:gap-3 transition-all duration-200 cursor-pointer"
+                  >
+                    Read more
+                    <ArrowRight size={16} />
                     </Link>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
           )}
 
           {/* No Results Message */}

@@ -183,51 +183,51 @@ export default function PublicationsPage() {
                 ))}
               </div>
             ) : (
-              <div className="grid gap-6">
-                {filteredPublications.map((publication, index) => (
-                  <motion.div
-                    key={`${publication.id}-${searchTerm}`}
-                    variants={itemVariants}
-                    transition={{ 
-                      duration: 0.6, 
-                      ease: [0.25, 0.46, 0.45, 0.94],
-                      delay: 0.5 + (index * 0.1) 
-                    }}
-                    className="bg-white rounded-xl border border-gray-200/30 p-6 shadow-sm hover:shadow-md transition-all duration-300"
-                  >
-                    <div className="flex flex-col sm:flex-row items-start gap-6">
-                      <div className="flex-1 order-2 sm:order-1">
-                        {/* Publication Type Badge */}
-                        <div className="mb-3">
-                          <span className="inline-block px-3 py-1 rounded-full text-sm font-medium" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}>
+            <div className="grid gap-6">
+              {filteredPublications.map((publication, index) => (
+                <motion.div
+                  key={`${publication.id}-${searchTerm}`}
+                  variants={itemVariants}
+                  transition={{ 
+                    duration: 0.6, 
+                    ease: [0.25, 0.46, 0.45, 0.94],
+                    delay: 0.5 + (index * 0.1) 
+                  }}
+                  className="bg-white rounded-xl border border-gray-200/30 p-6 shadow-sm hover:shadow-md transition-all duration-300"
+                >
+                  <div className="flex flex-col sm:flex-row items-start gap-6">
+                    <div className="flex-1 order-2 sm:order-1">
+                      {/* Publication Type Badge */}
+                      <div className="mb-3">
+                        <span className="inline-block px-3 py-1 rounded-full text-sm font-medium" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}>
                             {publication.publication_categories?.name || 'Publication'}
-                          </span>
-                        </div>
-                        
-                        <h3 className="text-xl font-semibold mb-3 text-left text-gray-900">
-                          {publication.title}
-                        </h3>
-                        <p className="text-gray-600 mb-4 text-left leading-relaxed">
-                          {publication.description}
-                        </p>
-                        
-                        {/* Date */}
-                        <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-                          <Calendar size={16} />
-                          <span>{formatDate(publication.published_at || publication.created_at)}</span>
-                        </div>
-                        
-                        <Link
-                          href={`/publications/${publication.slug}`}
-                          className="inline-flex items-center gap-2 font-medium text-gray-900 hover:gap-3 transition-all duration-200 cursor-pointer"
-                        >
-                          View Publication
-                          <ExternalLink size={16} />
-                        </Link>
+                        </span>
                       </div>
                       
+                      <h3 className="text-xl font-semibold mb-3 text-left text-gray-900">
+                        {publication.title}
+                      </h3>
+                      <p className="text-gray-600 mb-4 text-left leading-relaxed">
+                        {publication.description}
+                      </p>
+                      
+                      {/* Date */}
+                      <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                        <Calendar size={16} />
+                          <span>{formatDate(publication.published_at || publication.created_at)}</span>
+                      </div>
+                      
+                        <Link
+                          href={`/publications/${publication.slug}`}
+                        className="inline-flex items-center gap-2 font-medium text-gray-900 hover:gap-3 transition-all duration-200 cursor-pointer"
+                      >
+                        View Publication
+                        <ExternalLink size={16} />
+                        </Link>
+                    </div>
+                    
                       {/* Book Cover or Placeholder */}
-                      <div className="flex-shrink-0 order-1 sm:order-2">
+                    <div className="flex-shrink-0 order-1 sm:order-2">
                         {publication.cover_image ? (
                           <img 
                             src={publication.cover_image} 
@@ -235,13 +235,13 @@ export default function PublicationsPage() {
                             className="w-32 h-48 object-cover rounded-lg"
                           />
                         ) : (
-                          <div className="w-32 h-48 bg-gray-200 rounded-lg"></div>
+                      <div className="w-32 h-48 bg-gray-200 rounded-lg"></div>
                         )}
                       </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
             )}
 
             {/* No Results Message */}
