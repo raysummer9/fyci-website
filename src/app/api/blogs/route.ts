@@ -62,13 +62,8 @@ export async function GET(request: NextRequest) {
       query = query.eq('featured', true)
     }
 
-    if (category) {
-      query = query.eq('categories.slug', category)
-    }
-
-    if (tag) {
-      query = query.eq('blog_tags.tag.slugs', tag)
-    }
+    // Note: Category and tag filtering is done after fetching, as Supabase doesn't support
+    // filtering through junction tables directly in the query
 
     query = query.limit(parseInt(limit))
 
@@ -80,7 +75,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Transform the data to flatten tags and add comment counts
-    const transformedBlogs = await Promise.all((blogs || []).map(async (blog) => {
+    let transformedBlogs = await Promise.all((blogs || []).map(async (blog) => {
       // Get comment count for each blog
       const { count: commentsCount } = await supabase
         .from('comments')
@@ -98,6 +93,22 @@ export async function GET(request: NextRequest) {
         comments_count: commentsCount || 0
       }
     }))
+
+    // Filter by category if specified (after transformation to check junction table)
+    if (category) {
+      transformedBlogs = transformedBlogs.filter(blog => {
+        const blogCategories = blog.categories || []
+        return blogCategories.some((cat: any) => cat.slug === category)
+      })
+    }
+
+    // Filter by tag if specified (after transformation to check junction table)
+    if (tag) {
+      transformedBlogs = transformedBlogs.filter(blog => {
+        const blogTags = blog.tags || []
+        return blogTags.some((t: any) => t.slugs === tag)
+      })
+    }
 
     return NextResponse.json(transformedBlogs)
   } catch (error) {

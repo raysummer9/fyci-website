@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Facebook, Twitter, Calendar, User, Share2, ArrowRight, Instagram, Youtube, ChevronLeft, ChevronRight, Eye, MessageCircle, Heart, Clock, Search } from 'lucide-react';
+import { Facebook, Twitter, Calendar, User, Share2, ArrowRight, Instagram, Youtube, ChevronLeft, ChevronRight, Eye, MessageCircle, Heart, Clock, Search, Tag } from 'lucide-react';
 import Newsletter from '@/components/Newsletter';
 import Footer from '@/components/Footer';
 import { BlogPost } from '@/types';
@@ -743,12 +743,14 @@ export default function BlogPage() {
                       ))
                     ) : (
                       tags.map((tag, index) => (
-                      <span
+                        <Link
                           key={tag.id}
-                        className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer"
-                      >
-                          #{tag.name}
-                      </span>
+                          href={`/blog/tag/${tag.slugs}`}
+                          className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-[#360e1d] transition-colors"
+                        >
+                          <Tag size={12} />
+                          {tag.name}
+                        </Link>
                       ))
                     )}
                   </div>

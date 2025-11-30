@@ -9,33 +9,62 @@ export async function GET(request: NextRequest) {
 
     const supabase = await createServerSupabaseClient()
 
-    // Get categories with blog counts
-    const { data: categories, error } = await supabase
-      .from('categories')
-      .select(`
-        id,
-        name,
-        slug,
-        blogs!inner (
-          id
-        )
-      `)
-      .eq('blogs.status', 'published')
+    // Get categories with blog counts using the blog_categories junction table
+    // First, get all published blog IDs
+    const { data: publishedBlogs, error: blogsError } = await supabase
+      .from('blogs')
+      .select('id')
+      .eq('status', 'published')
 
-    if (error) {
-      console.error('Error fetching categories:', error)
-      return NextResponse.json({ error: 'Failed to fetch categories' }, { status: 500 })
+    if (blogsError) {
+      console.error('Error fetching published blogs:', blogsError)
+      return NextResponse.json({ error: 'Failed to fetch blogs' }, { status: 500 })
     }
 
-    // Transform data to include counts
-    const categoriesWithCounts = (categories || []).map(category => ({
-      id: category.id,
-      name: category.name,
-      slug: category.slug,
-      count: category.blogs?.length || 0
-    }))
+    const publishedBlogIds = (publishedBlogs || []).map(b => b.id)
 
-    return NextResponse.json(categoriesWithCounts)
+    if (publishedBlogIds.length === 0) {
+      return NextResponse.json([])
+    }
+
+    // Get categories that have blogs in the junction table
+    const { data: blogCategories, error: bcError } = await supabase
+      .from('blog_categories')
+      .select(`
+        category:categories (
+          id,
+          name,
+          slug
+        )
+      `)
+      .in('blog_id', publishedBlogIds)
+
+    if (bcError) {
+      console.error('Error fetching blog categories:', bcError)
+      return NextResponse.json({ error: 'Failed to fetch blog categories' }, { status: 500 })
+    }
+
+    // Count blogs per category
+    const categoryCounts: Record<string, { id: string; name: string; slug: string; count: number }> = {}
+    
+    blogCategories?.forEach((bc: any) => {
+      if (bc.category) {
+        const catId = bc.category.id
+        if (!categoryCounts[catId]) {
+          categoryCounts[catId] = {
+            id: bc.category.id,
+            name: bc.category.name,
+            slug: bc.category.slug,
+            count: 0
+          }
+        }
+        categoryCounts[catId].count++
+      }
+    })
+
+    const activeCategories = Object.values(categoryCounts).sort((a, b) => a.name.localeCompare(b.name))
+
+    return NextResponse.json(activeCategories)
   } catch (error) {
     console.error('Error in GET /api/blogs/categories:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
