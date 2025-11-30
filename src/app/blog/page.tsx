@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Facebook, Twitter, Calendar, User, Share2, ArrowRight, Instagram, Youtube, ChevronLeft, ChevronRight, Eye, MessageCircle, Heart, Clock } from 'lucide-react';
+import { Facebook, Twitter, Calendar, User, Share2, ArrowRight, Instagram, Youtube, ChevronLeft, ChevronRight, Eye, MessageCircle, Heart, Clock, Search } from 'lucide-react';
 import Newsletter from '@/components/Newsletter';
 import Footer from '@/components/Footer';
 import { BlogPost } from '@/types';
@@ -12,6 +12,7 @@ import { BlogPost } from '@/types';
 export default function BlogPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 4;
+  const [searchTerm, setSearchTerm] = useState('');
   const [featuredPost, setFeaturedPost] = useState<BlogPost | null>(null);
   const [recentPosts, setRecentPosts] = useState<BlogPost[]>([]);
   const [categories, setCategories] = useState<{id: string, name: string, slug: string, count: number}[]>([]);
@@ -117,14 +118,46 @@ export default function BlogPage() {
     }).toUpperCase();
   };
 
+  // Filter blog posts based on search term
+  const filteredBlogPosts = blogPosts.filter((post) => {
+    if (!searchTerm.trim()) return true;
+    
+    const searchLower = searchTerm.toLowerCase();
+    const titleMatch = post.title?.toLowerCase().includes(searchLower);
+    const excerptMatch = post.excerpt?.toLowerCase().includes(searchLower);
+    const authorMatch = post.author?.full_name?.toLowerCase().includes(searchLower) || 
+                       post.author?.email?.toLowerCase().includes(searchLower);
+    
+    // Check categories
+    const categoryMatch = post.categories?.some(cat => 
+      cat.name.toLowerCase().includes(searchLower) || 
+      cat.slug.toLowerCase().includes(searchLower)
+    ) || post.category?.name.toLowerCase().includes(searchLower) ||
+       post.category?.slug.toLowerCase().includes(searchLower);
+    
+    // Check tags
+    const tagMatch = post.tags?.some(tag => 
+      tag.name.toLowerCase().includes(searchLower) || 
+      tag.slugs.toLowerCase().includes(searchLower)
+    );
+    
+    return titleMatch || excerptMatch || authorMatch || categoryMatch || tagMatch;
+  });
+
   // Pagination logic
-  const totalPages = Math.ceil(blogPosts.length / postsPerPage);
+  const totalPages = Math.ceil(filteredBlogPosts.length / postsPerPage);
   const startIndex = (currentPage - 1) * postsPerPage;
-  const currentPosts = blogPosts.slice(startIndex, startIndex + postsPerPage);
+  const currentPosts = filteredBlogPosts.slice(startIndex, startIndex + postsPerPage);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // Reset to page 1 when search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -311,6 +344,45 @@ export default function BlogPage() {
                 transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
                 viewport={{ once: false, amount: 0.1, margin: "-100px" }}
               >
+                {/* Search Bar */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  viewport={{ once: false }}
+                  className="mb-8"
+                >
+                  <div className="relative max-w-2xl">
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                    <input
+                      type="text"
+                      placeholder="Search blog posts by title, author, category, or tag..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent text-base placeholder-gray-500 transition-all"
+                      style={{ '--tw-ring-color': '#360e1d' } as React.CSSProperties}
+                    />
+                    {searchTerm && (
+                      <button
+                        onClick={() => setSearchTerm('')}
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                        aria-label="Clear search"
+                      >
+                        <span className="text-2xl">&times;</span>
+                      </button>
+                    )}
+                  </div>
+                  {searchTerm && (
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="mt-3 text-sm text-gray-600"
+                    >
+                      Found {filteredBlogPosts.length} {filteredBlogPosts.length === 1 ? 'post' : 'posts'} matching "{searchTerm}"
+                    </motion.p>
+                  )}
+                </motion.div>
+
                 <motion.h2 
                   className="text-3xl font-bold text-gray-900 mb-8"
                   initial={{ opacity: 0, y: 30 }}
@@ -318,7 +390,7 @@ export default function BlogPage() {
                   transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
                   viewport={{ once: false, amount: 0.1, margin: "-100px" }}
                 >
-                  All Posts
+                  {searchTerm ? `Search Results (${filteredBlogPosts.length})` : 'All Posts'}
                 </motion.h2>
                 
                 <div className="w-full">
@@ -339,6 +411,23 @@ export default function BlogPage() {
                         </div>
                       ))}
                     </div>
+                  ) : filteredBlogPosts.length === 0 ? (
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6 }}
+                      className="text-center py-12"
+                    >
+                      <p className="text-gray-500 text-lg mb-4">No blog posts found matching your search.</p>
+                      {searchTerm && (
+                        <button
+                          onClick={() => setSearchTerm('')}
+                          className="text-[#360e1d] hover:underline font-medium"
+                        >
+                          Clear search and show all posts
+                        </button>
+                      )}
+                    </motion.div>
                   ) : (
                   <div className="space-y-6">
                     {currentPosts.map((post, index) => (
@@ -458,50 +547,52 @@ export default function BlogPage() {
                   )}
 
                   {/* Pagination */}
-                  <motion.div 
-                    className="flex flex-wrap justify-center items-center gap-2 sm:gap-4 mt-12 px-4"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.1, margin: "-100px" }}
-                    transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  >
-                    <button
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      disabled={currentPage === 1}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  {totalPages > 1 && (
+                    <motion.div 
+                      className="flex flex-wrap justify-center items-center gap-2 sm:gap-4 mt-12 px-4"
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: false, amount: 0.1, margin: "-100px" }}
+                      transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                     >
-                      <ChevronLeft size={16} />
-                      Previous
-                    </button>
+                      <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        <ChevronLeft size={16} />
+                        Previous
+                      </button>
 
-                    <div className="flex gap-2">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                        <button
-                          key={page}
-                          onClick={() => handlePageChange(page)}
-                          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                            currentPage === page
-                              ? 'text-white'
-                              : 'text-gray-700 hover:bg-gray-100'
-                          }`}
-                          style={{
-                            backgroundColor: currentPage === page ? '#360e1d' : 'transparent'
-                          }}
-                        >
-                          {page}
-                        </button>
-                      ))}
-                    </div>
+                      <div className="flex gap-2">
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                          <button
+                            key={page}
+                            onClick={() => handlePageChange(page)}
+                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                              currentPage === page
+                                ? 'text-white'
+                                : 'text-gray-700 hover:bg-gray-100'
+                            }`}
+                            style={{
+                              backgroundColor: currentPage === page ? '#360e1d' : 'transparent'
+                            }}
+                          >
+                            {page}
+                          </button>
+                        ))}
+                      </div>
 
-                    <button
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      disabled={currentPage === totalPages}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      Next
-                      <ChevronRight size={16} />
-                    </button>
-                  </motion.div>
+                      <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        Next
+                        <ChevronRight size={16} />
+                      </button>
+                    </motion.div>
+                  )}
                 </div>
               </motion.section>
             </div>
