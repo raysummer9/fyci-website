@@ -12,6 +12,7 @@ import { Competition } from '@/lib/admin-programme-data'
 import { Upload, X, Save, FileText } from 'lucide-react'
 import RichTextEditor from './RichTextEditor'
 import CompetitionFormBuilder from './CompetitionFormBuilder'
+import FilePickerModal from './FilePickerModal'
 import { CompetitionApplicationForm } from '@/types'
 
 interface CompetitionFormProps {
@@ -26,6 +27,7 @@ export default function CompetitionForm({ competition, isEditing = false, progra
   const [isDraftSaving, setIsDraftSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [showFilePicker, setShowFilePicker] = useState(false)
 
   const [formData, setFormData] = useState({
     title: competition?.title || '',
@@ -52,31 +54,9 @@ export default function CompetitionForm({ competition, isEditing = false, progra
     }
   }
 
-  const handleFileUpload = async (file: File) => {
-    if (!file) return
-
-    setUploading(true)
-    try {
-      const formData = new FormData()
-      formData.append('file', file)
-
-      const response = await fetch('/admin/api/upload', {
-        method: 'POST',
-        body: formData
-      })
-
-      const result = await response.json()
-
-      if (response.ok) {
-        setFormData(prev => ({ ...prev, featured_image: result.url }))
-      } else {
-        setError(result.error || 'Failed to upload image')
-      }
-    } catch (error) {
-      setError('Error uploading image')
-    } finally {
-      setUploading(false)
-    }
+  const handleFileSelect = (url: string) => {
+    handleInputChange('featured_image', url)
+    setShowFilePicker(false)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -258,30 +238,17 @@ export default function CompetitionForm({ competition, isEditing = false, progra
                 )}
                 
                 <div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) handleFileUpload(file)
-                    }}
-                    className="hidden"
-                    id="image-upload"
-                  />
-                  <Label htmlFor="image-upload">
-                    <div className="w-full border-2 border-dashed border-gray-300 rounded-md p-4 text-center cursor-pointer hover:border-gray-400 transition-colors">
-                      {uploading ? (
-                        <div className="text-sm text-gray-500">Uploading...</div>
-                      ) : (
-                        <div className="space-y-2">
-                          <Upload className="h-8 w-8 mx-auto text-gray-400" />
-                          <div className="text-sm text-gray-500">
-                            Click to upload image
-                          </div>
-                        </div>
-                      )}
+                  <div
+                    onClick={() => setShowFilePicker(true)}
+                    className="w-full border-2 border-dashed border-gray-300 rounded-md p-4 text-center cursor-pointer hover:border-gray-400 transition-colors"
+                  >
+                    <div className="space-y-2">
+                      <Upload className="h-8 w-8 mx-auto text-gray-400" />
+                      <div className="text-sm text-gray-500">
+                        Click to select or upload image
+                      </div>
                     </div>
-                  </Label>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -387,6 +354,18 @@ export default function CompetitionForm({ competition, isEditing = false, progra
           </Button>
         </div>
       </form>
+
+      {/* File Picker Modal */}
+      <FilePickerModal
+        open={showFilePicker}
+        onOpenChange={setShowFilePicker}
+        onSelect={handleFileSelect}
+        fileType="image"
+        title="Select or Upload Featured Image"
+        uploadEndpoint="/admin/api/upload"
+        allowedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
+        maxSize={5 * 1024 * 1024}
+      />
     </div>
   )
 }

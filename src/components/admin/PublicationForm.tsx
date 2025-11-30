@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge'
 import { PublicationWithDetails, PublicationCategory } from '@/lib/admin-publication-data'
 import { Upload, X, Save, Eye, FileText } from 'lucide-react'
+import FilePickerModal from './FilePickerModal'
 
 interface PublicationFormProps {
   publication?: PublicationWithDetails | null
@@ -24,6 +25,9 @@ export default function PublicationForm({ publication, isEditing = false }: Publ
   const [error, setError] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const [categories, setCategories] = useState<PublicationCategory[]>([])
+  const [showFilePicker, setShowFilePicker] = useState(false)
+  const [showCoverImagePicker, setShowCoverImagePicker] = useState(false)
+  const [filePickerType, setFilePickerType] = useState<'pdf' | 'image'>('pdf')
 
   const [formData, setFormData] = useState({
     title: publication?.title || '',
@@ -103,58 +107,13 @@ export default function PublicationForm({ publication, isEditing = false }: Publ
     }
   }
 
-  const handleFileUpload = async (file: File) => {
-    setUploading(true)
-    try {
-      const formData = new FormData()
-      formData.append('file', file)
-
-      const response = await fetch('/admin/api/publications/upload', {
-        method: 'POST',
-        body: formData
-      })
-
-      const result = await response.json()
-
-      if (response.ok) {
-        handleInputChange('file_url', result.url)
-        // Store file size for reference
-        handleInputChange('file_size', result.size)
-      } else {
-        throw new Error(result.error || 'Failed to upload file')
-      }
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      setError(error instanceof Error ? error.message : 'Failed to upload file')
-    } finally {
-      setUploading(false)
-    }
-  }
-
-  const handleCoverImageUpload = async (file: File) => {
-    if (!file) return
-
-    setUploading(true)
-    try {
-      const formData = new FormData()
-      formData.append('file', file)
-
-      const response = await fetch('/admin/api/upload', {
-        method: 'POST',
-        body: formData
-      })
-
-      const result = await response.json()
-
-      if (response.ok) {
-        handleInputChange('cover_image', result.url)
-      } else {
-        setError(result.error || 'Failed to upload cover image')
-      }
-    } catch (error) {
-      setError('Error uploading cover image')
-    } finally {
-      setUploading(false)
+  const handleFileSelect = (url: string) => {
+    if (filePickerType === 'pdf') {
+      handleInputChange('file_url', url)
+      setShowFilePicker(false)
+    } else {
+      handleInputChange('cover_image', url)
+      setShowCoverImagePicker(false)
     }
   }
 
@@ -300,42 +259,27 @@ export default function PublicationForm({ publication, isEditing = false }: Publ
                         </Button>
                       </div>
                     ) : (
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                      <div
+                        onClick={() => {
+                          setFilePickerType('pdf')
+                          setShowFilePicker(true)
+                        }}
+                        className="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-gray-400 transition-colors"
+                      >
                         <div className="text-center">
                           <Upload className="mx-auto h-12 w-12 text-gray-400" />
                           <div className="mt-4">
-                            <Label htmlFor="file-upload" className="cursor-pointer">
-                              <span className="mt-2 block text-sm font-medium text-gray-900">
-                                Upload PDF file
-                              </span>
-                              <span className="mt-1 block text-sm text-gray-500">
-                                PDF files up to 50MB
-                              </span>
-                            </Label>
-                            <input
-                              id="file-upload"
-                              name="file-upload"
-                              type="file"
-                              accept=".pdf,application/pdf"
-                              className="sr-only"
-                              onChange={(e) => {
-                                const file = e.target.files?.[0]
-                                if (file) {
-                                  handleFileUpload(file)
-                                }
-                              }}
-                              disabled={uploading}
-                            />
+                            <span className="mt-2 block text-sm font-medium text-gray-900">
+                              Click to select or upload PDF file
+                            </span>
+                            <span className="mt-1 block text-sm text-gray-500">
+                              PDF files up to 50MB
+                            </span>
                           </div>
                         </div>
                       </div>
                     )}
                   </div>
-                  {uploading && (
-                    <div className="mt-2 text-sm text-blue-600">
-                      Uploading file...
-                    </div>
-                  )}
                 </div>
 
                 {/* Cover Image */}
@@ -360,31 +304,19 @@ export default function PublicationForm({ publication, isEditing = false }: Publ
                     </div>
                   )}
                   
-                  <div>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0]
-                        if (file) handleCoverImageUpload(file)
-                      }}
-                      className="hidden"
-                      id="cover-image-upload"
-                    />
-                    <Label htmlFor="cover-image-upload">
-                      <div className="w-full border-2 border-dashed border-gray-300 rounded-md p-4 text-center cursor-pointer hover:border-gray-400 transition-colors">
-                        {uploading ? (
-                          <div className="text-sm text-gray-500">Uploading...</div>
-                        ) : (
-                          <div className="space-y-2">
-                            <Upload className="h-8 w-8 mx-auto text-gray-400" />
-                            <div className="text-sm text-gray-500">
-                              Click to upload cover image
-                            </div>
-                          </div>
-                        )}
+                  <div
+                    onClick={() => {
+                      setFilePickerType('image')
+                      setShowCoverImagePicker(true)
+                    }}
+                    className="w-full border-2 border-dashed border-gray-300 rounded-md p-4 text-center cursor-pointer hover:border-gray-400 transition-colors"
+                  >
+                    <div className="space-y-2">
+                      <Upload className="h-8 w-8 mx-auto text-gray-400" />
+                      <div className="text-sm text-gray-500">
+                        Click to select or upload cover image
                       </div>
-                    </Label>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -401,6 +333,28 @@ export default function PublicationForm({ publication, isEditing = false }: Publ
           </form>
         </CardContent>
       </Card>
+
+      {/* File Picker Modals */}
+      <FilePickerModal
+        open={showFilePicker}
+        onOpenChange={setShowFilePicker}
+        onSelect={handleFileSelect}
+        fileType="pdf"
+        title="Select or Upload PDF File"
+        uploadEndpoint="/admin/api/publications/upload"
+        allowedTypes={['application/pdf']}
+        maxSize={50 * 1024 * 1024}
+      />
+      <FilePickerModal
+        open={showCoverImagePicker}
+        onOpenChange={setShowCoverImagePicker}
+        onSelect={handleFileSelect}
+        fileType="image"
+        title="Select or Upload Cover Image"
+        uploadEndpoint="/admin/api/upload"
+        allowedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
+        maxSize={5 * 1024 * 1024}
+      />
     </div>
   )
 }

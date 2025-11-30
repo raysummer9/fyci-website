@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { BlogWithDetails, Tag } from '@/lib/admin-blog-data'
 import { Upload, Plus, X, Save, Eye, FileText } from 'lucide-react'
 import RichTextEditor from './RichTextEditor'
+import FilePickerModal from './FilePickerModal'
 
 interface Category {
   id: string
@@ -30,6 +31,7 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
   const [isDraftSaving, setIsDraftSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [showFilePicker, setShowFilePicker] = useState(false)
   const [categories, setCategories] = useState<Category[]>([])
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [selectedCategoryObjects, setSelectedCategoryObjects] = useState<Category[]>([])
@@ -166,31 +168,9 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
     }
   }
 
-  const handleFileUpload = async (file: File) => {
-    if (!file) return
-
-    setUploading(true)
-    try {
-      const formData = new FormData()
-      formData.append('file', file)
-
-      const response = await fetch('/admin/api/upload', {
-        method: 'POST',
-        body: formData
-      })
-
-      const result = await response.json()
-
-      if (response.ok) {
-        setFormData(prev => ({ ...prev, featured_image: result.url }))
-      } else {
-        setError(result.error || 'Failed to upload image')
-      }
-    } catch (error) {
-      setError('Error uploading image')
-    } finally {
-      setUploading(false)
-    }
+  const handleFileSelect = (url: string) => {
+    handleInputChange('featured_image', url)
+    setShowFilePicker(false)
   }
 
   const handleCreateTag = async () => {
@@ -436,33 +416,20 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
                 )}
                 
                 <div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) handleFileUpload(file)
-                    }}
-                    className="hidden"
-                    id="image-upload"
-                  />
-                  <Label htmlFor="image-upload">
-                    <div className="w-full border-2 border-dashed border-gray-300 rounded-md p-4 text-center cursor-pointer hover:border-gray-400 transition-colors">
-                      {uploading ? (
-                        <div className="text-sm text-gray-500">Uploading...</div>
-                      ) : (
-                        <div className="space-y-2">
-                          <Upload className="h-8 w-8 mx-auto text-gray-400" />
-                          <div className="text-sm text-gray-500">
-                            Click to upload image
-                          </div>
-                          <div className="text-xs text-gray-400 mt-1">
-                            Recommended: 1200 × 675px (16:9) or 1920 × 1080px
-                          </div>
-                        </div>
-                      )}
+                  <div
+                    onClick={() => setShowFilePicker(true)}
+                    className="w-full border-2 border-dashed border-gray-300 rounded-md p-4 text-center cursor-pointer hover:border-gray-400 transition-colors"
+                  >
+                    <div className="space-y-2">
+                      <Upload className="h-8 w-8 mx-auto text-gray-400" />
+                      <div className="text-sm text-gray-500">
+                        Click to select or upload image
+                      </div>
+                      <div className="text-xs text-gray-400 mt-1">
+                        Recommended: 1200 × 675px (16:9) or 1920 × 1080px
+                      </div>
                     </div>
-                  </Label>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -753,6 +720,18 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
           </Button>
         </div>
       </form>
+
+      {/* File Picker Modal */}
+      <FilePickerModal
+        open={showFilePicker}
+        onOpenChange={setShowFilePicker}
+        onSelect={handleFileSelect}
+        fileType="image"
+        title="Select or Upload Featured Image"
+        uploadEndpoint="/admin/api/upload"
+        allowedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
+        maxSize={5 * 1024 * 1024}
+      />
     </div>
   )
 }

@@ -38,6 +38,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useState, useCallback, useEffect, useRef } from 'react'
+import FilePickerModal from './FilePickerModal'
 
 interface RichTextEditorProps {
   content: string
@@ -77,6 +78,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
   const [showLinkInput, setShowLinkInput] = useState(false)
   const [showImageInput, setShowImageInput] = useState(false)
   const [showColorPicker, setShowColorPicker] = useState(false)
+  const [showFilePicker, setShowFilePicker] = useState(false)
   const [uploading, setUploading] = useState(false)
   const colorPickerRef = useRef<HTMLDivElement>(null)
   const toolbarRef = useRef<HTMLDivElement>(null)
@@ -185,32 +187,11 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
     setImageUrl('')
   }, [editor, imageUrl])
 
-  const handleFileUpload = useCallback(async (file: File) => {
+  const handleFileSelect = useCallback((url: string) => {
     if (!editor) return
-
-    setUploading(true)
-    try {
-      const formData = new FormData()
-      formData.append('file', file)
-
-      const response = await fetch('/admin/api/upload', {
-        method: 'POST',
-        body: formData
-      })
-
-      const result = await response.json()
-
-      if (response.ok) {
-        editor.chain().focus().setImage({ src: result.url }).run()
-      } else {
-        alert(result.error || 'Failed to upload image')
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error)
-      alert('Error uploading image')
-    } finally {
-      setUploading(false)
-    }
+    editor.chain().focus().setImage({ src: url }).run()
+    setShowFilePicker(false)
+    setShowImageInput(false)
   }, [editor])
 
   if (!editor) {
@@ -467,26 +448,15 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
           >
             {editor.isActive('link') ? <Unlink className="h-4 w-4" /> : <LinkIcon className="h-4 w-4" />}
           </MenuButton>
-          <div className="relative">
-            <MenuButton
-              onClick={() => setShowImageInput(true)}
-              title="Image - Click for URL input, drag file over for upload"
-            >
-              <ImageIcon className="h-4 w-4" />
-            </MenuButton>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0]
-                if (file) {
-                  handleFileUpload(file)
-                }
-              }}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              title="Upload image from file"
-            />
-          </div>
+          <MenuButton
+            onClick={() => {
+              setShowFilePicker(true)
+              setShowImageInput(false)
+            }}
+            title="Image - Select or upload image"
+          >
+            <ImageIcon className="h-4 w-4" />
+          </MenuButton>
         </div>
 
         {/* History */}
@@ -547,11 +517,22 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
         </div>
       )}
 
-      {/* Image Input */}
+      {/* Image Input - URL option */}
       {showImageInput && (
         <div className="p-3 border-b border-gray-200 bg-gray-50">
           <div className="mb-2 text-sm text-gray-600">
-            You can either upload an image file by clicking the image button above, or enter an image URL below:
+            Enter an image URL, or{' '}
+            <button
+              type="button"
+              onClick={() => {
+                setShowImageInput(false)
+                setShowFilePicker(true)
+              }}
+              className="text-[#360e1d] hover:underline font-medium"
+            >
+              browse/upload files
+            </button>
+            :
           </div>
           <div className="flex gap-2">
             <Input
@@ -575,9 +556,9 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
               type="button" 
               onClick={setImage} 
               size="sm" 
-              disabled={!imageUrl || uploading}
+              disabled={!imageUrl}
             >
-              {uploading ? 'Uploading...' : 'Insert Image'}
+              Insert Image
             </Button>
             <Button
               type="button"
@@ -587,7 +568,6 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
               }}
               variant="outline"
               size="sm"
-              disabled={uploading}
             >
               Cancel
             </Button>
@@ -746,6 +726,18 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
           cursor: col-resize;
         }
       `}</style>
+
+      {/* File Picker Modal */}
+      <FilePickerModal
+        open={showFilePicker}
+        onOpenChange={setShowFilePicker}
+        onSelect={handleFileSelect}
+        fileType="image"
+        title="Select or Upload Image"
+        uploadEndpoint="/admin/api/upload"
+        allowedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
+        maxSize={5 * 1024 * 1024}
+      />
     </div>
   )
 }
