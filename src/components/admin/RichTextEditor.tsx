@@ -79,6 +79,8 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
   const [showColorPicker, setShowColorPicker] = useState(false)
   const [uploading, setUploading] = useState(false)
   const colorPickerRef = useRef<HTMLDivElement>(null)
+  const toolbarRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   // Close color picker when clicking outside
   useEffect(() => {
@@ -96,6 +98,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [showColorPicker])
+
 
   const editor = useEditor({
     extensions: [
@@ -215,9 +218,12 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
   }
 
   return (
-    <div className="border border-gray-300 rounded-lg overflow-hidden">
+    <div ref={containerRef} className="border border-gray-300 rounded-lg">
       {/* Toolbar */}
-      <div className="border-b border-gray-200 p-2 bg-gray-50 flex flex-wrap gap-1">
+      <div 
+        ref={toolbarRef}
+        className="sticky top-0 z-50 border-b border-gray-200 p-2 bg-gray-50 flex flex-wrap gap-1 shadow-sm rounded-t-lg bg-white"
+      >
         {/* Text Formatting */}
         <div className="flex gap-1 mr-2">
           <MenuButton
@@ -590,7 +596,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
       )}
 
       {/* Editor Content */}
-      <div className="p-4 min-h-[400px]">
+      <div className="p-4 min-h-[400px] overflow-auto rounded-b-lg">
         <EditorContent 
           editor={editor}
           className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl mx-auto focus:outline-none"
