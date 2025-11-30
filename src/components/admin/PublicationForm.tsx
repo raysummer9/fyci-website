@@ -343,7 +343,7 @@ export default function PublicationForm({ publication, isEditing = false }: Publ
         title="Select or Upload PDF File"
         uploadEndpoint="/admin/api/publications/upload"
         allowedTypes={['application/pdf']}
-        maxSize={50 * 1024 * 1024}
+        maxSize={2 * 1024 * 1024}
       />
       <FilePickerModal
         open={showCoverImagePicker}
@@ -353,7 +353,7 @@ export default function PublicationForm({ publication, isEditing = false }: Publ
         title="Select or Upload Cover Image"
         uploadEndpoint="/admin/api/upload"
         allowedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
-        maxSize={5 * 1024 * 1024}
+        maxSize={2 * 1024 * 1024}
       />
     </div>
   )

@@ -121,3 +121,48 @@ export async function GET(request: NextRequest) {
   }
 }
 
+export async function DELETE(request: NextRequest) {
+  try {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      return NextResponse.json({ error: 'Database not configured' }, { status: 500 })
+    }
+
+    const supabase = await createServerSupabaseClient()
+
+    // Check authentication
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+    
+    if (sessionError || !session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { searchParams } = new URL(request.url)
+    const filePath = searchParams.get('path')
+
+    if (!filePath) {
+      return NextResponse.json({ error: 'File path is required' }, { status: 400 })
+    }
+
+    // Use admin client for storage operations
+    const adminSupabase = createAdminClient()
+
+    // Delete file from Supabase Storage
+    const { error } = await adminSupabase.storage
+      .from('media')
+      .remove([filePath])
+
+    if (error) {
+      console.error('Error deleting file:', error)
+      return NextResponse.json({ 
+        error: 'Failed to delete file',
+        details: error.message 
+      }, { status: 500 })
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Error in DELETE /api/files:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+

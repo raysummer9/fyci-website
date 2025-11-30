@@ -12,7 +12,8 @@ import {
   Users, 
   LogOut,
   MessageSquare,
-  ClipboardList
+  ClipboardList,
+  Upload as UploadIcon
 } from 'lucide-react'
 
 interface SidebarProps {
@@ -49,6 +50,11 @@ const navigation = [
     name: 'Publications',
     href: '/admin/publications',
     icon: BookOpen,
+  },
+  {
+    name: 'Uploads',
+    href: '/admin/uploads',
+    icon: UploadIcon,
   },
   {
     name: 'Users',

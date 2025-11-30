@@ -28,11 +28,11 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    // Validate file size (max 10MB for competition applications)
-    const maxSize = 10 * 1024 * 1024 // 10MB
+    // Validate file size (max 2MB)
+    const maxSize = 2 * 1024 * 1024 // 2MB
     if (file.size > maxSize) {
       return NextResponse.json({ 
-        error: 'File too large. Maximum size is 10MB.' 
+        error: 'File too large. Maximum size is 2MB.' 
       }, { status: 400 })
     }
 

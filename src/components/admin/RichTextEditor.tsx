@@ -736,7 +736,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
         title="Select or Upload Image"
         uploadEndpoint="/admin/api/upload"
         allowedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
-        maxSize={5 * 1024 * 1024}
+        maxSize={2 * 1024 * 1024}
       />
     </div>
   )

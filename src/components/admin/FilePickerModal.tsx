@@ -25,7 +25,7 @@ interface FilePickerModalProps {
   title?: string
   uploadEndpoint?: string
   allowedTypes?: string[]
-  maxSize?: number
+  maxSize?: number // Default is 2MB
 }
 
 export default function FilePickerModal({
@@ -37,7 +37,7 @@ export default function FilePickerModal({
   title = 'Select or Upload File',
   uploadEndpoint = '/admin/api/upload',
   allowedTypes,
-  maxSize = 5 * 1024 * 1024 // 5MB default
+  maxSize = 2 * 1024 * 1024 // 2MB default
 }: FilePickerModalProps) {
   const [files, setFiles] = useState<FileItem[]>([])
   const [loading, setLoading] = useState(false)

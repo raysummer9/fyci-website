@@ -730,7 +730,7 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
         title="Select or Upload Featured Image"
         uploadEndpoint="/admin/api/upload"
         allowedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
-        maxSize={5 * 1024 * 1024}
+        maxSize={2 * 1024 * 1024}
       />
     </div>
   )

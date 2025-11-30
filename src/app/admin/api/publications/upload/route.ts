@@ -31,11 +31,11 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    // Validate file size (max 50MB for PDFs)
-    const maxSize = 50 * 1024 * 1024 // 50MB
+    // Validate file size (max 2MB)
+    const maxSize = 2 * 1024 * 1024 // 2MB
     if (file.size > maxSize) {
       return NextResponse.json({ 
-        error: 'File too large. Maximum size is 50MB.' 
+        error: 'File too large. Maximum size is 2MB.' 
       }, { status: 400 })
     }
 
