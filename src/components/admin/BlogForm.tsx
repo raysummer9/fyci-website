@@ -31,6 +31,8 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const [categories, setCategories] = useState<Category[]>([])
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [selectedCategoryObjects, setSelectedCategoryObjects] = useState<Category[]>([])
   const [tags, setTags] = useState<Tag[]>([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [selectedTagObjects, setSelectedTagObjects] = useState<Tag[]>([])
@@ -83,6 +85,23 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
         updated_at: ''
       }))
       setSelectedTagObjects(tagObjects)
+    }
+    // Load selected categories from blog.categories or fallback to blog.category
+    if (blog?.categories && blog.categories.length > 0) {
+      setSelectedCategories(blog.categories.map(cat => cat.id))
+      setSelectedCategoryObjects(blog.categories.map(cat => ({
+        id: cat.id,
+        name: cat.name,
+        slug: cat.slug
+      })))
+    } else if (blog?.category) {
+      // Fallback to single category for backward compatibility
+      setSelectedCategories([blog.category.id])
+      setSelectedCategoryObjects([{
+        id: blog.category.id,
+        name: blog.category.name,
+        slug: blog.category.slug
+      }])
     }
     // Calculate initial read time if blog has content
     if (blog?.content) {
@@ -198,6 +217,20 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
     }
   }
 
+  const handleCategorySelect = (categoryId: string) => {
+    if (selectedCategories.includes(categoryId)) {
+      setSelectedCategories(prev => prev.filter(id => id !== categoryId))
+      setSelectedCategoryObjects(prev => prev.filter(cat => cat.id !== categoryId))
+    } else {
+      setSelectedCategories(prev => [...prev, categoryId])
+      // Find the category object
+      const categoryObject = categories.find(c => c.id === categoryId)
+      if (categoryObject) {
+        setSelectedCategoryObjects(prev => [...prev, categoryObject])
+      }
+    }
+  }
+
   const handleTagSelect = (tagId: string) => {
     if (selectedTags.includes(tagId)) {
       setSelectedTags(prev => prev.filter(id => id !== tagId))
@@ -238,6 +271,8 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          category_id: selectedCategories.length > 0 ? selectedCategories[0] : null, // Keep for backward compatibility
+          category_ids: selectedCategories,
           tag_ids: selectedTags
         })
       })
@@ -272,6 +307,8 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
         body: JSON.stringify({
           ...formData,
           status: 'draft',
+          category_id: selectedCategories.length > 0 ? selectedCategories[0] : null, // Keep for backward compatibility
+          category_ids: selectedCategories,
           tag_ids: selectedTags
         })
       })
@@ -430,24 +467,55 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
               </CardContent>
             </Card>
 
-            {/* Category */}
+            {/* Categories */}
             <Card>
               <CardHeader>
-                <CardTitle>Category</CardTitle>
+                <CardTitle>Categories</CardTitle>
               </CardHeader>
-              <CardContent>
-                <select
-                  value={formData.category_id}
-                  onChange={(e) => handleInputChange('category_id', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select category</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Select Categories
+                  </Label>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {categories.map((category) => (
+                      <div key={category.id} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id={`category-${category.id}`}
+                          checked={selectedCategories.includes(category.id)}
+                          onChange={() => handleCategorySelect(category.id)}
+                          className="rounded"
+                        />
+                        <Label htmlFor={`category-${category.id}`} className="text-sm cursor-pointer">
+                          {category.name}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {selectedCategoryObjects.length > 0 && (
+                  <div>
+                    <Label className="text-sm font-medium text-gray-700 mb-2 block">
+                      Selected Categories
+                    </Label>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedCategoryObjects.map(category => (
+                        <Badge key={category.id} variant="secondary" className="text-xs">
+                          {category.name}
+                          <button
+                            type="button"
+                            onClick={() => handleCategorySelect(category.id)}
+                            className="ml-2 hover:text-red-600"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
 

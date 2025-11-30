@@ -37,6 +37,13 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
           name,
           slug
         ),
+        blog_categories (
+          category:categories (
+            id,
+            name,
+            slug
+          )
+        ),
         author:profiles!created_by (
           id,
           full_name,
@@ -67,9 +74,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });
     }
 
-    // Transform the data to flatten tags
+    // Transform the data to flatten tags and categories
+    const categories = (blog.blog_categories || []).map((bc: any) => bc.category).filter(Boolean)
+    
     const transformedBlog = {
       ...blog,
+      categories: categories.length > 0 ? categories : (blog.category ? [blog.category] : []),
       tags: blog.blog_tags?.map((bt: any) => bt.tag).filter(Boolean) || []
     };
 

@@ -205,14 +205,33 @@ export default function BlogPage() {
                         )}
                   </div>
 
-                  {/* Category Tag */}
-                  <div>
-                    <span 
-                      className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
-                      style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
-                    >
-                          {featuredPost.category?.name || 'Blog'}
-                    </span>
+                  {/* Category Tags */}
+                  <div className="flex flex-wrap gap-2">
+                    {(featuredPost.categories && featuredPost.categories.length > 0) ? (
+                      featuredPost.categories.map((category) => (
+                        <span 
+                          key={category.id}
+                          className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                          style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
+                        >
+                          {category.name}
+                        </span>
+                      ))
+                    ) : featuredPost.category ? (
+                      <span 
+                        className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                        style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
+                      >
+                        {featuredPost.category.name}
+                      </span>
+                    ) : (
+                      <span 
+                        className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                        style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
+                      >
+                        Blog
+                      </span>
+                    )}
                   </div>
 
                   {/* Title */}
@@ -349,13 +368,34 @@ export default function BlogPage() {
 
                           {/* Post Content - Right Side */}
                           <div className="flex-1 p-6 space-y-4">
-                            {/* Category */}
-                            <span 
-                              className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
-                              style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
-                            >
-                                {post.category?.name || 'Blog'}
-                            </span>
+                            {/* Categories */}
+                            <div className="flex flex-wrap gap-2">
+                              {(post.categories && post.categories.length > 0) ? (
+                                post.categories.map((category) => (
+                                  <span 
+                                    key={category.id}
+                                    className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                                    style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
+                                  >
+                                    {category.name}
+                                  </span>
+                                ))
+                              ) : post.category ? (
+                                <span 
+                                  className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                                  style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
+                                >
+                                  {post.category.name}
+                                </span>
+                              ) : (
+                                <span 
+                                  className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                                  style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
+                                >
+                                  Blog
+                                </span>
+                              )}
+                            </div>
 
                             {/* Title */}
                             <h3 className="text-lg font-bold text-gray-900 leading-tight line-clamp-2">

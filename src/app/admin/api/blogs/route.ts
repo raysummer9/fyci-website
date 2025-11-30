@@ -67,6 +67,7 @@ export async function POST(request: NextRequest) {
       content,
       featured_image,
       category_id,
+      category_ids,
       status,
       featured,
       read_time,
@@ -106,6 +107,7 @@ export async function POST(request: NextRequest) {
       meta_title: meta_title || null,
       meta_description: meta_description || null,
       published_at: published_at || null,
+      category_ids: category_ids || [],
       tag_ids: tag_ids || [],
       created_by: session.user.id
     }

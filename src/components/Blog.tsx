@@ -237,11 +237,27 @@ export default function Blog() {
                   
                   {/* Content */}
                   <div className="p-6">
-                    {/* Category Badge */}
-                    <div className="mb-3">
-                      <span className="inline-block px-3 py-1 rounded-full text-sm font-medium" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}>
-                        {post.category?.name || 'Blog'}
-                      </span>
+                    {/* Category Badges */}
+                    <div className="mb-3 flex flex-wrap gap-2">
+                      {(post.categories && post.categories.length > 0) ? (
+                        post.categories.map((category) => (
+                          <span 
+                            key={category.id}
+                            className="inline-block px-3 py-1 rounded-full text-sm font-medium" 
+                            style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
+                          >
+                            {category.name}
+                          </span>
+                        ))
+                      ) : post.category ? (
+                        <span className="inline-block px-3 py-1 rounded-full text-sm font-medium" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}>
+                          {post.category.name}
+                        </span>
+                      ) : (
+                        <span className="inline-block px-3 py-1 rounded-full text-sm font-medium" style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}>
+                          Blog
+                        </span>
+                      )}
                     </div>
                     
                     <h3 className="text-xl font-semibold mb-3 text-left text-gray-900 leading-tight">

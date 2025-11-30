@@ -229,7 +229,12 @@ export interface BlogPost {
     id: string;
     name: string;
     slug: string;
-  };
+  }; // Deprecated: Use categories array instead
+  categories?: {
+    id: string;
+    name: string;
+    slug: string;
+  }[];
   author?: {
     id: string;
     full_name?: string;

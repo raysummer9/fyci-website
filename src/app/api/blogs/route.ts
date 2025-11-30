@@ -34,6 +34,13 @@ export async function GET(request: NextRequest) {
           name,
           slug
         ),
+        blog_categories (
+          category:categories (
+            id,
+            name,
+            slug
+          )
+        ),
         author:profiles!created_by (
           id,
           full_name,
@@ -81,8 +88,12 @@ export async function GET(request: NextRequest) {
         .eq('blog_id', blog.id)
         .eq('is_approved', true)
 
+      // Get categories from blog_categories junction table
+      const categories = (blog.blog_categories || []).map((bc: any) => bc.category).filter(Boolean)
+
       return {
         ...blog,
+        categories: categories.length > 0 ? categories : (blog.category ? [blog.category] : []),
         tags: blog.blog_tags?.map((bt: any) => bt.tag).filter(Boolean) || [],
         comments_count: commentsCount || 0
       }

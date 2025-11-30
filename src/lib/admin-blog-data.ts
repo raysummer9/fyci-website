@@ -28,7 +28,12 @@ export interface BlogWithDetails extends Blog {
     id: string
     name: string
     slug: string
-  }
+  } // Deprecated: Use categories array instead
+  categories?: {
+    id: string
+    name: string
+    slug: string
+  }[]
   tags: {
     id: string
     name: string
@@ -117,6 +122,9 @@ export async function getBlogs(filters?: {
       .select(`
         *,
         category:categories(id, name, slug),
+        blog_categories(
+          category:categories(id, name, slug)
+        ),
         blog_tags(
           tag:tags(id, name, slugs)
         ),
@@ -159,9 +167,12 @@ export async function getBlogs(filters?: {
         // Transform tags from the nested structure
         const tags = (blog.blog_tags || []).map((bt: any) => bt.tag).filter(Boolean)
 
-        // Get category from categories table
+        // Get categories from blog_categories junction table
+        const categories = (blog.blog_categories || []).map((bc: any) => bc.category).filter(Boolean)
+
+        // Get category from categories table (for backward compatibility)
         let category = blog.category
-        if (blog.category_id && !blog.category) {
+        if (blog.category_id && !blog.category && categories.length === 0) {
           const { data: categoryData } = await supabase
             .from('categories')
             .select('id, name, slug')
@@ -173,6 +184,7 @@ export async function getBlogs(filters?: {
         return {
           ...blog,
           category,
+          categories: categories.length > 0 ? categories : (category ? [category] : []),
           tags,
           comments_count: commentsCount || 0
         }
@@ -218,6 +230,9 @@ export async function getBlog(id: string): Promise<BlogWithDetails | null> {
       .select(`
         *,
         category:categories(id, name, slug),
+        blog_categories(
+          category:categories(id, name, slug)
+        ),
         blog_tags(
           tag:tags(id, name, slugs)
         ),
@@ -242,9 +257,12 @@ export async function getBlog(id: string): Promise<BlogWithDetails | null> {
     // Transform tags
     const tags = (data.blog_tags || []).map((bt: any) => bt.tag).filter(Boolean)
 
-    // Get category from categories table
+    // Get categories from blog_categories junction table
+    const categories = (data.blog_categories || []).map((bc: any) => bc.category).filter(Boolean)
+
+    // Get category from categories table (for backward compatibility)
     let category = data.category
-    if (data.category_id && !data.category) {
+    if (data.category_id && !data.category && categories.length === 0) {
       const { data: categoryData } = await supabase
         .from('categories')
         .select('id, name, slug')
@@ -256,6 +274,7 @@ export async function getBlog(id: string): Promise<BlogWithDetails | null> {
     return {
       ...data,
       category,
+      categories: categories.length > 0 ? categories : (category ? [category] : []),
       tags,
       comments_count: commentsCount || 0
     }
@@ -278,6 +297,7 @@ export async function createBlog(blogData: {
   meta_title?: string
   meta_description?: string
   published_at?: string
+  category_ids?: string[]
   tag_ids?: string[]
   created_by: string
 }): Promise<Blog | null> {
@@ -288,7 +308,7 @@ export async function createBlog(blogData: {
 
     const supabase = await createServerSupabaseClient()
 
-    const { tag_ids, created_by, ...blogInsertData } = blogData
+    const { tag_ids, category_ids, created_by, ...blogInsertData } = blogData
 
     // Insert blog
     const { data: blog, error: blogError } = await supabase
@@ -305,6 +325,23 @@ export async function createBlog(blogData: {
     if (blogError || !blog) {
       console.error('Error creating blog:', blogError)
       return null
+    }
+
+    // Insert blog categories if provided
+    if (category_ids && category_ids.length > 0) {
+      const blogCategoryInserts = category_ids.map(categoryId => ({
+        blog_id: blog.id,
+        category_id: categoryId
+      }))
+
+      const { error: categoriesError } = await supabase
+        .from('blog_categories')
+        .insert(blogCategoryInserts)
+
+      if (categoriesError) {
+        console.error('Error creating blog categories:', categoriesError)
+        // Blog was created, but categories failed - we'll still return the blog
+      }
     }
 
     // Insert blog tags if provided
@@ -344,6 +381,7 @@ export async function updateBlog(id: string, blogData: Partial<{
   meta_title: string
   meta_description: string
   published_at: string
+  category_ids: string[]
   tag_ids: string[]
   updated_by: string
 }>): Promise<Blog | null> {
@@ -354,7 +392,7 @@ export async function updateBlog(id: string, blogData: Partial<{
 
     const supabase = await createServerSupabaseClient()
 
-    const { tag_ids, updated_by, ...updateData } = blogData
+    const { tag_ids, category_ids, updated_by, ...updateData } = blogData
 
     // Update blog
     const updatePayload = {
@@ -374,6 +412,31 @@ export async function updateBlog(id: string, blogData: Partial<{
     if (blogError || !blog) {
       console.error('Error updating blog:', blogError)
       return null
+    }
+
+    // Update blog categories if provided
+    if (category_ids !== undefined) {
+      // First, remove existing categories
+      await supabase
+        .from('blog_categories')
+        .delete()
+        .eq('blog_id', id)
+
+      // Then, insert new categories
+      if (category_ids.length > 0) {
+        const blogCategoryInserts = category_ids.map(categoryId => ({
+          blog_id: id,
+          category_id: categoryId
+        }))
+
+        const { error: categoriesError } = await supabase
+          .from('blog_categories')
+          .insert(blogCategoryInserts)
+
+        if (categoriesError) {
+          console.error('Error updating blog categories:', categoriesError)
+        }
+      }
     }
 
     // Update blog tags if provided

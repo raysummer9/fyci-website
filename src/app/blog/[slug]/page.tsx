@@ -317,10 +317,23 @@ export default function BlogPostPage() {
       <main className="min-h-screen bg-white">
         <section className="pt-28 sm:pt-36 pb-12">
           <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 space-y-6">
-            {blog.category && (
-              <span className="inline-flex items-center rounded-full bg-[#ebdfe4] px-4 py-1 text-sm font-medium text-[#360e1d]">
-                {blog.category.name}
-              </span>
+            {((blog.categories && blog.categories.length > 0) || blog.category) && (
+              <div className="flex flex-wrap gap-2">
+                {(blog.categories && blog.categories.length > 0) ? (
+                  blog.categories.map((category) => (
+                    <span 
+                      key={category.id}
+                      className="inline-flex items-center rounded-full bg-[#ebdfe4] px-4 py-1 text-sm font-medium text-[#360e1d]"
+                    >
+                      {category.name}
+                    </span>
+                  ))
+                ) : blog.category ? (
+                  <span className="inline-flex items-center rounded-full bg-[#ebdfe4] px-4 py-1 text-sm font-medium text-[#360e1d]">
+                    {blog.category.name}
+                  </span>
+                ) : null}
+              </div>
             )}
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-[#0f2a20] leading-tight max-w-4xl">
