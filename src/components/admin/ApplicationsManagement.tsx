@@ -67,46 +67,24 @@ export default function ApplicationsManagement() {
     setLoading(true)
     setError(null)
     try {
-      // Fetch all competitions first to get their applications
-      const competitionsResponse = await fetch('/admin/api/competitions')
-      if (!competitionsResponse.ok) {
-        throw new Error('Failed to fetch competitions')
+      // Fetch all applications directly from admin API
+      const response = await fetch('/admin/api/applications')
+      const responseData = await response.json().catch(() => ({ error: 'Failed to parse response' }))
+      
+      if (!response.ok) {
+        console.error('API Error:', {
+          status: response.status,
+          statusText: response.statusText,
+          data: responseData
+        })
+        throw new Error(responseData.error || responseData.details || `Failed to fetch applications (${response.status})`)
       }
-      const competitionsData = await competitionsResponse.json()
-
-      // Fetch applications for each competition
-      const allApplications: ApplicationWithCompetition[] = []
-      for (const competition of competitionsData) {
-        try {
-          const appsResponse = await fetch(`/api/competitions/${competition.slug}/applications`)
-          if (appsResponse.ok) {
-            const apps = await appsResponse.json()
-            apps.forEach((app: CompetitionApplication) => {
-              allApplications.push({
-                ...app,
-                competition: {
-                  id: competition.id,
-                  title: competition.title,
-                  slug: competition.slug,
-                  application_form: competition.application_form
-                }
-              })
-            })
-          }
-        } catch (error) {
-          console.error(`Error fetching applications for competition ${competition.slug}:`, error)
-        }
-      }
-
-      // Sort by created_at descending (newest first)
-      allApplications.sort((a, b) => 
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      )
-
-      setApplications(allApplications)
+      
+      console.log('Applications loaded:', responseData.length || 0)
+      setApplications(Array.isArray(responseData) ? responseData : [])
     } catch (error) {
       console.error('Error loading applications:', error)
-      setError('Failed to load applications')
+      setError(error instanceof Error ? error.message : 'Failed to load applications')
     } finally {
       setLoading(false)
     }
