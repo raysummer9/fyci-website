@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
         status,
         published_at,
         created_at,
-        publication_categories!category_id (
+        publication_categories (
           id,
           name,
           slug

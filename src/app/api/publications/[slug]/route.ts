@@ -29,7 +29,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         published_at,
         created_at,
         updated_at,
-        publication_categories!category_id (
+        publication_categories (
           id,
           name,
           slug

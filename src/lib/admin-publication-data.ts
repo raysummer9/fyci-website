@@ -205,7 +205,7 @@ export async function getPublications(filters?: PublicationFilters): Promise<Pub
       .from('publications')
       .select(`
         *,
-        publication_categories!category_id (
+        publication_categories (
           id,
           name,
           slug
@@ -260,7 +260,7 @@ export async function getPublication(id: string): Promise<PublicationWithDetails
       .from('publications')
       .select(`
         *,
-        publication_categories!category_id (
+        publication_categories (
           id,
           name,
           slug
