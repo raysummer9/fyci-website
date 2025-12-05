@@ -258,12 +258,12 @@ export default function BlogPage() {
                         {featuredPost.category.name}
                       </span>
                     ) : (
-                      <span 
-                        className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
-                        style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
-                      >
+                    <span 
+                      className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                      style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
+                    >
                         Blog
-                      </span>
+                    </span>
                     )}
                   </div>
 
@@ -451,7 +451,7 @@ export default function BlogPage() {
                               ) : (
                             <div className="absolute inset-0 flex items-center justify-center">
                               <span className="text-gray-500 text-sm">Post Image</span>
-                                </div>
+                            </div>
                               )}
                           </div>
 
@@ -477,12 +477,12 @@ export default function BlogPage() {
                                   {post.category.name}
                                 </span>
                               ) : (
-                                <span 
-                                  className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
-                                  style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
-                                >
+                            <span 
+                              className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                              style={{ backgroundColor: '#e6e1e3', color: '#360e1d' }}
+                            >
                                   Blog
-                                </span>
+                            </span>
                               )}
                             </div>
 
@@ -526,7 +526,7 @@ export default function BlogPage() {
                               <div className="flex items-center gap-1">
                                 <Clock size={14} />
                                     <span>{post.read_time} min read</span>
-                                  </div>
+                              </div>
                                 )}
                             </div>
 
@@ -548,50 +548,50 @@ export default function BlogPage() {
 
                   {/* Pagination */}
                   {totalPages > 1 && (
-                    <motion.div 
-                      className="flex flex-wrap justify-center items-center gap-2 sm:gap-4 mt-12 px-4"
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: false, amount: 0.1, margin: "-100px" }}
-                      transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  <motion.div 
+                    className="flex flex-wrap justify-center items-center gap-2 sm:gap-4 mt-12 px-4"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.1, margin: "-100px" }}
+                    transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  >
+                    <button
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
-                      <button
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                      >
-                        <ChevronLeft size={16} />
-                        Previous
-                      </button>
+                      <ChevronLeft size={16} />
+                      Previous
+                    </button>
 
-                      <div className="flex gap-2">
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                          <button
-                            key={page}
-                            onClick={() => handlePageChange(page)}
-                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                              currentPage === page
-                                ? 'text-white'
-                                : 'text-gray-700 hover:bg-gray-100'
-                            }`}
-                            style={{
-                              backgroundColor: currentPage === page ? '#360e1d' : 'transparent'
-                            }}
-                          >
-                            {page}
-                          </button>
-                        ))}
-                      </div>
+                    <div className="flex gap-2">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <button
+                          key={page}
+                          onClick={() => handlePageChange(page)}
+                          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                            currentPage === page
+                              ? 'text-white'
+                              : 'text-gray-700 hover:bg-gray-100'
+                          }`}
+                          style={{
+                            backgroundColor: currentPage === page ? '#360e1d' : 'transparent'
+                          }}
+                        >
+                          {page}
+                        </button>
+                      ))}
+                    </div>
 
-                      <button
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                      >
-                        Next
-                        <ChevronRight size={16} />
-                      </button>
-                    </motion.div>
+                    <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      Next
+                      <ChevronRight size={16} />
+                    </button>
+                  </motion.div>
                   )}
                 </div>
               </motion.section>
@@ -642,7 +642,7 @@ export default function BlogPage() {
                                 ) : (
                               <div className="w-full h-full flex items-center justify-center">
                                 <span className="text-xs text-gray-500">Image</span>
-                                  </div>
+                              </div>
                                 )}
                             </div>
         
