@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
         likes,
         read_time,
         published_at,
+        hide_counts,
         created_at,
         category:categories!category_id (
           id,

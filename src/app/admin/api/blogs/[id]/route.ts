@@ -68,7 +68,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       meta_title,
       meta_description,
       published_at,
-      tag_ids
+      tag_ids,
+      hide_counts
     } = body
 
     if (!title || !slug || !content) {
@@ -104,6 +105,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       published_at: published_at || null,
       category_ids: category_ids || [],
       tag_ids: tag_ids || [],
+      hide_counts: hide_counts || false,
       updated_by: session.user.id
     }
 

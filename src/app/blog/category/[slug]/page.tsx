@@ -293,19 +293,19 @@ export default function BlogCategoryPage() {
                                   <span>{post.read_time} min read</span>
                                 </div>
                               )}
-                              {post.views !== undefined && (
+                              {!post.hide_counts && post.views !== undefined && (
                                 <div className="flex items-center gap-2">
                                   <Eye size={16} />
                                   <span>{post.views}</span>
                                 </div>
                               )}
-                              {post.likes !== undefined && (
+                              {!post.hide_counts && post.likes !== undefined && (
                                 <div className="flex items-center gap-2">
                                   <Heart size={16} />
                                   <span>{post.likes}</span>
                                 </div>
                               )}
-                              {post.comments_count !== undefined && post.comments_count > 0 && (
+                              {!post.hide_counts && post.comments_count !== undefined && post.comments_count > 0 && (
                                 <div className="flex items-center gap-2">
                                   <MessageCircle size={16} />
                                   <span>{post.comments_count}</span>

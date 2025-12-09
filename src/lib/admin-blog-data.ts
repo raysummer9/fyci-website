@@ -17,6 +17,7 @@ export interface Blog {
   meta_title: string | null
   meta_description: string | null
   published_at: string | null
+  hide_counts: boolean
   created_by: string | null
   updated_by: string | null
   created_at: string
@@ -299,6 +300,7 @@ export async function createBlog(blogData: {
   published_at?: string
   category_ids?: string[]
   tag_ids?: string[]
+  hide_counts?: boolean
   created_by: string
 }): Promise<Blog | null> {
   try {
@@ -383,6 +385,7 @@ export async function updateBlog(id: string, blogData: Partial<{
   published_at: string
   category_ids: string[]
   tag_ids: string[]
+  hide_counts: boolean
   updated_by: string
 }>): Promise<Blog | null> {
   try {

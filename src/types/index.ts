@@ -225,6 +225,7 @@ export interface BlogPost {
   published_at?: string;
   created_at: string;
   comments_count?: number;
+  hide_counts?: boolean;
   category?: {
     id: string;
     name: string;

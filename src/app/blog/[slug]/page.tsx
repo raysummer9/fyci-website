@@ -360,10 +360,12 @@ export default function BlogPostPage() {
                 </div>
               )}
 
-              <div>
-                <p className="uppercase tracking-wide text-xs text-gray-500 mb-1">Views</p>
-                <p className="font-medium text-gray-900">{(viewCount || blog.views || 0).toLocaleString()}</p>
-              </div>
+              {!blog.hide_counts && (
+                <div>
+                  <p className="uppercase tracking-wide text-xs text-gray-500 mb-1">Views</p>
+                  <p className="font-medium text-gray-900">{(viewCount || blog.views || 0).toLocaleString()}</p>
+                </div>
+              )}
             </div>
 
           </div>
@@ -427,9 +429,11 @@ export default function BlogPostPage() {
               )}
 
               {/* Comments Section */}
-              <motion.div variants={itemVariants}>
-                <BlogComments blogSlug={slug} />
-              </motion.div>
+              {!blog.hide_counts && (
+                <motion.div variants={itemVariants}>
+                  <BlogComments blogSlug={slug} />
+                </motion.div>
+              )}
 
               <motion.div variants={itemVariants}>
                 <div className="rounded-2xl border border-gray-200 p-6 sm:p-8">
@@ -540,7 +544,7 @@ export default function BlogPostPage() {
       </main>
 
       {/* Floating Like Button */}
-      {blog && (
+      {blog && !blog.hide_counts && (
         <div className="fixed right-6 bottom-6 z-50">
           <button
             onClick={handleLike}

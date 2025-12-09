@@ -71,6 +71,7 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
     meta_title: blog?.meta_title || '',
     meta_description: blog?.meta_description || '',
     published_at: blog?.published_at || '',
+    hide_counts: blog?.hide_counts || false,
   })
 
   useEffect(() => {
@@ -621,6 +622,15 @@ export default function BlogForm({ blog, isEditing = false }: BlogFormProps) {
                     onCheckedChange={(checked) => handleInputChange('featured', checked)}
                   />
                   <Label htmlFor="featured">Featured Post</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="hide_counts"
+                    checked={formData.hide_counts}
+                    onCheckedChange={(checked) => handleInputChange('hide_counts', checked)}
+                  />
+                  <Label htmlFor="hide_counts">Hide Views, Likes & Comments Count</Label>
                 </div>
 
                 <div>

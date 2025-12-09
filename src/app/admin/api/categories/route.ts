@@ -10,9 +10,9 @@ export async function GET(request: NextRequest) {
     const supabase = await createServerSupabaseClient()
 
     // Check authentication
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
     
-    if (sessionError || !session) {
+    if (userError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 

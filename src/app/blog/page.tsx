@@ -289,22 +289,28 @@ export default function BlogPage() {
                   {/* Metadata */}
                   <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
                     {/* Views */}
-                    <div className="flex items-center gap-1">
-                      <Eye size={14} />
-                      <span>{featuredPost.views.toLocaleString()}</span>
-                    </div>
+                    {!featuredPost.hide_counts && (
+                      <div className="flex items-center gap-1">
+                        <Eye size={14} />
+                        <span>{featuredPost.views.toLocaleString()}</span>
+                      </div>
+                    )}
                     
                     {/* Likes */}
-                    <div className="flex items-center gap-1">
-                      <Heart size={14} />
-                      <span>{featuredPost.likes}</span>
-                    </div>
+                    {!featuredPost.hide_counts && (
+                      <div className="flex items-center gap-1">
+                        <Heart size={14} />
+                        <span>{featuredPost.likes}</span>
+                      </div>
+                    )}
                     
                     {/* Comments */}
-                    <div className="flex items-center gap-1">
-                      <MessageCircle size={14} />
-                      <span>{featuredPost.comments_count || 0}</span>
-                    </div>
+                    {!featuredPost.hide_counts && (
+                      <div className="flex items-center gap-1">
+                        <MessageCircle size={14} />
+                        <span>{featuredPost.comments_count || 0}</span>
+                      </div>
+                    )}
                     
                     {/* Read Time */}
                         {featuredPost.read_time && (
@@ -312,7 +318,7 @@ export default function BlogPage() {
                       <Clock size={14} />
                       <span>{featuredPost.read_time} min read</span>
                     </div>
-                    )}
+                        )}
                   </div>
         
                   {/* View Post Button - Text and Icon */}
@@ -504,22 +510,28 @@ export default function BlogPage() {
                             {/* Metadata */}
                             <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
                               {/* Views */}
-                              <div className="flex items-center gap-1">
-                                <Eye size={14} />
-                                <span>{post.views.toLocaleString()}</span>
-                              </div>
+                              {!post.hide_counts && (
+                                <div className="flex items-center gap-1">
+                                  <Eye size={14} />
+                                  <span>{post.views.toLocaleString()}</span>
+                                </div>
+                              )}
                               
                               {/* Likes */}
-                              <div className="flex items-center gap-1">
-                                <Heart size={14} />
-                                <span>{post.likes}</span>
-                              </div>
+                              {!post.hide_counts && (
+                                <div className="flex items-center gap-1">
+                                  <Heart size={14} />
+                                  <span>{post.likes}</span>
+                                </div>
+                              )}
                               
                               {/* Comments */}
-                              <div className="flex items-center gap-1">
-                                <MessageCircle size={14} />
-                                <span>{post.comments_count || 0}</span>
-                              </div>
+                              {!post.hide_counts && (
+                                <div className="flex items-center gap-1">
+                                  <MessageCircle size={14} />
+                                  <span>{post.comments_count || 0}</span>
+                                </div>
+                              )}
                               
                               {/* Read Time */}
                                 {post.read_time && (

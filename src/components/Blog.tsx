@@ -281,20 +281,26 @@ export default function Blog() {
                       )}
                       <div className="flex items-center gap-4 text-sm text-gray-500 flex-wrap">
                         {/* Views */}
-                        <div className="flex items-center gap-1">
-                          <Eye size={14} />
-                          <span>{(post.views || 0).toLocaleString()}</span>
-                        </div>
+                        {!post.hide_counts && (
+                          <div className="flex items-center gap-1">
+                            <Eye size={14} />
+                            <span>{(post.views || 0).toLocaleString()}</span>
+                          </div>
+                        )}
                         {/* Likes */}
-                        <div className="flex items-center gap-1">
-                          <Heart size={14} />
-                          <span>{post.likes || 0}</span>
-                        </div>
+                        {!post.hide_counts && (
+                          <div className="flex items-center gap-1">
+                            <Heart size={14} />
+                            <span>{post.likes || 0}</span>
+                          </div>
+                        )}
                         {/* Comments */}
-                        <div className="flex items-center gap-1">
-                          <MessageCircle size={14} />
-                          <span>{post.comments_count || 0}</span>
-                        </div>
+                        {!post.hide_counts && (
+                          <div className="flex items-center gap-1">
+                            <MessageCircle size={14} />
+                            <span>{post.comments_count || 0}</span>
+                          </div>
+                        )}
                       </div>
                       {post.read_time && (
                         <div className="flex items-center gap-2 text-sm text-gray-500">
