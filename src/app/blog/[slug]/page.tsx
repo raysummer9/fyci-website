@@ -401,13 +401,6 @@ export default function BlogPostPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-12">
-              {blog.excerpt && (
-                <motion.div variants={itemVariants} className="space-y-4">
-                  <h2 className="text-3xl font-semibold text-[#0f2a20]">Overview</h2>
-                  <p className="text-lg text-gray-700 leading-relaxed">{blog.excerpt}</p>
-                </motion.div>
-              )}
-
               {blog.content && (
                 <motion.div variants={itemVariants} className="space-y-4">
                   <div
